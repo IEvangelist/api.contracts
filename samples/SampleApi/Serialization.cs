@@ -11,7 +11,7 @@ namespace SampleApi;
 /// <c>System.Text.Json</c> serialization attributes.
 /// </summary>
 /// <remarks>
-/// This DTO demonstrates common JSON customisation patterns:
+/// This DTO demonstrates common JSON customization patterns:
 /// <list type="bullet">
 ///   <item><description><see cref="JsonPropertyNameAttribute"/> to control the serialised property names.</description></item>
 ///   <item><description><see cref="JsonIgnoreAttribute"/> to exclude properties from serialisation.</description></item>

@@ -9,7 +9,7 @@ namespace SampleApi;
 /// Provides well-known route path constants for the sample API.
 /// </summary>
 /// <remarks>
-/// Centralising route paths in a static class ensures that controllers, clients,
+/// Centralizing route paths in a static class ensures that controllers, clients,
 /// and tests reference the same values, reducing the risk of routing mismatches.
 /// </remarks>
 [ApiContract(

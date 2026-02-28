@@ -171,7 +171,7 @@
       "isStatic": true,
       "docs": {
         "summary": "Provides well-known route path constants for the sample API.",
-        "remarks": "Centralising route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
+        "remarks": "Centralizing route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
       },
       "members": [
         {
@@ -2162,7 +2162,7 @@
       "accessibility": "public",
       "docs": {
         "summary": "A data transfer object for product information, annotated with System.Text.Json serialization attributes.",
-        "remarks": "This DTO demonstrates common JSON customisation patterns: to control the serialised property names. to exclude properties from serialisation. to enforce presence during deserialisation. to apply a custom converter.",
+        "remarks": "This DTO demonstrates common JSON customization patterns: to control the serialized property names. to exclude properties from serialization. to enforce presence during deserialization. to apply a custom converter.",
         "seeAlso": [
           "T:SampleApi.ApiResponse`1"
         ]
