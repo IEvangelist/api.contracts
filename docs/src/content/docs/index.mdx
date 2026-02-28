@@ -8,21 +8,173 @@ hero:
     - text: Get Started
       link: /api.contracts/guides/introduction/
       icon: right-arrow
-    - text: View on GitHub
+    - text: View Schema
+      link: /api.contracts/samples/sample-api-schema/
+      icon: document
+      variant: minimal
+    - text: GitHub
       link: https://github.com/IEvangelist/api.contracts
       icon: external
       variant: minimal
 ---
 
-## What is API Contracts?
+import { Card, CardGrid, LinkCard, Steps, Tabs, TabItem, Badge, Aside } from '@astrojs/starlight/components';
 
-A **Roslyn incremental source generator** that walks your .NET assembly's public API surface and emits deterministic, versioned JSON schemas — designed for AI agents, documentation pipelines, and automated tooling.
+## Why API Contracts?
 
-### Key Features
+<CardGrid>
+  <Card title="Deterministic Hashing" icon="lock-locked">
+    Every build produces the **same schema** for the same API surface. Detect changes instantly via `apiHash` (SHA-256) — no more silent breaking changes.
+  </Card>
+  <Card title="AI-Ready Metadata" icon="rocket">
+    Enrich your types with `[ApiContract]` for agent-oriented descriptions, categories, roles, and tags. **LLMs and agents** consume schemas natively.
+  </Card>
+  <Card title="Cryptographic Signatures" icon="approve-check">
+    Optional **RSA-SHA256 signatures** ensure schema integrity and provenance. Verify that schemas haven't been tampered with.
+  </Card>
+  <Card title="Zero Runtime Cost" icon="star">
+    Powered by a **Roslyn incremental source generator** — all schema work happens at compile time. No reflection, no runtime overhead.
+  </Card>
+</CardGrid>
 
-- 🔒 **Deterministic hashing** — detect API surface changes via `apiHash` (SHA-256)
-- ✍️ **Optional RSA-SHA256 signatures** — cryptographic schema integrity
-- 📖 **XML docs normalization** — summaries, remarks, params, examples all captured
-- 🤖 **AI metadata** — `[ApiContract]` attribute for agent-oriented descriptions, categories, roles, and tags
-- 📦 **JSON contract modeling** — System.Text.Json serialization behavior captured per type
-- 🌐 **Polyglot code generation** — schema supports C#, TypeScript, Python, Java, Go, Rust
+## How it works
+
+<Steps>
+1. **Install** the source generator NuGet package
+
+   ```xml title="YourProject.csproj"
+   <PackageReference Include="ApiContracts.Generator"
+                     OutputItemType="Analyzer"
+                     ReferenceOutputAssembly="false" />
+   ```
+
+2. **Annotate** your types (optional — all public types are captured automatically)
+
+   ```csharp title="Customer.cs"
+   [ApiContract(
+       Name = "Customer",
+       Description = "A customer entity with contact information.",
+       Category = "Domain",
+       Role = "entity",
+       Tags = "customer,crm,domain")]
+   public class Customer
+   {
+       public required Guid Id { get; set; }
+       public required string FullName { get; set; }
+       public string? Email { get; set; }
+   }
+   ```
+
+3. **Build** — the generator walks all public types, extracts XML docs, models JSON serialization, and emits deterministic schemas
+
+   ```bash
+   dotnet build
+   ```
+
+4. **Consume** the schema in documentation, AI agents, or tooling
+
+   ```csharp title="Usage.cs"
+   var result = SchemaVerifier.ValidateSchema(schemaJson);
+   Console.WriteLine($"Valid: {result.IsValid}, Hash: {result.ApiHash}");
+   ```
+</Steps>
+
+## What gets captured?
+
+<Tabs>
+  <TabItem label="Types & Members">
+    Every public **class**, **struct**, **record**, **interface**, **enum**, and **delegate** — including all public members with full signatures, parameters, return types, and modifiers.
+
+    ```json title="Type schema"
+    {
+      "name": "Customer",
+      "fullName": "SampleApi.Customer",
+      "kind": "class",
+      "members": [
+        {
+          "name": "FullName",
+          "kind": "property",
+          "returnType": "string",
+          "signature": "string Customer.FullName"
+        }
+      ]
+    }
+    ```
+  </TabItem>
+  <TabItem label="XML Documentation">
+    All XML documentation is **normalized** and captured: summaries, remarks, parameter descriptions, return docs, `<example>` blocks, and `<seealso>` references.
+
+    ```json title="Documentation schema"
+    {
+      "docs": {
+        "summary": "Service for managing customers.",
+        "remarks": "Provides CRUD operations and search capabilities.",
+        "parameters": {
+          "id": "The customer identifier."
+        },
+        "returns": "The customer if found; otherwise, null."
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="AI Metadata">
+    The `[ApiContract]` attribute enriches schemas with **human- and AI-readable** descriptions, categories, semantic roles, and searchable tags.
+
+    ```json title="AI metadata"
+    {
+      "ai": {
+        "name": "CustomerService",
+        "description": "Service for creating, reading, updating, and searching customers.",
+        "category": "Services",
+        "role": "service",
+        "tags": ["customer", "crud", "service"]
+      }
+    }
+    ```
+  </TabItem>
+  <TabItem label="JSON Contracts">
+    System.Text.Json serialization behavior is captured per type — property names, types, `required`/`nullable`/`ignored` flags, and JSON type mappings.
+
+    ```json title="JSON contract"
+    {
+      "json": {
+        "contractType": "object",
+        "useCamelCase": true,
+        "properties": [
+          {
+            "clrName": "FullName",
+            "jsonName": "fullName",
+            "jsonType": "string",
+            "required": true
+          }
+        ]
+      }
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Explore further
+
+<CardGrid>
+  <LinkCard
+    title="Quick Start Guide"
+    description="Get up and running in under 5 minutes."
+    href="/api.contracts/guides/quick-start/"
+  />
+  <LinkCard
+    title="Sample Schema"
+    description="See a real-world schema generated from the SampleApi project."
+    href="/api.contracts/samples/sample-api-schema/"
+  />
+  <LinkCard
+    title="Schema Format"
+    description="Understand the assembly schema structure in detail."
+    href="/api.contracts/schema/assembly-schema/"
+  />
+  <LinkCard
+    title="Configuration"
+    description="Customize output paths, signing, and which types are included."
+    href="/api.contracts/guides/configuration/"
+  />
+</CardGrid>
