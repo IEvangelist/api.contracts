@@ -1,0 +1,155 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using ApiContracts;
+
+namespace SampleApi;
+
+/// <summary>
+/// Encapsulates the outcome of an operation, holding either a success value or an error message.
+/// </summary>
+/// <typeparam name="T">The type of the value returned on success.</typeparam>
+/// <remarks>
+/// Use the static factory methods <see cref="Ok"/> and <see cref="Fail"/> to create instances.
+/// Callers should inspect <see cref="IsSuccess"/> before accessing <see cref="Value"/>.
+/// </remarks>
+/// <seealso cref="ValidationError"/>
+/// <seealso cref="ProblemDetails"/>
+[ApiContract(
+    Name = "Result",
+    Description = "A generic result type that represents either a successful value or an error.",
+    Category = "Patterns",
+    Role = "response",
+    Tags = "result,error-handling,generic,pattern")]
+public class Result<T>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Result{T}"/> class.
+    /// Use the static factory methods instead of calling this constructor directly.
+    /// </summary>
+    protected Result(bool isSuccess, T? value, string? error)
+    {
+        IsSuccess = isSuccess;
+        Value = value;
+        Error = error;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the operation succeeded.
+    /// </summary>
+    public bool IsSuccess { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the operation failed.
+    /// </summary>
+    public bool IsFailure => !IsSuccess;
+
+    /// <summary>
+    /// Gets the value produced by a successful operation.
+    /// </summary>
+    /// <value>
+    /// The result value, or the default of <typeparamref name="T"/> when the operation failed.
+    /// </value>
+    public T? Value { get; }
+
+    /// <summary>
+    /// Gets the error message describing why the operation failed.
+    /// </summary>
+    /// <value>
+    /// The error message, or <see langword="null"/> when the operation succeeded.
+    /// </value>
+    public string? Error { get; }
+
+    /// <summary>
+    /// Creates a successful result containing the specified value.
+    /// </summary>
+    /// <param name="value">The success value.</param>
+    /// <returns>A <see cref="Result{T}"/> representing a successful outcome.</returns>
+    public static Result<T> Ok(T value) => new(true, value, null);
+
+    /// <summary>
+    /// Creates a failed result with the specified error message.
+    /// </summary>
+    /// <param name="error">A message describing the failure.</param>
+    /// <returns>A <see cref="Result{T}"/> representing a failed outcome.</returns>
+    public static Result<T> Fail(string error) => new(false, default, error);
+}
+
+/// <summary>
+/// Describes a validation error associated with a specific input field.
+/// </summary>
+/// <param name="Field">The name of the field that failed validation.</param>
+/// <param name="Message">A human-readable message describing the validation failure.</param>
+/// <param name="Code">An application-specific error code for programmatic handling.</param>
+/// <remarks>
+/// Validation errors are typically collected during request processing and returned
+/// as part of a <see cref="ProblemDetails"/> response.
+/// </remarks>
+/// <seealso cref="ProblemDetails"/>
+/// <seealso cref="Result{T}"/>
+[ApiContract(
+    Name = "ValidationError",
+    Description = "A record describing a validation failure for a specific input field.",
+    Category = "Patterns",
+    Role = "error",
+    Tags = "validation,error,field,pattern")]
+public record class ValidationError(
+    string Field,
+    string Message,
+    string? Code = null);
+
+/// <summary>
+/// A machine-readable format for specifying errors in HTTP API responses,
+/// based on RFC 9457.
+/// </summary>
+/// <remarks>
+/// <see cref="ProblemDetails"/> provides a standardised error response body that
+/// clients can parse without knowledge of the specific API. The <see cref="Extensions"/>
+/// dictionary allows API authors to attach additional context that is not covered by the
+/// core properties.
+/// </remarks>
+/// <seealso cref="ValidationError"/>
+/// <seealso cref="Result{T}"/>
+[ApiContract(
+    Name = "ProblemDetails",
+    Description = "RFC 9457 problem details object for standardised HTTP API error responses.",
+    Category = "Patterns",
+    Role = "error",
+    Tags = "error,http,rfc9457,problem-details")]
+public class ProblemDetails
+{
+    /// <summary>
+    /// Gets or sets a URI reference that identifies the problem type.
+    /// </summary>
+    /// <value>A URI such as "https://example.com/errors/not-found".</value>
+    public string? Type { get; set; }
+
+    /// <summary>
+    /// Gets or sets a short, human-readable summary of the problem type.
+    /// </summary>
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the HTTP status code generated by the origin server for this occurrence.
+    /// </summary>
+    public int? Status { get; set; }
+
+    /// <summary>
+    /// Gets or sets a human-readable explanation specific to this occurrence of the problem.
+    /// </summary>
+    public string? Detail { get; set; }
+
+    /// <summary>
+    /// Gets or sets a URI reference that identifies the specific occurrence of the problem.
+    /// </summary>
+    public string? Instance { get; set; }
+
+    /// <summary>
+    /// Gets the extension members for this problem details instance.
+    /// </summary>
+    /// <remarks>
+    /// Use this dictionary to include additional context such as trace identifiers,
+    /// validation errors, or retry-after hints.
+    /// </remarks>
+    public IDictionary<string, object?> Extensions { get; } = new Dictionary<string, object?>();
+}
