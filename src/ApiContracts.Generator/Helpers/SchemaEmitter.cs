@@ -16,7 +16,8 @@ internal static class SchemaEmitter
         string targetFramework,
         List<CanonicalType> types,
         string apiHash,
-        AssemblyConfig config)
+        AssemblyConfig config,
+        string? signatureValue = null)
     {
         var sb = new StringBuilder();
         sb.AppendLine("{");
@@ -44,7 +45,21 @@ internal static class SchemaEmitter
         }
 
         sb.AppendLine($"  ],");
-        sb.AppendLine($"  \"apiHash\": \"{EscapeJson(apiHash)}\"");
+        sb.AppendLine($"  \"apiHash\": \"{EscapeJson(apiHash)}\",");
+
+        // Signature envelope
+        if (signatureValue is not null && config.SigningKeyId is not null)
+        {
+            sb.AppendLine($"  \"signature\": {{");
+            sb.AppendLine($"    \"algorithm\": \"RSA-SHA256\",");
+            sb.AppendLine($"    \"publicKeyId\": \"{EscapeJson(config.SigningKeyId)}\",");
+            sb.AppendLine($"    \"value\": \"{EscapeJson(signatureValue)}\"");
+            sb.AppendLine($"  }},");
+        }
+
+        // Remove trailing comma on last property
+        // Rewrite: emit generatedAt as final property (no trailing comma)
+        sb.AppendLine($"  \"generatedAt\": \"{DateTime.UtcNow:O}\"");
         sb.AppendLine("}");
 
         return sb.ToString();

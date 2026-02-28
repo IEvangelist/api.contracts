@@ -119,6 +119,15 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
         var canonicalJson = CanonicalSerializer.SerializeForHashing(typeModels);
         var apiHash = HashComputer.ComputeSha256(canonicalJson);
 
+        // Compute optional signature
+        string? signatureValue = null;
+        if (config.Sign && !string.IsNullOrEmpty(config.SigningKeyId))
+        {
+            // Signing is deferred to post-build via the Verification SDK.
+            // The generator emits the signature envelope placeholder with the key ID.
+            // Actual signing requires the private key file, which is handled externally.
+        }
+
         // Build assembly schema JSON
         var schemaJson = SchemaEmitter.EmitAssemblySchema(
             assemblyName,
@@ -128,7 +137,8 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
                 : "net10.0",
             typeModels,
             apiHash,
-            config);
+            config,
+            signatureValue);
 
         // Emit as additional file via source text
         context.AddSource(

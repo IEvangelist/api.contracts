@@ -9,8 +9,14 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <Authors>David Pine</Authors>
     <Company>IEvangelist</Company>
+    <Product>API Contracts</Product>
+    <Version>1.0.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://ievangelist.github.io/api.contracts</PackageProjectUrl>
     <RepositoryUrl>https://github.com/IEvangelist/api.contracts</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageTags>api;contracts;schema;roslyn;source-generator;json;ai;documentation</PackageTags>
+    <Copyright>Copyright © David Pine. All rights reserved.</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 </Project>

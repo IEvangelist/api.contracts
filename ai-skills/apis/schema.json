@@ -8,37 +8,139 @@
         "id": "csharp",
         "displayName": "C#",
         "extension": ".cs",
-        "syntaxAlias": "csharp"
+        "syntaxAlias": "csharp",
+        "typeMap": {
+          "string": "string",
+          "int": "int",
+          "long": "long",
+          "bool": "bool",
+          "double": "double",
+          "float": "float",
+          "decimal": "decimal",
+          "DateTime": "DateTime",
+          "DateTimeOffset": "DateTimeOffset",
+          "Guid": "Guid",
+          "byte[]": "byte[]",
+          "object": "object",
+          "void": "void"
+        },
+        "namespacePattern": "namespace {namespace};",
+        "importPattern": "using {namespace};"
       },
       {
         "id": "typescript",
         "displayName": "TypeScript",
         "extension": ".ts",
-        "syntaxAlias": "typescript"
+        "syntaxAlias": "typescript",
+        "typeMap": {
+          "string": "string",
+          "int": "number",
+          "long": "number",
+          "bool": "boolean",
+          "double": "number",
+          "float": "number",
+          "decimal": "number",
+          "DateTime": "Date",
+          "DateTimeOffset": "Date",
+          "Guid": "string",
+          "byte[]": "Uint8Array",
+          "object": "Record<string, unknown>",
+          "void": "void"
+        },
+        "namespacePattern": "// namespace: {namespace}",
+        "importPattern": "import {{ {types} }} from '{module}';"
       },
       {
         "id": "python",
         "displayName": "Python",
         "extension": ".py",
-        "syntaxAlias": "python"
+        "syntaxAlias": "python",
+        "typeMap": {
+          "string": "str",
+          "int": "int",
+          "long": "int",
+          "bool": "bool",
+          "double": "float",
+          "float": "float",
+          "decimal": "Decimal",
+          "DateTime": "datetime",
+          "DateTimeOffset": "datetime",
+          "Guid": "UUID",
+          "byte[]": "bytes",
+          "object": "dict[str, Any]",
+          "void": "None"
+        },
+        "namespacePattern": "# namespace: {namespace}",
+        "importPattern": "from {module} import {types}"
       },
       {
         "id": "java",
         "displayName": "Java",
         "extension": ".java",
-        "syntaxAlias": "java"
+        "syntaxAlias": "java",
+        "typeMap": {
+          "string": "String",
+          "int": "int",
+          "long": "long",
+          "bool": "boolean",
+          "double": "double",
+          "float": "float",
+          "decimal": "BigDecimal",
+          "DateTime": "LocalDateTime",
+          "DateTimeOffset": "OffsetDateTime",
+          "Guid": "UUID",
+          "byte[]": "byte[]",
+          "object": "Object",
+          "void": "void"
+        },
+        "namespacePattern": "package {namespace};",
+        "importPattern": "import {namespace}.{type};"
       },
       {
         "id": "go",
         "displayName": "Go",
         "extension": ".go",
-        "syntaxAlias": "go"
+        "syntaxAlias": "go",
+        "typeMap": {
+          "string": "string",
+          "int": "int",
+          "long": "int64",
+          "bool": "bool",
+          "double": "float64",
+          "float": "float32",
+          "decimal": "float64",
+          "DateTime": "time.Time",
+          "DateTimeOffset": "time.Time",
+          "Guid": "string",
+          "byte[]": "[]byte",
+          "object": "interface{}",
+          "void": ""
+        },
+        "namespacePattern": "package {namespace}",
+        "importPattern": "import \"{module}\""
       },
       {
         "id": "rust",
         "displayName": "Rust",
         "extension": ".rs",
-        "syntaxAlias": "rust"
+        "syntaxAlias": "rust",
+        "typeMap": {
+          "string": "String",
+          "int": "i32",
+          "long": "i64",
+          "bool": "bool",
+          "double": "f64",
+          "float": "f32",
+          "decimal": "f64",
+          "DateTime": "chrono::NaiveDateTime",
+          "DateTimeOffset": "chrono::DateTime<Utc>",
+          "Guid": "uuid::Uuid",
+          "byte[]": "Vec<u8>",
+          "object": "serde_json::Value",
+          "void": "()"
+        },
+        "namespacePattern": "mod {namespace};",
+        "importPattern": "use {module}::{types};"
       }
     ]
   },
@@ -68,6 +170,24 @@
       "packageVersion": "{package.version}",
       "apiHash": "{apiHash}",
       "schemaVersion": "{schemaVersion}"
+    },
+    "context": {
+      "typeContext": {
+        "fields": ["fullName", "namespace", "kind", "accessibility", "ai", "docs", "json", "members", "baseType", "interfaces", "attributes"],
+        "description": "Full context object for rendering type pages"
+      },
+      "memberContext": {
+        "fields": ["name", "kind", "signature", "returnType", "parameters", "ai", "docs", "json", "attributes"],
+        "description": "Context object for rendering member pages"
+      },
+      "namespaceContext": {
+        "fields": ["name", "types"],
+        "description": "Context object for namespace index pages"
+      },
+      "packageContext": {
+        "fields": ["name", "version", "targetFramework", "apiHash"],
+        "description": "Package-level context available to all templates"
+      }
     }
   }
 }

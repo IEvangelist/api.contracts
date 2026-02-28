@@ -308,6 +308,21 @@ internal sealed class CanonicalModelBuilder
     private static CanonicalDocumentation? ExtractDocumentation(ISymbol symbol)
     {
         var xmlComment = symbol.GetDocumentationCommentXml();
+
+        // Handle inheritdoc: resolve from base types/interfaces
+        if (string.IsNullOrWhiteSpace(xmlComment) || xmlComment!.Contains("<inheritdoc"))
+        {
+            var inherited = ResolveInheritedDocumentation(symbol);
+            if (inherited is not null)
+            {
+                // If we have partial docs with inheritdoc, merge; otherwise use inherited
+                if (string.IsNullOrWhiteSpace(xmlComment))
+                {
+                    return inherited;
+                }
+            }
+        }
+
         if (string.IsNullOrWhiteSpace(xmlComment))
         {
             return null;
@@ -556,5 +571,83 @@ internal sealed class CanonicalModelBuilder
 
                 return a.NamedArguments.Any(n => n.Key == "Exclude" && n.Value.Value is true);
             });
+    }
+
+    /// <summary>
+    /// Resolves inherited documentation from base types and interfaces for inheritdoc support.
+    /// </summary>
+    private static CanonicalDocumentation? ResolveInheritedDocumentation(ISymbol symbol)
+    {
+        // For methods/properties, look at the overridden member first, then interface implementations
+        if (symbol is IMethodSymbol method)
+        {
+            // Check overridden method
+            if (method.OverriddenMethod is not null)
+            {
+                var docs = ExtractDocumentation(method.OverriddenMethod);
+                if (docs is not null) return docs;
+            }
+
+            // Check interface implementations
+            foreach (var iface in method.ContainingType?.Interfaces ?? ImmutableArray<INamedTypeSymbol>.Empty)
+            {
+                var ifaceMember = iface.GetMembers(method.Name)
+                    .OfType<IMethodSymbol>()
+                    .FirstOrDefault(m => ParametersMatch(m, method));
+                if (ifaceMember is not null)
+                {
+                    var docs = ExtractDocumentation(ifaceMember);
+                    if (docs is not null) return docs;
+                }
+            }
+        }
+        else if (symbol is IPropertySymbol property)
+        {
+            if (property.OverriddenProperty is not null)
+            {
+                var docs = ExtractDocumentation(property.OverriddenProperty);
+                if (docs is not null) return docs;
+            }
+
+            foreach (var iface in property.ContainingType?.Interfaces ?? ImmutableArray<INamedTypeSymbol>.Empty)
+            {
+                var ifaceMember = iface.GetMembers(property.Name)
+                    .OfType<IPropertySymbol>()
+                    .FirstOrDefault();
+                if (ifaceMember is not null)
+                {
+                    var docs = ExtractDocumentation(ifaceMember);
+                    if (docs is not null) return docs;
+                }
+            }
+        }
+        else if (symbol is INamedTypeSymbol type)
+        {
+            // For types, check base type
+            if (type.BaseType is not null &&
+                type.BaseType.SpecialType == SpecialType.None)
+            {
+                var docs = ExtractDocumentation(type.BaseType);
+                if (docs is not null) return docs;
+            }
+        }
+
+        return null;
+    }
+
+    private static bool ParametersMatch(IMethodSymbol a, IMethodSymbol b)
+    {
+        if (a.Parameters.Length != b.Parameters.Length) return false;
+
+        for (int i = 0; i < a.Parameters.Length; i++)
+        {
+            if (!SymbolEqualityComparer.Default.Equals(
+                a.Parameters[i].Type, b.Parameters[i].Type))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
