@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/SampleApi/SampleApi.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ApiContracts.Abstractions/ApiContracts.Abstractions.csproj" />
+    <Project Path="src/ApiContracts.Generator/ApiContracts.Generator.csproj" />
+    <Project Path="src/ApiContracts.Verification/ApiContracts.Verification.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ApiContracts.Generator.Tests/ApiContracts.Generator.Tests.csproj" />
+  </Folder>
+</Solution>

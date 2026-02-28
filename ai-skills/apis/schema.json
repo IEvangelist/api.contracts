@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0.0",
+  "generator": "ApiContracts.Generator",
+  "languages": {
+    "default": "csharp",
+    "available": [
+      {
+        "id": "csharp",
+        "displayName": "C#",
+        "extension": ".cs",
+        "syntaxAlias": "csharp"
+      },
+      {
+        "id": "typescript",
+        "displayName": "TypeScript",
+        "extension": ".ts",
+        "syntaxAlias": "typescript"
+      },
+      {
+        "id": "python",
+        "displayName": "Python",
+        "extension": ".py",
+        "syntaxAlias": "python"
+      },
+      {
+        "id": "java",
+        "displayName": "Java",
+        "extension": ".java",
+        "syntaxAlias": "java"
+      },
+      {
+        "id": "go",
+        "displayName": "Go",
+        "extension": ".go",
+        "syntaxAlias": "go"
+      },
+      {
+        "id": "rust",
+        "displayName": "Rust",
+        "extension": ".rs",
+        "syntaxAlias": "rust"
+      }
+    ]
+  },
+  "documentation": {
+    "templates": {
+      "namespaceIndex": "NamespaceIndex.mdx",
+      "type": "TypePage.mdx",
+      "member": "MemberPage.mdx",
+      "enum": "EnumPage.mdx",
+      "jsonContract": "JsonContractPage.mdx",
+      "examples": "ExamplesPage.mdx",
+      "searchIndex": "SearchIndex.json"
+    },
+    "placeholders": {
+      "typeName": "{type.ai.name}",
+      "typeFullName": "{type.fullName}",
+      "typeNamespace": "{type.namespace}",
+      "typeKind": "{type.kind}",
+      "typeSummary": "{type.docs.summary}",
+      "typeCategory": "{type.ai.category}",
+      "typeRole": "{type.ai.role}",
+      "memberName": "{member.name}",
+      "memberSignature": "{member.signature}",
+      "memberSummary": "{member.docs.summary}",
+      "memberReturnType": "{member.returnType}",
+      "packageName": "{package.name}",
+      "packageVersion": "{package.version}",
+      "apiHash": "{apiHash}",
+      "schemaVersion": "{schemaVersion}"
+    }
+  }
+}

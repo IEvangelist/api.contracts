@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>ApiContracts.Verification</PackageId>
+    <Description>Verification SDK for validating API schema signatures and computing canonical hashes.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ApiContracts.Abstractions\ApiContracts.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
