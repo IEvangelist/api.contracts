@@ -267,8 +267,8 @@ internal sealed class CanonicalModelBuilder
     {
         var attr = symbol.GetAttributes()
             .FirstOrDefault(a =>
-                a.AttributeClass?.Name == "AIContractAttribute" ||
-                a.AttributeClass?.ToDisplayString() == "ApiContracts.AIContractAttribute");
+                a.AttributeClass?.Name == "ApiContractAttribute" ||
+                a.AttributeClass?.ToDisplayString() == "ApiContracts.ApiContractAttribute");
 
         if (attr is null)
         {
@@ -541,15 +541,15 @@ internal sealed class CanonicalModelBuilder
         "JsonPolymorphicAttribute" or
         "JsonNumberHandlingAttribute" or
         "JsonRequiredAttribute" or
-        "AIContractAttribute";
+        "ApiContractAttribute";
 
     private static bool ShouldExclude(ISymbol symbol)
     {
         return symbol.GetAttributes()
             .Any(a =>
             {
-                if (a.AttributeClass?.Name != "AIContractAttribute" &&
-                    a.AttributeClass?.ToDisplayString() != "ApiContracts.AIContractAttribute")
+                if (a.AttributeClass?.Name != "ApiContractAttribute" &&
+                    a.AttributeClass?.ToDisplayString() != "ApiContracts.ApiContractAttribute")
                 {
                     return false;
                 }

@@ -11,7 +11,7 @@ The `apiHash` provides a deterministic fingerprint of the API surface.
 - Parameter names, types, nullability
 - Shape-affecting attributes (`[Obsolete]`, `[Flags]`, `[JsonDerivedType]`)
 - JSON serialization metadata
-- `AIContractAttribute` metadata
+- `ApiContractAttribute` metadata
 - XML documentation text (summary, remarks, params, returns)
 
 ## Excluded from Hash

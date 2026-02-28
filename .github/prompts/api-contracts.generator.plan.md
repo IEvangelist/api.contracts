@@ -17,7 +17,7 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 - Normalize XML docs (summary, remarks, params, returns, examples, inline code, inheritdoc).  
 - Extract and normalize code samples with `language` and `region`.  
 - Model System.Text.Json behavior (jsonName, ignored, nullable, required, contractType).  
-- Apply `AIContractAttribute` overrides (name, description, category, role, tags, exclude).  
+- Apply `ApiContractAttribute` overrides (name, description, category, role, tags, exclude).  
 - Build a canonical API model and compute a deterministic `apiHash`.  
 - Optionally sign the emitted schema with a private key and embed signature metadata.  
 - Emit root schema once and one assembly schema per assembly.
@@ -25,7 +25,7 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 ---
 
 **Canonical hashing rules**
-- **Include**: public types, public members, signatures (param names/types/nullability), attributes that affect shape, JSON serialization metadata, AIContractAttribute metadata, XML docs *excluding* code sample content.  
+- **Include**: public types, public members, signatures (param names/types/nullability), attributes that affect shape, JSON serialization metadata, ApiContractAttribute metadata, XML docs *excluding* code sample content.  
 - **Exclude**: file paths, timestamps, build metadata, code sample content, ordering differences, whitespace.  
 - **Process**: build canonical model → sort (namespace → type → member) → serialize to UTF‑8 JSON with sorted properties and no whitespace → SHA‑256 → `apiHash: "sha256:<hex>"`.
 
@@ -44,7 +44,7 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 
 **Configuration surface**
 - MSBuild props: `AISchemaEmitStandard`, `AISchemaEmitVendor`, `AISchemaVendorFolder`, `AISchemaSign`, `AISchemaSigningPrivateKey`, `AISchemaIncludeInternals`.  
-- Assembly attribute: `AIContractConfig(OutputFolder = "...", EmitStandard = true, Sign = true, SigningKeyId = "...")`.
+- Assembly attribute: `ApiContractConfig(OutputFolder = "...", EmitStandard = true, Sign = true, SigningKeyId = "...")`.
 
 ---
 

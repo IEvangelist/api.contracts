@@ -16,7 +16,7 @@ description: Learn about API Contracts — deterministic, signed, versioned JSON
 ## How It Works
 
 1. Add the `ApiContracts.Generator` source generator to your project.
-2. Optionally annotate types with `[AIContract]` for enhanced AI metadata.
+2. Optionally annotate types with `[ApiContract]` for enhanced AI metadata.
 3. Build your project — the generator emits JSON schemas automatically.
 4. Consume the schemas in documentation sites, AI agents, or tooling.
 

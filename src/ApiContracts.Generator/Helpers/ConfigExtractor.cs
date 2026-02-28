@@ -6,12 +6,12 @@ using Microsoft.CodeAnalysis;
 namespace ApiContracts.Generator.Helpers;
 
 /// <summary>
-/// Extracts configuration from assembly-level <c>AIContractConfigAttribute</c>.
+/// Extracts configuration from assembly-level <c>ApiContractConfigAttribute</c>.
 /// </summary>
 internal static class ConfigExtractor
 {
-    private const string ConfigAttributeName = "AIContractConfigAttribute";
-    private const string ConfigAttributeFullName = "ApiContracts.AIContractConfigAttribute";
+    private const string ConfigAttributeName = "ApiContractConfigAttribute";
+    private const string ConfigAttributeFullName = "ApiContracts.ApiContractConfigAttribute";
 
     public static AssemblyConfig ExtractConfig(IAssemblySymbol assembly)
     {

@@ -13,7 +13,7 @@ namespace ApiContracts;
     AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Event,
     AllowMultiple = false,
     Inherited = true)]
-public sealed class AIContractAttribute : Attribute
+public sealed class ApiContractAttribute : Attribute
 {
     /// <summary>
     /// Overrides the display name in the schema.

@@ -19,7 +19,7 @@ description: Get up and running with API Contracts in under 5 minutes.
 ```csharp
 using ApiContracts;
 
-[AIContract(
+[ApiContract(
     Name = "Customer",
     Description = "A customer entity with contact info.",
     Category = "Domain",

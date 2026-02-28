@@ -4,7 +4,7 @@
 namespace ApiContracts.Models;
 
 /// <summary>
-/// AI metadata from <see cref="AIContractAttribute"/> overrides.
+/// AI metadata from <see cref="ApiContractAttribute"/> overrides.
 /// </summary>
 public sealed class AIMetadata
 {

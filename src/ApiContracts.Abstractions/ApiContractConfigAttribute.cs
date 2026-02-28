@@ -7,7 +7,7 @@ namespace ApiContracts;
 /// Assembly-level attribute that configures schema generation behavior.
 /// </summary>
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
-public sealed class AIContractConfigAttribute : Attribute
+public sealed class ApiContractConfigAttribute : Attribute
 {
     /// <summary>
     /// Output folder for generated schemas, relative to the project directory.

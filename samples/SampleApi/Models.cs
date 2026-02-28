@@ -12,7 +12,7 @@ namespace SampleApi;
 /// This is a sample domain model demonstrating the API Contracts generator.
 /// It shows how types, properties, and methods are captured in the schema.
 /// </remarks>
-[AIContract(
+[ApiContract(
     Name = "Customer",
     Description = "A customer entity with contact information and order history.",
     Category = "Domain",
@@ -77,7 +77,7 @@ public enum ContactMethod
 /// <summary>
 /// Represents an order placed by a customer.
 /// </summary>
-[AIContract(
+[ApiContract(
     Name = "Order",
     Description = "An order with line items and total calculation.",
     Category = "Domain",

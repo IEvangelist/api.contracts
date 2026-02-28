@@ -18,7 +18,7 @@ Each schema includes a deterministic `apiHash` (SHA-256 of the canonical API mod
 
 | Project | Description |
 |---|---|
-| `ApiContracts.Abstractions` | Attributes (`AIContractAttribute`, `AIContractConfigAttribute`) and canonical models |
+| `ApiContracts.Abstractions` | Attributes (`ApiContractAttribute`, `ApiContractConfigAttribute`) and canonical models |
 | `ApiContracts.Generator` | Roslyn incremental source generator |
 | `ApiContracts.Verification` | SDK for hash computation and RSA-SHA256 signature verification |
 | `SampleApi` | Example project demonstrating generator usage |
@@ -39,7 +39,7 @@ Each schema includes a deterministic `apiHash` (SHA-256 of the canonical API mod
 ```csharp
 using ApiContracts;
 
-[AIContract(
+[ApiContract(
     Name = "Customer",
     Description = "A customer entity.",
     Category = "Domain",
@@ -73,7 +73,7 @@ The generator emits schema code during compilation. The schema captures all publ
 ### Assembly Attribute
 
 ```csharp
-[assembly: AIContractConfig(
+[assembly: ApiContractConfig(
     OutputFolder = "ai-skills/apis",
     EmitStandard = true,
     Sign = true,

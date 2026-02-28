@@ -28,16 +28,16 @@ API Contracts supports configuration through MSBuild properties and assembly-lev
 ## Assembly Attribute
 
 ```csharp
-[assembly: AIContractConfig(
+[assembly: ApiContractConfig(
     OutputFolder = "ai-skills/apis",
     EmitStandard = true,
     Sign = true,
     SigningKeyId = "pine-2026")]
 ```
 
-## AIContractAttribute
+## ApiContractAttribute
 
-Apply `[AIContract]` to types, methods, properties, or parameters:
+Apply `[ApiContract]` to types, methods, properties, or parameters:
 
 | Property | Type | Description |
 |---|---|---|

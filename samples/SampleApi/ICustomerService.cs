@@ -11,7 +11,7 @@ namespace SampleApi;
 /// <remarks>
 /// Provides CRUD operations and search capabilities for customer entities.
 /// </remarks>
-[AIContract(
+[ApiContract(
     Name = "CustomerService",
     Description = "Service for creating, reading, updating, and searching customers.",
     Category = "Services",

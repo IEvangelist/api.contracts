@@ -11,7 +11,7 @@ public class ConfigExtractorTests
     [Fact]
     public void ExtractConfig_NoAttribute_ReturnsDefaults()
     {
-        // When there's no AIContractConfigAttribute, defaults should be used
+        // When there's no ApiContractConfigAttribute, defaults should be used
         var config = new AssemblyConfig();
 
         Assert.Equal("ai-skills/apis", config.OutputFolder);
