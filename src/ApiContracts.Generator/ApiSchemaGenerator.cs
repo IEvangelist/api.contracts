@@ -20,20 +20,54 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // Collect all named type symbols from the compilation
-        var typeSymbols = context.CompilationProvider.Select(
-            static (compilation, ct) =>
+        // Read MSBuild properties via AnalyzerConfig
+        var msbuildConfig = context.AnalyzerConfigOptionsProvider.Select(
+            static (provider, ct) =>
             {
+                var config = new AssemblyConfig();
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaEmitStandard", out var emitStd))
+                    config.EmitStandard = string.Equals(emitStd, "true", StringComparison.OrdinalIgnoreCase);
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaEmitVendor", out var emitVendor))
+                    config.EmitVendor = string.Equals(emitVendor, "true", StringComparison.OrdinalIgnoreCase);
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaVendorFolder", out var vendorFolder) &&
+                    !string.IsNullOrEmpty(vendorFolder))
+                    config.VendorFolder = vendorFolder;
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaSign", out var sign))
+                    config.Sign = string.Equals(sign, "true", StringComparison.OrdinalIgnoreCase);
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaSigningPrivateKey", out var signingKey) &&
+                    !string.IsNullOrEmpty(signingKey))
+                    config.SigningKeyId = signingKey;
+
+                if (provider.GlobalOptions.TryGetValue("build_property.AISchemaIncludeInternals", out var includeInternals))
+                    config.IncludeInternals = string.Equals(includeInternals, "true", StringComparison.OrdinalIgnoreCase);
+
+                return config;
+            });
+
+        // Collect all named type symbols from the compilation
+        var compilationWithConfig = context.CompilationProvider.Combine(msbuildConfig);
+
+        var typeSymbols = compilationWithConfig.Select(
+            static (pair, ct) =>
+            {
+                var (compilation, config) = pair;
                 var types = new List<INamedTypeSymbol>();
-                CollectTypes(compilation.GlobalNamespace, types, compilation, ct);
+                CollectTypes(compilation.GlobalNamespace, types, compilation, config.IncludeInternals, ct);
                 return types.ToImmutableArray();
             });
 
-        // Collect assembly-level config
-        var assemblyConfig = context.CompilationProvider.Select(
-            static (compilation, ct) =>
+        // Collect assembly-level config (merges with MSBuild config)
+        var assemblyConfig = compilationWithConfig.Select(
+            static (pair, ct) =>
             {
-                return ConfigExtractor.ExtractConfig(compilation.Assembly);
+                var (compilation, msbuildConfig) = pair;
+                var attrConfig = ConfigExtractor.ExtractConfig(compilation.Assembly);
+                return MergeConfig(attrConfig, msbuildConfig);
             });
 
         // Combine and generate
@@ -45,6 +79,22 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
             var ((types, config), compilation) = data;
             Execute(spc, compilation, types, config);
         });
+    }
+
+    private static AssemblyConfig MergeConfig(AssemblyConfig attrConfig, AssemblyConfig msbuildConfig)
+    {
+        // Attribute config takes precedence where explicitly set;
+        // MSBuild config provides defaults
+        return new AssemblyConfig
+        {
+            OutputFolder = attrConfig.OutputFolder,
+            EmitStandard = attrConfig.EmitStandard || msbuildConfig.EmitStandard,
+            EmitVendor = attrConfig.EmitVendor || msbuildConfig.EmitVendor,
+            VendorFolder = attrConfig.VendorFolder ?? msbuildConfig.VendorFolder,
+            Sign = attrConfig.Sign || msbuildConfig.Sign,
+            SigningKeyId = attrConfig.SigningKeyId ?? msbuildConfig.SigningKeyId,
+            IncludeInternals = attrConfig.IncludeInternals || msbuildConfig.IncludeInternals,
+        };
     }
 
     private static void Execute(
@@ -131,14 +181,17 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
         INamespaceSymbol ns,
         List<INamedTypeSymbol> types,
         Compilation compilation,
+        bool includeInternals,
         System.Threading.CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         foreach (var type in ns.GetTypeMembers())
         {
-            if (type.DeclaredAccessibility == Accessibility.Public &&
-                !IsCompilerGenerated(type))
+            var isAccessible = type.DeclaredAccessibility == Accessibility.Public ||
+                (includeInternals && type.DeclaredAccessibility == Accessibility.Internal);
+
+            if (isAccessible && !IsCompilerGenerated(type))
             {
                 types.Add(type);
             }
@@ -148,7 +201,7 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
         {
             if (SymbolEqualityComparer.Default.Equals(childNs.ContainingAssembly, compilation.Assembly))
             {
-                CollectTypes(childNs, types, compilation, ct);
+                CollectTypes(childNs, types, compilation, includeInternals, ct);
             }
         }
     }

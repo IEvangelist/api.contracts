@@ -1,0 +1,427 @@
+{
+  "schemaVersion": "1.0.0",
+  "rootSchema": "../../schema.json",
+  "package": {
+    "name": "SampleApi",
+    "version": "0.0.0.0",
+    "targetFramework": "net10.0"
+  },
+  "types": [
+    {
+      "name": "ContactMethod",
+      "fullName": "SampleApi.ContactMethod",
+      "namespace": "SampleApi",
+      "kind": "enum",
+      "accessibility": "public",
+      "enumMembers": [
+        {"name": "Email", "value": 0, "description": "Contact via email."},
+        {"name": "Phone", "value": 1, "description": "Contact via phone."},
+        {"name": "Sms", "value": 2, "description": "Contact via SMS."},
+        {"name": "Mail", "value": 3, "description": "Contact via postal mail."}
+      ],
+      "docs": {
+        "summary": "Available contact methods for a customer."
+      },
+      "members": []
+    },
+    {
+      "name": "Customer",
+      "fullName": "SampleApi.Customer",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "ai": {
+        "name": "Customer",
+        "description": "A customer entity with contact information and order history.",
+        "category": "Domain",
+        "role": "entity",
+        "tags": ["customer", "crm", "domain"]
+      },
+      "docs": {
+        "summary": "Represents a customer in the system.",
+        "remarks": "This is a sample domain model demonstrating the API Contracts generator. It shows how types, properties, and methods are captured in the schema."
+      },
+      "json": {
+        "contractType": "object",
+        "useCamelCase": true,
+        "properties": [
+          {"clrName": "Id", "jsonName": "id", "jsonType": "string", "clrType": "System.Guid", "required": true},
+          {"clrName": "FullName", "jsonName": "fullName", "jsonType": "string", "clrType": "string", "required": true},
+          {"clrName": "Email", "jsonName": "email", "jsonType": "string", "clrType": "string?", "nullable": true},
+          {"clrName": "CreatedAt", "jsonName": "createdAt", "jsonType": "string", "clrType": "System.DateTimeOffset"},
+          {"clrName": "IsActive", "jsonName": "isActive", "jsonType": "boolean", "clrType": "bool"},
+          {"clrName": "Tags", "jsonName": "tags", "jsonType": "array", "clrType": "System.Collections.Generic.List<string>"},
+          {"clrName": "PreferredContact", "jsonName": "preferredContact", "jsonType": "string", "clrType": "SampleApi.ContactMethod"}
+        ]
+      },
+      "members": [
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Customer.Id { get; set; }",
+          "returnType": "System.Guid",
+          "json": {
+            "clrName": "Id",
+            "jsonName": "id",
+            "jsonType": "string",
+            "clrType": "System.Guid",
+            "required": true
+          },
+          "docs": {
+            "summary": "Gets or sets the unique identifier."
+          },
+          "_": true
+        },
+        {
+          "name": "FullName",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Customer.FullName { get; set; }",
+          "returnType": "string",
+          "json": {
+            "clrName": "FullName",
+            "jsonName": "fullName",
+            "jsonType": "string",
+            "clrType": "string",
+            "required": true
+          },
+          "docs": {
+            "summary": "Gets or sets the customer's full name."
+          },
+          "_": true
+        },
+        {
+          "name": "Email",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? Customer.Email { get; set; }",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "json": {
+            "clrName": "Email",
+            "jsonName": "email",
+            "jsonType": "string",
+            "clrType": "string?",
+            "nullable": true
+          },
+          "docs": {
+            "summary": "Gets or sets the email address."
+          },
+          "_": true
+        },
+        {
+          "name": "CreatedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset Customer.CreatedAt { get; set; }",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the date when the customer was created."
+          },
+          "_": true
+        },
+        {
+          "name": "IsActive",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool Customer.IsActive { get; set; }",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets or sets whether the customer is active."
+          },
+          "_": true
+        },
+        {
+          "name": "Tags",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "List<string> Customer.Tags { get; set; }",
+          "returnType": "System.Collections.Generic.List<string>",
+          "docs": {
+            "summary": "Gets or sets the customer's tags for segmentation."
+          },
+          "_": true
+        },
+        {
+          "name": "PreferredContact",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "ContactMethod Customer.PreferredContact { get; set; }",
+          "returnType": "SampleApi.ContactMethod",
+          "docs": {
+            "summary": "Gets or sets the customer's preferred contact method."
+          },
+          "_": true
+        }
+      ]
+    },
+    {
+      "name": "ICustomerService",
+      "fullName": "SampleApi.ICustomerService",
+      "namespace": "SampleApi",
+      "kind": "interface",
+      "accessibility": "public",
+      "ai": {
+        "name": "CustomerService",
+        "description": "Service for creating, reading, updating, and searching customers.",
+        "category": "Services",
+        "role": "service",
+        "tags": ["customer", "crud", "service"]
+      },
+      "docs": {
+        "summary": "Service for managing customers.",
+        "remarks": "Provides CRUD operations and search capabilities for customer entities."
+      },
+      "members": [
+        {
+          "name": "CreateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer> ICustomerService.CreateAsync(Customer customer)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
+          "parameters": [
+            {"name": "customer", "type": "SampleApi.Customer"}
+          ],
+          "docs": {
+            "summary": "Creates a new customer.",
+            "returns": "The created customer with assigned identifier.",
+            "parameters": {
+              "customer": "The customer to create."
+            }
+          },
+          "_": true
+        },
+        {
+          "name": "GetByIdAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer?> ICustomerService.GetByIdAsync(Guid id)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer?>",
+          "isReturnNullable": true,
+          "parameters": [
+            {"name": "id", "type": "System.Guid"}
+          ],
+          "docs": {
+            "summary": "Retrieves a customer by identifier.",
+            "returns": "The customer if found; otherwise, null.",
+            "parameters": {
+              "id": "The customer identifier."
+            }
+          },
+          "_": true
+        },
+        {
+          "name": "SearchAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<IReadOnlyList<Customer>> ICustomerService.SearchAsync(string query, int skip, int take)",
+          "returnType": "System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SampleApi.Customer>>",
+          "parameters": [
+            {"name": "query", "type": "string"},
+            {"name": "skip", "type": "int", "isOptional": true, "defaultValue": "0"},
+            {"name": "take", "type": "int", "isOptional": true, "defaultValue": "25"}
+          ],
+          "docs": {
+            "summary": "Searches for customers matching the given criteria.",
+            "returns": "A list of matching customers.",
+            "parameters": {
+              "query": "The search query string.",
+              "skip": "Number of results to skip for pagination.",
+              "take": "Number of results to return."
+            }
+          },
+          "_": true
+        },
+        {
+          "name": "UpdateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer> ICustomerService.UpdateAsync(Customer customer)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
+          "parameters": [
+            {"name": "customer", "type": "SampleApi.Customer"}
+          ],
+          "docs": {
+            "summary": "Updates an existing customer.",
+            "returns": "The updated customer.",
+            "parameters": {
+              "customer": "The customer with updated values."
+            }
+          },
+          "_": true
+        },
+        {
+          "name": "DeactivateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<bool> ICustomerService.DeactivateAsync(Guid id)",
+          "returnType": "System.Threading.Tasks.Task<bool>",
+          "parameters": [
+            {"name": "id", "type": "System.Guid"}
+          ],
+          "docs": {
+            "summary": "Deactivates a customer by identifier.",
+            "returns": "true if the customer was deactivated.",
+            "parameters": {
+              "id": "The customer identifier."
+            }
+          },
+          "_": true
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "fullName": "SampleApi.Order",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "ai": {
+        "name": "Order",
+        "description": "An order with line items and total calculation.",
+        "category": "Domain",
+        "role": "entity",
+        "tags": ["order", "commerce"]
+      },
+      "docs": {
+        "summary": "Represents an order placed by a customer."
+      },
+      "json": {
+        "contractType": "object",
+        "useCamelCase": true,
+        "properties": [
+          {"clrName": "Id", "jsonName": "id", "jsonType": "string", "clrType": "System.Guid", "required": true},
+          {"clrName": "CustomerId", "jsonName": "customerId", "jsonType": "string", "clrType": "System.Guid", "required": true},
+          {"clrName": "OrderDate", "jsonName": "orderDate", "jsonType": "string", "clrType": "System.DateTimeOffset"},
+          {"clrName": "Items", "jsonName": "items", "jsonType": "array", "clrType": "System.Collections.Generic.List<SampleApi.OrderItem>"},
+          {"clrName": "TotalPrice", "jsonName": "totalPrice", "jsonType": "number", "clrType": "decimal"},
+          {"clrName": "Status", "jsonName": "status", "jsonType": "string", "clrType": "SampleApi.OrderStatus"}
+        ]
+      },
+      "members": [
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Order.Id { get; set; }",
+          "returnType": "System.Guid",
+          "docs": {"summary": "Gets or sets the order identifier."},
+          "_": true
+        },
+        {
+          "name": "CustomerId",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Order.CustomerId { get; set; }",
+          "returnType": "System.Guid",
+          "docs": {"summary": "Gets or sets the customer who placed this order."},
+          "_": true
+        },
+        {
+          "name": "OrderDate",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset Order.OrderDate { get; set; }",
+          "returnType": "System.DateTimeOffset",
+          "docs": {"summary": "Gets or sets the order date."},
+          "_": true
+        },
+        {
+          "name": "Items",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "List<OrderItem> Order.Items { get; set; }",
+          "returnType": "System.Collections.Generic.List<SampleApi.OrderItem>",
+          "docs": {"summary": "Gets or sets the line items in the order."},
+          "_": true
+        },
+        {
+          "name": "TotalPrice",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal Order.TotalPrice { get; }",
+          "returnType": "decimal",
+          "docs": {"summary": "Gets the total price of the order."},
+          "_": true
+        },
+        {
+          "name": "Status",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "OrderStatus Order.Status { get; set; }",
+          "returnType": "SampleApi.OrderStatus",
+          "docs": {"summary": "Gets or sets the order status."},
+          "_": true
+        }
+      ]
+    },
+    {
+      "name": "OrderItem",
+      "fullName": "SampleApi.OrderItem",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Represents a single item within an order."
+      },
+      "json": {
+        "contractType": "object",
+        "useCamelCase": true,
+        "properties": [
+          {"clrName": "ProductName", "jsonName": "productName", "jsonType": "string", "clrType": "string", "required": true},
+          {"clrName": "Quantity", "jsonName": "quantity", "jsonType": "number", "clrType": "int"},
+          {"clrName": "UnitPrice", "jsonName": "unitPrice", "jsonType": "number", "clrType": "decimal"}
+        ]
+      },
+      "members": [
+        {
+          "name": "ProductName",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string OrderItem.ProductName { get; set; }",
+          "returnType": "string",
+          "docs": {"summary": "Gets or sets the product name."},
+          "_": true
+        },
+        {
+          "name": "Quantity",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int OrderItem.Quantity { get; set; }",
+          "returnType": "int",
+          "docs": {"summary": "Gets or sets the quantity ordered."},
+          "_": true
+        },
+        {
+          "name": "UnitPrice",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal OrderItem.UnitPrice { get; set; }",
+          "returnType": "decimal",
+          "docs": {"summary": "Gets or sets the unit price."},
+          "_": true
+        }
+      ]
+    },
+    {
+      "name": "OrderStatus",
+      "fullName": "SampleApi.OrderStatus",
+      "namespace": "SampleApi",
+      "kind": "enum",
+      "accessibility": "public",
+      "docs": {
+        "summary": "The status of an order."
+      },
+      "enumMembers": [
+        {"name": "Pending", "value": 0, "description": "Order is pending processing."},
+        {"name": "Confirmed", "value": 1, "description": "Order has been confirmed."},
+        {"name": "Shipped", "value": 2, "description": "Order has been shipped."},
+        {"name": "Delivered", "value": 3, "description": "Order has been delivered."},
+        {"name": "Cancelled", "value": 4, "description": "Order has been cancelled."}
+      ],
+      "members": []
+    }
+  ],
+  "apiHash": "sha256:sample-placeholder-hash"
+}
