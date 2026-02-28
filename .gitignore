@@ -39,3 +39,8 @@ TestResults/
 ## OS files
 .DS_Store
 Thumbs.db
+
+## Docs
+docs/node_modules/
+docs/dist/
+docs/.astro/
