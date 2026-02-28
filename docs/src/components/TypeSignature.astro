@@ -1,0 +1,84 @@
+---
+/**
+ * TypeSignature component - Renders a type's signature with generics, constraints, and inheritance.
+ *
+ * @prop {object} type - A type object from the assembly schema
+ */
+const { type } = Astro.props;
+
+const kindBadge = {
+  class: '🏗️ Class',
+  struct: '📦 Struct',
+  interface: '🔌 Interface',
+  enum: '🔢 Enum',
+  delegate: '🔗 Delegate',
+  record: '📋 Record',
+}[type.kind] ?? type.kind;
+
+const modifiers = [
+  type.accessibility,
+  type.isStatic ? 'static' : null,
+  type.isAbstract ? 'abstract' : null,
+  type.isSealed ? 'sealed' : null,
+].filter(Boolean).join(' ');
+
+let signature = `${modifiers} ${type.kind} ${type.name}`;
+
+if (type.isGeneric && type.genericParameters) {
+  signature += `<${type.genericParameters.map((g: any) => g.name).join(', ')}>`;
+}
+
+if (type.baseType || type.interfaces?.length) {
+  const bases = [type.baseType, ...(type.interfaces ?? [])].filter(Boolean);
+  signature += ` : ${bases.join(', ')}`;
+}
+---
+
+<div class="type-signature">
+  <span class="kind-badge">{kindBadge}</span>
+  <pre><code class="language-csharp">{signature}</code></pre>
+  {type.genericParameters?.length > 0 && (
+    <div class="constraints">
+      <strong>Type Parameters:</strong>
+      <ul>
+        {type.genericParameters.map((gp: any) => (
+          <li>
+            <code>{gp.name}</code>
+            {gp.constraints?.length > 0 && (
+              <span> — where {gp.name} : {gp.constraints.join(', ')}</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+
+<style>
+  .type-signature {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--sl-color-gray-7);
+  }
+  .kind-badge {
+    font-size: 0.875rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+  .type-signature pre {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+  .constraints {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .constraints ul {
+    margin: 0.25rem 0;
+    padding-left: 1.5rem;
+  }
+</style>

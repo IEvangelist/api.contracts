@@ -1,0 +1,113 @@
+---
+/**
+ * JsonContract component - Displays JSON serialization contract details for a type.
+ *
+ * @prop {object} json - A JSON contract object from the assembly schema
+ * @prop {string} typeName - The type name for display
+ */
+const { json, typeName = 'Type' } = Astro.props;
+
+if (!json) return;
+
+const properties = json.properties ?? [];
+---
+
+<div class="json-contract">
+  <h3>JSON Contract — {typeName}</h3>
+  <div class="contract-meta">
+    <span><strong>Contract type:</strong> {json.contractType}</span>
+    <span><strong>Naming:</strong> {json.useCamelCase ? 'camelCase' : 'PascalCase'}</span>
+  </div>
+
+  {properties.length > 0 && (
+    <table>
+      <thead>
+        <tr>
+          <th>JSON Name</th>
+          <th>CLR Name</th>
+          <th>Type</th>
+          <th>Flags</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {properties.map((p: any) => (
+          <tr class={p.ignored ? 'ignored' : ''}>
+            <td><code>{p.jsonName}</code></td>
+            <td><code>{p.clrName}</code></td>
+            <td>
+              <code>{p.jsonType}</code>
+              <span class="clr-type">({p.clrType})</span>
+            </td>
+            <td>
+              {p.required && <span class="flag required">required</span>}
+              {p.nullable && <span class="flag nullable">nullable</span>}
+              {p.ignored && <span class="flag ignored-flag">ignored</span>}
+            </td>
+            <td>{p.description ?? '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</div>
+
+<style>
+  .json-contract {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  .json-contract h3 {
+    margin-top: 0;
+    font-size: 1rem;
+  }
+  .contract-meta {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-2);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+  }
+  th {
+    font-weight: 600;
+    color: var(--sl-color-gray-2);
+  }
+  .clr-type {
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+    margin-left: 0.25rem;
+  }
+  .flag {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    margin-right: 0.25rem;
+  }
+  .required {
+    background: #dc2626;
+    color: white;
+  }
+  .nullable {
+    background: #ca8a04;
+    color: white;
+  }
+  .ignored-flag {
+    background: var(--sl-color-gray-4);
+    color: var(--sl-color-gray-1);
+  }
+  tr.ignored {
+    opacity: 0.5;
+  }
+</style>

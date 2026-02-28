@@ -187,6 +187,36 @@ export interface Customer {
 }
 ```
 
+### Example 4: Error recovery — fill missing required fields
+
+**User intent**: "Submit this customer: `{ "fullName": "Bob" }`"
+
+**Agent plan**:
+1. Find `Customer` type and read `json.properties[]`.
+2. Validate payload against required fields.
+3. Detect missing `id` (required, type `Guid`).
+4. Generate a default value: `Guid.NewGuid()`.
+5. Re-validate: all required fields present.
+6. Submit corrected payload.
+
+**Remediation steps**:
+- **Missing required field**: Auto-generate a default value if the type is deterministic (`Guid` → new GUID, `DateTime` → `DateTime.UtcNow`). Otherwise, prompt the user.
+- **Type mismatch**: Attempt coercion only for safe conversions (`"42"` → `42` for numeric fields). Reject unsafe coercions.
+- **Unknown enum value**: List valid values from `enumMembers[].name` and ask the user to choose.
+- **Null in non-nullable field**: Replace with a sensible default or ask the user.
+- **Retry logic**: After each correction, re-validate the full payload before proceeding. Maximum 3 retry attempts.
+
+**Corrected result**:
+```json
+{
+  "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+  "fullName": "Bob",
+  "isActive": true,
+  "tags": [],
+  "preferredContact": "Email"
+}
+```
+
 ## Telemetry & Auditing
 
 When acting on schema data, log the following for traceability:

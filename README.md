@@ -1,6 +1,7 @@
 # API Contracts
 
 [![CI](https://github.com/IEvangelist/api.contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/IEvangelist/api.contracts/actions/workflows/ci.yml)
+[![Docs](https://github.com/IEvangelist/api.contracts/actions/workflows/deploy-docs.yml/badge.svg)](https://ievangelist.github.io/api.contracts/)
 
 Deterministic, signed, versioned JSON schemas that describe a .NET assembly's public API surface — built for AI, tooling, and documentation.
 
@@ -8,7 +9,7 @@ Deterministic, signed, versioned JSON schemas that describe a .NET assembly's pu
 
 **API Contracts** is a Roslyn incremental source generator that walks public symbols in a .NET compilation and emits:
 
-- **Root schema** (`ai-skills/apis/schema.json`) — language definitions, documentation templates, and placeholders.
+- **Root schema** (`ai-skills/apis/schema.json`) — language definitions, polyglot type mappings, documentation templates, and placeholders.
 - **Assembly schemas** (`ai-skills/apis/reference/<AssemblyName>.ai-schema.json`) — data-only snapshots of every public type, member, JSON contract, XML doc, and AI metadata.
 - **Optional signed variants** with RSA-SHA256 signature envelopes.
 
@@ -80,6 +81,41 @@ The generator emits schema code during compilation. The schema captures all publ
     SigningKeyId = "my-key-2026")]
 ```
 
+### Enabling Signing
+
+To sign your schemas with RSA-SHA256:
+
+1. Generate an RSA key pair:
+
+   ```bash
+   openssl genrsa -out private.pem 2048
+   openssl rsa -in private.pem -pubout -out public.pem
+   ```
+
+2. Configure your project:
+
+   ```xml
+   <PropertyGroup>
+     <AISchemaSign>true</AISchemaSign>
+     <AISchemaSigningPrivateKey>path/to/private.pem</AISchemaSigningPrivateKey>
+   </PropertyGroup>
+   ```
+
+3. The emitted schema will include a `signature` envelope that consumers can verify with the public key.
+
+### Vendor Mirrors
+
+To emit vendor-specific copies of your schema:
+
+```xml
+<PropertyGroup>
+  <AISchemaEmitVendor>true</AISchemaEmitVendor>
+  <AISchemaVendorFolder>my-vendor</AISchemaVendorFolder>
+</PropertyGroup>
+```
+
+This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.ai-schema.json`.
+
 ## Schema Format
 
 ### Assembly Schema
@@ -94,7 +130,13 @@ The generator emits schema code during compilation. The schema captures all publ
     "targetFramework": "net10.0"
   },
   "types": [ ... ],
-  "apiHash": "sha256:<hex>"
+  "apiHash": "sha256:<hex>",
+  "signature": {
+    "algorithm": "RSA-SHA256",
+    "publicKeyId": "pine-2026",
+    "value": "<base64>"
+  },
+  "generatedAt": "2025-01-01T00:00:00.0000000Z"
 }
 ```
 
@@ -133,9 +175,33 @@ if (result.IsValid)
 // Verify signature
 bool valid = SchemaVerifier.VerifySignature(data, signatureBase64, publicKeyPem);
 
+// Sign data
+string signature = SchemaVerifier.SignData(canonicalJson, privateKeyPem);
+
 // Compute hash
 string hash = SchemaVerifier.ComputeApiHash(canonicalJson);
 ```
+
+## Generating Documentation
+
+The project includes an [Astro/Starlight](https://starlight.astro.build/) documentation site that consumes the emitted schemas.
+
+### Running locally
+
+```bash
+cd docs
+npm install
+npm run dev
+```
+
+### How it works
+
+1. The schema loader plugin (`docs/src/plugins/schema-loader.mjs`) loads `schema.json` and all `*.ai-schema.json` files at build time
+2. It builds type and namespace indexes for fast lookup
+3. Astro components (`TypeSignature`, `MemberList`, `JsonContract`, `Examples`) render API documentation from the schema data
+4. Polyglot code samples are shown in tabbed views with copy buttons
+
+The documentation site is deployed to [GitHub Pages](https://ievangelist.github.io/api.contracts/) automatically on changes to `docs/` or `ai-skills/`.
 
 ## SKILL.md
 
