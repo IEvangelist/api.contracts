@@ -6,10 +6,23 @@ hero:
   tagline: AI-ready schemas from your .NET assemblies — built for agents, tooling, and documentation.
   actions:
     - text: Get Started
-      link: /guides/introduction/
+      link: /api.contracts/guides/introduction/
       icon: right-arrow
     - text: View on GitHub
       link: https://github.com/IEvangelist/api.contracts
       icon: external
       variant: minimal
 ---
+
+## What is API Contracts?
+
+A **Roslyn incremental source generator** that walks your .NET assembly's public API surface and emits deterministic, versioned JSON schemas — designed for AI agents, documentation pipelines, and automated tooling.
+
+### Key Features
+
+- 🔒 **Deterministic hashing** — detect API surface changes via `apiHash` (SHA-256)
+- ✍️ **Optional RSA-SHA256 signatures** — cryptographic schema integrity
+- 📖 **XML docs normalization** — summaries, remarks, params, examples all captured
+- 🤖 **AI metadata** — `[ApiContract]` attribute for agent-oriented descriptions, categories, roles, and tags
+- 📦 **JSON contract modeling** — System.Text.Json serialization behavior captured per type
+- 🌐 **Polyglot code generation** — schema supports C#, TypeScript, Python, Java, Go, Rust
