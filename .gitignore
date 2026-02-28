@@ -1,11 +1,14 @@
 ## Build results
-[Bb]uild/
 [Oo]bj/
 [Bb]in/
 [Dd]ebug/
 [Rr]elease/
 x64/
 x86/
+
+## MSBuild build props (keep tracked)
+!**/build/*.props
+!**/build/*.targets
 
 ## NuGet
 *.nupkg

@@ -1,0 +1,30 @@
+<Project>
+  <PropertyGroup>
+    <!-- Emit schema to standard ai-skills/apis/reference/ output -->
+    <AISchemaEmitStandard Condition="'$(AISchemaEmitStandard)' == ''">true</AISchemaEmitStandard>
+
+    <!-- Emit vendor-specific mirror -->
+    <AISchemaEmitVendor Condition="'$(AISchemaEmitVendor)' == ''">false</AISchemaEmitVendor>
+
+    <!-- Vendor output folder name -->
+    <AISchemaVendorFolder Condition="'$(AISchemaVendorFolder)' == ''"></AISchemaVendorFolder>
+
+    <!-- Sign the schema with RSA-SHA256 -->
+    <AISchemaSign Condition="'$(AISchemaSign)' == ''">false</AISchemaSign>
+
+    <!-- Path to PEM private key for signing -->
+    <AISchemaSigningPrivateKey Condition="'$(AISchemaSigningPrivateKey)' == ''"></AISchemaSigningPrivateKey>
+
+    <!-- Include internal types and members -->
+    <AISchemaIncludeInternals Condition="'$(AISchemaIncludeInternals)' == ''">false</AISchemaIncludeInternals>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <CompilerVisibleProperty Include="AISchemaEmitStandard" />
+    <CompilerVisibleProperty Include="AISchemaEmitVendor" />
+    <CompilerVisibleProperty Include="AISchemaVendorFolder" />
+    <CompilerVisibleProperty Include="AISchemaSign" />
+    <CompilerVisibleProperty Include="AISchemaSigningPrivateKey" />
+    <CompilerVisibleProperty Include="AISchemaIncludeInternals" />
+  </ItemGroup>
+</Project>
