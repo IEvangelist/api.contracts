@@ -5,7 +5,7 @@ description: A real-world schema generated from the SampleApi project — showca
 
 import { Tabs, TabItem, Aside, Badge, LinkCard } from '@astrojs/starlight/components';
 
-The **SampleApi** project demonstrates every major feature of the API Contracts generator. The full schema is [available as JSON](/api.contracts/schemas/SampleApi.ai-schema.json) for consumption by AI agents, documentation pipelines, and automated tooling.
+The **SampleApi** project demonstrates every major feature of the API Contracts generator. The full schema is [available as JSON](/api.contracts/schemas/SampleApi.api-schema.json) for consumption by AI agents, documentation pipelines, and automated tooling.
 
 <Aside type="tip">
   The schema below was generated at build time by the `ApiContracts.Generator` source generator from the [`samples/SampleApi`](https://github.com/IEvangelist/api.contracts/tree/main/samples/SampleApi) project.
@@ -161,8 +161,8 @@ Every generated schema includes a versioned envelope with package metadata and a
 
 ```json title="Schema envelope"
 {
+  "$schema": "/api.contracts/schemas/api-schema.json",
   "schemaVersion": "1.0.0",
-  "rootSchema": "../../schema.json",
   "package": {
     "name": "SampleApi",
     "version": "1.0.0.0",
@@ -177,20 +177,13 @@ Every generated schema includes a versioned envelope with package metadata and a
 
 Here's what the `Customer` type looks like in the generated schema:
 
-```json title="Customer type in schema" collapse={38-70}
+```json title="Customer type in schema" collapse={26-58}
 {
   "name": "Customer",
   "fullName": "SampleApi.Customer",
   "namespace": "SampleApi",
   "kind": "class",
   "accessibility": "public",
-  "ai": {
-    "name": "Customer",
-    "description": "A customer entity with contact information and order history.",
-    "category": "Domain",
-    "role": "entity",
-    "tags": ["customer", "crm", "domain"]
-  },
   "docs": {
     "summary": "Represents a customer in the system.",
     "remarks": "This is a sample domain model demonstrating the API Contracts generator. It shows how types, properties, and methods are captured in the schema."
@@ -274,7 +267,7 @@ Here's what the `Customer` type looks like in the generated schema:
 
 The complete schema JSON for the SampleApi project is published at:
 
-**[`/api.contracts/schemas/SampleApi.ai-schema.json`](/api.contracts/schemas/SampleApi.ai-schema.json)**
+**[`/api.contracts/schemas/SampleApi.api-schema.json`](/api.contracts/schemas/SampleApi.api-schema.json)**
 
 Consumers — including AI agents, SDK generators, and documentation pipelines — can reference this URL directly to discover the full API surface.
 

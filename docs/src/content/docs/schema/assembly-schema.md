@@ -3,14 +3,14 @@ title: Assembly Schema
 description: Each assembly produces a data-only snapshot of its public API surface.
 ---
 
-Assembly schemas are emitted to `ai-skills/apis/reference/<AssemblyName>.ai-schema.json`.
+Assembly schemas are emitted to `ai-skills/apis/reference/<AssemblyName>.api-schema.json`.
 
 ## Structure
 
 ```json
 {
+  "$schema": "/schemas/api-schema.json",
   "schemaVersion": "1.0.0",
-  "rootSchema": "../../schema.json",
   "package": { "name": "...", "version": "...", "targetFramework": "..." },
   "types": [ ... ],
   "apiHash": "sha256:<hex>",

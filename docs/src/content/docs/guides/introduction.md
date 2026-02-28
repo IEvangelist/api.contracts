@@ -24,6 +24,6 @@ description: Learn about API Contracts — deterministic, signed, versioned JSON
 
 | Output | Location | Description |
 |---|---|---|
-| Root Schema | `ai-skills/apis/schema.json` | Language definitions, templates, placeholders |
-| Assembly Schema | `ai-skills/apis/reference/<Name>.ai-schema.json` | Per-assembly API surface snapshot |
-| Vendor Mirror | `<vendor>/apis/reference/<Name>.ai-schema.json` | Optional vendor-specific copy |
+| Root Schema | `schemas/api-schema.json` | JSON Schema definition for assembly schemas |
+| Assembly Schema | `ai-skills/apis/reference/<Name>.api-schema.json` | Per-assembly API surface snapshot |
+| Vendor Mirror | `<vendor>/apis/reference/<Name>.api-schema.json` | Optional vendor-specific copy |
