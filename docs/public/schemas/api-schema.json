@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ievangelist.github.io/api.contracts/schemas/api-schema.json",
+  "title": "API Contracts Assembly Schema",
+  "description": "Defines the shape of *.api-schema.json files emitted by the ApiContracts.Generator Roslyn source generator. Each file is a deterministic, self-describing snapshot of a .NET assembly's public API surface.",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "package", "apiHash", "types"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this JSON Schema definition.",
+      "const": "https://ievangelist.github.io/api.contracts/schemas/api-schema.json"
+    },
+    "schemaVersion": {
+      "type": "string",
+      "description": "Version of the schema format (semver).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "package": {
+      "$ref": "#/$defs/package"
+    },
+    "apiHash": {
+      "type": "string",
+      "description": "Deterministic SHA-256 hash of the canonical API model in the format sha256:<hex>.",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "signature": {
+      "$ref": "#/$defs/signature"
+    },
+    "types": {
+      "type": "array",
+      "description": "All public types in the assembly, sorted by namespace then name.",
+      "items": {
+        "$ref": "#/$defs/type"
+      }
+    }
+  },
+  "$defs": {
+    "package": {
+      "type": "object",
+      "description": "Assembly/package metadata.",
+      "required": ["name", "version", "targetFramework"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Assembly name."
+        },
+        "version": {
+          "type": "string",
+          "description": "Assembly version."
+        },
+        "targetFramework": {
+          "type": "string",
+          "description": "Target framework moniker (e.g. net10.0)."
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "description": "Optional RSA-SHA256 cryptographic signature envelope.",
+      "required": ["algorithm", "publicKeyId", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "const": "RSA-SHA256"
+        },
+        "publicKeyId": {
+          "type": "string",
+          "description": "Identifier for the public key used to verify the signature."
+        },
+        "value": {
+          "type": "string",
+          "description": "Base64-encoded signature of the canonical JSON."
+        }
+      }
+    },
+    "type": {
+      "type": "object",
+      "description": "A public type in the assembly.",
+      "required": ["name", "fullName", "namespace", "kind", "accessibility", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Simple type name."
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Fully qualified type name including namespace."
+        },
+        "namespace": {
+          "type": "string",
+          "description": "Containing namespace."
+        },
+        "kind": {
+          "type": "string",
+          "description": "Type kind.",
+          "enum": ["class", "struct", "record", "record struct", "interface", "enum", "delegate"]
+        },
+        "accessibility": {
+          "type": "string",
+          "description": "Declared accessibility.",
+          "enum": ["public", "internal"]
+        },
+        "isAbstract": {
+          "type": "boolean",
+          "description": "True if the type is abstract."
+        },
+        "isSealed": {
+          "type": "boolean",
+          "description": "True if the type is sealed."
+        },
+        "isStatic": {
+          "type": "boolean",
+          "description": "True if the type is static."
+        },
+        "isGeneric": {
+          "type": "boolean",
+          "description": "True if the type has generic type parameters."
+        },
+        "genericParameters": {
+          "type": "array",
+          "description": "Generic type parameters with optional constraints.",
+          "items": {
+            "$ref": "#/$defs/genericParameter"
+          }
+        },
+        "baseType": {
+          "type": "string",
+          "description": "Fully qualified base type name (omitted for System.Object)."
+        },
+        "interfaces": {
+          "type": "array",
+          "description": "Implemented interfaces, sorted alphabetically.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "docs": {
+          "$ref": "#/$defs/docs"
+        },
+        "json": {
+          "$ref": "#/$defs/jsonContract"
+        },
+        "enumMembers": {
+          "type": "array",
+          "description": "Members of an enum type.",
+          "items": {
+            "$ref": "#/$defs/enumMember"
+          }
+        },
+        "members": {
+          "type": "array",
+          "description": "Public members sorted by kind then name.",
+          "items": {
+            "$ref": "#/$defs/member"
+          }
+        }
+      }
+    },
+    "member": {
+      "type": "object",
+      "description": "A public member of a type.",
+      "required": ["name", "kind", "signature"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Member name (.ctor for constructors, this[] for indexers)."
+        },
+        "kind": {
+          "type": "string",
+          "description": "Member kind.",
+          "enum": ["constructor", "method", "property", "field", "event", "indexer"]
+        },
+        "signature": {
+          "type": "string",
+          "description": "Minimally qualified member signature."
+        },
+        "returnType": {
+          "type": "string",
+          "description": "Fully qualified return type."
+        },
+        "isReturnNullable": {
+          "type": "boolean",
+          "description": "True if the return type is nullable."
+        },
+        "isStatic": {
+          "type": "boolean"
+        },
+        "isAbstract": {
+          "type": "boolean"
+        },
+        "isVirtual": {
+          "type": "boolean"
+        },
+        "isOverride": {
+          "type": "boolean"
+        },
+        "isAsync": {
+          "type": "boolean"
+        },
+        "parameters": {
+          "type": "array",
+          "description": "Method/indexer parameters.",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "docs": {
+          "$ref": "#/$defs/docs"
+        }
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "description": "A method or indexer parameter.",
+      "required": ["name", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "Fully qualified parameter type."
+        },
+        "isNullable": {
+          "type": "boolean"
+        },
+        "isOptional": {
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "type": "string",
+          "description": "String representation of the default value."
+        },
+        "modifier": {
+          "type": "string",
+          "description": "Parameter modifier.",
+          "enum": ["ref", "out", "in", "ref readonly", "params"]
+        }
+      }
+    },
+    "genericParameter": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "enumMember": {
+      "type": "object",
+      "required": ["name", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "docs": {
+      "type": "object",
+      "description": "Normalized XML documentation.",
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "remarks": {
+          "type": "string"
+        },
+        "returns": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Parameter name to description mapping.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "seeAlso": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "jsonContract": {
+      "type": "object",
+      "description": "System.Text.Json serialization contract for the type.",
+      "required": ["contractType", "useCamelCase", "properties"],
+      "additionalProperties": false,
+      "properties": {
+        "contractType": {
+          "type": "string"
+        },
+        "useCamelCase": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/jsonProperty"
+          }
+        }
+      }
+    },
+    "jsonProperty": {
+      "type": "object",
+      "description": "A JSON serialization property.",
+      "required": ["clrName", "jsonName", "jsonType", "clrType"],
+      "additionalProperties": false,
+      "properties": {
+        "clrName": {
+          "type": "string",
+          "description": "CLR property name."
+        },
+        "jsonName": {
+          "type": "string",
+          "description": "JSON property name after naming policy."
+        },
+        "jsonType": {
+          "type": "string",
+          "description": "JSON Schema type.",
+          "enum": ["string", "number", "boolean", "object", "array"]
+        },
+        "clrType": {
+          "type": "string",
+          "description": "Fully qualified CLR type."
+        },
+        "ignored": {
+          "type": "boolean"
+        },
+        "nullable": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "description": "XML doc summary for the property."
+        }
+      }
+    }
+  }
+}

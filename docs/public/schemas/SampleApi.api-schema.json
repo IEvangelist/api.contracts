@@ -1,11 +1,12 @@
 {
+  "$schema": "https://ievangelist.github.io/api.contracts/schemas/api-schema.json",
   "schemaVersion": "1.0.0",
-  "rootSchema": "../../schema.json",
   "package": {
     "name": "SampleApi",
     "version": "1.0.0.0",
     "targetFramework": "net10.0"
   },
+  "apiHash": "sha256:d5dbe44a66cf9c54a107f58ca8e8c8a84cffa81ed7dc03d34547f4d3e9f709f4",
   "types": [
     {
       "name": "Address",
@@ -16,17 +17,6 @@
       "interfaces": [
         "System.IEquatable<SampleApi.Address>"
       ],
-      "ai": {
-        "name": "Address",
-        "description": "A postal address with street, city, state, postal code, and country.",
-        "category": "Domain",
-        "role": "value-object",
-        "tags": [
-          "address",
-          "location",
-          "value-object"
-        ]
-      },
       "docs": {
         "summary": "Represents a physical or mailing address.",
         "remarks": "This record class provides value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots.",
@@ -82,23 +72,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Address",
-            "Description": "A postal address with street, city, state, postal code, and country.",
-            "Category": "Domain",
-            "Role": "value-object",
-            "Tags": "address,location,value-object"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "Address.Address(string Street, string City, string State, string PostalCode, string Country)",
           "returnType": "void",
           "parameters": [
@@ -141,86 +118,46 @@
         {
           "name": "City",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Address.City",
           "returnType": "string",
           "docs": {
             "summary": "The city or locality name."
-          },
-          "json": {
-            "clrName": "City",
-            "jsonName": "city",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The city or locality name."
           }
         },
         {
           "name": "Country",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Address.Country",
           "returnType": "string",
           "docs": {
             "summary": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\")."
-          },
-          "json": {
-            "clrName": "Country",
-            "jsonName": "country",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\")."
           }
         },
         {
           "name": "PostalCode",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Address.PostalCode",
           "returnType": "string",
           "docs": {
             "summary": "The postal or ZIP code."
-          },
-          "json": {
-            "clrName": "PostalCode",
-            "jsonName": "postalCode",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The postal or ZIP code."
           }
         },
         {
           "name": "State",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Address.State",
           "returnType": "string",
           "docs": {
             "summary": "The state, province, or region."
-          },
-          "json": {
-            "clrName": "State",
-            "jsonName": "state",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The state, province, or region."
           }
         },
         {
           "name": "Street",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Address.Street",
           "returnType": "string",
           "docs": {
             "summary": "The street address, including house or building number."
-          },
-          "json": {
-            "clrName": "Street",
-            "jsonName": "street",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The street address, including house or building number."
           }
         }
       ]
@@ -232,39 +169,14 @@
       "kind": "class",
       "accessibility": "public",
       "isStatic": true,
-      "ai": {
-        "name": "ApiEndpoints",
-        "description": "Static class containing route path constants for every API endpoint.",
-        "category": "Configuration",
-        "role": "configuration",
-        "tags": [
-          "routes",
-          "constants",
-          "configuration",
-          "static"
-        ]
-      },
       "docs": {
         "summary": "Provides well-known route path constants for the sample API.",
         "remarks": "Centralising route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "ApiEndpoints",
-            "Description": "Static class containing route path constants for every API endpoint.",
-            "Category": "Configuration",
-            "Role": "configuration",
-            "Tags": "routes,constants,configuration,static"
-          }
-        }
-      ],
       "members": [
         {
           "name": "CustomerById",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.CustomerById",
           "returnType": "string",
           "isStatic": true,
@@ -275,7 +187,6 @@
         {
           "name": "Customers",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.Customers",
           "returnType": "string",
           "isStatic": true,
@@ -286,7 +197,6 @@
         {
           "name": "Health",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.Health",
           "returnType": "string",
           "isStatic": true,
@@ -297,7 +207,6 @@
         {
           "name": "OrderById",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.OrderById",
           "returnType": "string",
           "isStatic": true,
@@ -308,7 +217,6 @@
         {
           "name": "Orders",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.Orders",
           "returnType": "string",
           "isStatic": true,
@@ -319,7 +227,6 @@
         {
           "name": "ProductById",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.ProductById",
           "returnType": "string",
           "isStatic": true,
@@ -330,7 +237,6 @@
         {
           "name": "Products",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.Products",
           "returnType": "string",
           "isStatic": true,
@@ -341,7 +247,6 @@
         {
           "name": "Ready",
           "kind": "field",
-          "accessibility": "public",
           "signature": "string ApiEndpoints.Ready",
           "returnType": "string",
           "isStatic": true,
@@ -363,19 +268,6 @@
           "name": "T"
         }
       ],
-      "ai": {
-        "name": "ApiResponse",
-        "description": "A generic API response wrapper containing data, a message, and a timestamp.",
-        "category": "DTOs",
-        "role": "response",
-        "tags": [
-          "response",
-          "generic",
-          "dto",
-          "serialization",
-          "envelope"
-        ]
-      },
       "docs": {
         "summary": "A generic envelope for API responses containing a data payload and metadata.",
         "remarks": "Wrapping all API responses in  gives clients a consistent structure to deserialise, regardless of the underlying resource type.",
@@ -420,23 +312,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "ApiResponse",
-            "Description": "A generic API response wrapper containing data, a message, and a timestamp.",
-            "Category": "DTOs",
-            "Role": "response",
-            "Tags": "response,generic,dto,serialization,envelope"
-          }
-        }
-      ],
       "members": [
         {
           "name": "Fail",
           "kind": "method",
-          "accessibility": "public",
           "signature": "ApiResponse<T> ApiResponse<T>.Fail(string message)",
           "returnType": "SampleApi.ApiResponse<T>",
           "isStatic": true,
@@ -457,7 +336,6 @@
         {
           "name": "Ok",
           "kind": "method",
-          "accessibility": "public",
           "signature": "ApiResponse<T> ApiResponse<T>.Ok(T data, string? message = null)",
           "returnType": "SampleApi.ApiResponse<T>",
           "isStatic": true,
@@ -485,73 +363,39 @@
         {
           "name": "Data",
           "kind": "property",
-          "accessibility": "public",
           "signature": "T? ApiResponse<T>.Data",
           "returnType": "T?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the response data payload."
-          },
-          "json": {
-            "clrName": "Data",
-            "jsonName": "data",
-            "jsonType": "object",
-            "clrType": "T?",
-            "nullable": true,
-            "description": "Gets or sets the response data payload."
           }
         },
         {
           "name": "Message",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ApiResponse<T>.Message",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets an optional human-readable message."
-          },
-          "json": {
-            "clrName": "Message",
-            "jsonName": "message",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets an optional human-readable message."
           }
         },
         {
           "name": "Success",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool ApiResponse<T>.Success",
           "returnType": "bool",
           "docs": {
             "summary": "Gets or sets a value indicating whether the request was successful."
-          },
-          "json": {
-            "clrName": "Success",
-            "jsonName": "success",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets or sets a value indicating whether the request was successful."
           }
         },
         {
           "name": "Timestamp",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset ApiResponse<T>.Timestamp",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the UTC timestamp when the response was generated."
-          },
-          "json": {
-            "clrName": "Timestamp",
-            "jsonName": "timestamp",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the UTC timestamp when the response was generated."
           }
         }
       ]
@@ -563,18 +407,6 @@
       "kind": "class",
       "accessibility": "public",
       "isAbstract": true,
-      "ai": {
-        "name": "AuditableEntity",
-        "description": "Abstract base class providing identity and audit timestamp properties for entities.",
-        "category": "Domain",
-        "role": "entity-base",
-        "tags": [
-          "audit",
-          "entity",
-          "abstract",
-          "base-class"
-        ]
-      },
       "docs": {
         "summary": "Base class for entities that require audit tracking.",
         "remarks": "All entities inheriting from  automatically receive a unique identifier and timestamp fields for creation and last modification. The  and  properties record the identity of the user who performed the respective action.",
@@ -625,106 +457,52 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "AuditableEntity",
-            "Description": "Abstract base class providing identity and audit timestamp properties for entities.",
-            "Category": "Domain",
-            "Role": "entity-base",
-            "Tags": "audit,entity,abstract,base-class"
-          }
-        }
-      ],
       "members": [
         {
           "name": "CreatedAt",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset AuditableEntity.CreatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the UTC date and time when the entity was created."
-          },
-          "json": {
-            "clrName": "CreatedAt",
-            "jsonName": "createdAt",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the UTC date and time when the entity was created."
           }
         },
         {
           "name": "CreatedBy",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? AuditableEntity.CreatedBy",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the identifier of the user who created the entity."
-          },
-          "json": {
-            "clrName": "CreatedBy",
-            "jsonName": "createdBy",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the identifier of the user who created the entity."
           }
         },
         {
           "name": "Id",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Guid AuditableEntity.Id",
           "returnType": "System.Guid",
           "docs": {
             "summary": "Gets or sets the unique identifier of the entity."
-          },
-          "json": {
-            "clrName": "Id",
-            "jsonName": "id",
-            "jsonType": "string",
-            "clrType": "System.Guid",
-            "description": "Gets or sets the unique identifier of the entity."
           }
         },
         {
           "name": "UpdatedAt",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset AuditableEntity.UpdatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the UTC date and time when the entity was last updated."
-          },
-          "json": {
-            "clrName": "UpdatedAt",
-            "jsonName": "updatedAt",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the UTC date and time when the entity was last updated."
           }
         },
         {
           "name": "UpdatedBy",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? AuditableEntity.UpdatedBy",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the identifier of the user who last updated the entity."
-          },
-          "json": {
-            "clrName": "UpdatedBy",
-            "jsonName": "updatedBy",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the identifier of the user who last updated the entity."
           }
         }
       ]
@@ -769,17 +547,6 @@
       "namespace": "SampleApi",
       "kind": "class",
       "accessibility": "public",
-      "ai": {
-        "name": "Customer",
-        "description": "A customer entity with contact information and order history.",
-        "category": "Domain",
-        "role": "entity",
-        "tags": [
-          "customer",
-          "crm",
-          "domain"
-        ]
-      },
       "docs": {
         "summary": "Represents a customer in the system.",
         "remarks": "This is a sample domain model demonstrating the API Contracts generator. It shows how types, properties, and methods are captured in the schema."
@@ -842,140 +609,69 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Customer",
-            "Description": "A customer entity with contact information and order history.",
-            "Category": "Domain",
-            "Role": "entity",
-            "Tags": "customer,crm,domain"
-          }
-        }
-      ],
       "members": [
         {
           "name": "CreatedAt",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset Customer.CreatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the date when the customer was created."
-          },
-          "json": {
-            "clrName": "CreatedAt",
-            "jsonName": "createdAt",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the date when the customer was created."
           }
         },
         {
           "name": "Email",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? Customer.Email",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the email address."
-          },
-          "json": {
-            "clrName": "Email",
-            "jsonName": "email",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the email address."
           }
         },
         {
           "name": "FullName",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Customer.FullName",
           "returnType": "string",
           "docs": {
             "summary": "Gets or sets the customer's full name."
-          },
-          "json": {
-            "clrName": "FullName",
-            "jsonName": "fullName",
-            "jsonType": "string",
-            "clrType": "string",
-            "required": true,
-            "description": "Gets or sets the customer's full name."
           }
         },
         {
           "name": "Id",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Guid Customer.Id",
           "returnType": "System.Guid",
           "docs": {
             "summary": "Gets or sets the unique identifier."
-          },
-          "json": {
-            "clrName": "Id",
-            "jsonName": "id",
-            "jsonType": "string",
-            "clrType": "System.Guid",
-            "required": true,
-            "description": "Gets or sets the unique identifier."
           }
         },
         {
           "name": "IsActive",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool Customer.IsActive",
           "returnType": "bool",
           "docs": {
             "summary": "Gets or sets whether the customer is active."
-          },
-          "json": {
-            "clrName": "IsActive",
-            "jsonName": "isActive",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets or sets whether the customer is active."
           }
         },
         {
           "name": "PreferredContact",
           "kind": "property",
-          "accessibility": "public",
           "signature": "ContactMethod Customer.PreferredContact",
           "returnType": "SampleApi.ContactMethod",
           "docs": {
             "summary": "Gets or sets the customer's preferred contact method."
-          },
-          "json": {
-            "clrName": "PreferredContact",
-            "jsonName": "preferredContact",
-            "jsonType": "string",
-            "clrType": "SampleApi.ContactMethod",
-            "description": "Gets or sets the customer's preferred contact method."
           }
         },
         {
           "name": "Tags",
           "kind": "property",
-          "accessibility": "public",
           "signature": "List<string> Customer.Tags",
           "returnType": "System.Collections.Generic.List<string>",
           "docs": {
             "summary": "Gets or sets the customer's tags for segmentation."
-          },
-          "json": {
-            "clrName": "Tags",
-            "jsonName": "tags",
-            "jsonType": "array",
-            "clrType": "System.Collections.Generic.List<string>",
-            "description": "Gets or sets the customer's tags for segmentation."
           }
         }
       ]
@@ -990,18 +686,6 @@
       "interfaces": [
         "System.IEquatable<SampleApi.DateRange>"
       ],
-      "ai": {
-        "name": "DateRange",
-        "description": "An inclusive date range defined by a start and end date.",
-        "category": "Domain",
-        "role": "value-object",
-        "tags": [
-          "date",
-          "range",
-          "value-object",
-          "temporal"
-        ]
-      },
       "docs": {
         "summary": "Represents an inclusive date range with a start and end date.",
         "remarks": "is a readonly struct that implements for efficient value-based comparisons. The  property provides the calculated time span between the two boundary dates. A  is considered valid when  is less than or equal to ."
@@ -1033,23 +717,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "DateRange",
-            "Description": "An inclusive date range defined by a start and end date.",
-            "Category": "Domain",
-            "Role": "value-object",
-            "Tags": "date,range,value-object,temporal"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "DateRange.DateRange(DateTimeOffset start, DateTimeOffset end)",
           "returnType": "void",
           "parameters": [
@@ -1073,7 +744,6 @@
         {
           "name": "Contains",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.Contains(DateTimeOffset date)",
           "returnType": "bool",
           "parameters": [
@@ -1093,7 +763,6 @@
         {
           "name": "Equals",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.Equals(DateRange other)",
           "returnType": "bool",
           "parameters": [
@@ -1107,7 +776,6 @@
         {
           "name": "Equals",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.Equals(object? obj)",
           "returnType": "bool",
           "isOverride": true,
@@ -1123,7 +791,6 @@
         {
           "name": "GetHashCode",
           "kind": "method",
-          "accessibility": "public",
           "signature": "int DateRange.GetHashCode()",
           "returnType": "int",
           "isOverride": true,
@@ -1132,7 +799,6 @@
         {
           "name": "op_Equality",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.operator ==(DateRange left, DateRange right)",
           "returnType": "bool",
           "isStatic": true,
@@ -1153,7 +819,6 @@
         {
           "name": "op_Inequality",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.operator !=(DateRange left, DateRange right)",
           "returnType": "bool",
           "isStatic": true,
@@ -1174,7 +839,6 @@
         {
           "name": "Overlaps",
           "kind": "method",
-          "accessibility": "public",
           "signature": "bool DateRange.Overlaps(DateRange other)",
           "returnType": "bool",
           "parameters": [
@@ -1194,7 +858,6 @@
         {
           "name": "ToString",
           "kind": "method",
-          "accessibility": "public",
           "signature": "string DateRange.ToString()",
           "returnType": "string",
           "isOverride": true,
@@ -1205,52 +868,28 @@
         {
           "name": "Duration",
           "kind": "property",
-          "accessibility": "public",
           "signature": "TimeSpan DateRange.Duration",
           "returnType": "System.TimeSpan",
           "docs": {
             "summary": "Gets the duration of time between  and ."
-          },
-          "json": {
-            "clrName": "Duration",
-            "jsonName": "duration",
-            "jsonType": "string",
-            "clrType": "System.TimeSpan",
-            "description": "Gets the duration of time between  and ."
           }
         },
         {
           "name": "End",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset DateRange.End",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets the inclusive end date of the range."
-          },
-          "json": {
-            "clrName": "End",
-            "jsonName": "end",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets the inclusive end date of the range."
           }
         },
         {
           "name": "Start",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset DateRange.Start",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets the inclusive start date of the range."
-          },
-          "json": {
-            "clrName": "Start",
-            "jsonName": "start",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets the inclusive start date of the range."
           }
         }
       ]
@@ -1262,18 +901,6 @@
       "kind": "enum",
       "accessibility": "public",
       "isSealed": true,
-      "ai": {
-        "name": "FeatureFlags",
-        "description": "Bitwise flags representing independently toggleable application features.",
-        "category": "Configuration",
-        "role": "enum",
-        "tags": [
-          "feature-flags",
-          "configuration",
-          "enum",
-          "flags"
-        ]
-      },
       "docs": {
         "summary": "Feature flags that can be independently enabled for the application.",
         "remarks": "This enum uses the  to allow bitwise combination of values. Use  as a convenience mask to enable every flag at once."
@@ -1310,21 +937,6 @@
           "description": "Convenience flag that enables all features."
         }
       ],
-      "attributes": [
-        {
-          "name": "FlagsAttribute"
-        },
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "FeatureFlags",
-            "Description": "Bitwise flags representing independently toggleable application features.",
-            "Category": "Configuration",
-            "Role": "enum",
-            "Tags": "feature-flags,configuration,enum,flags"
-          }
-        }
-      ],
       "members": []
     },
     {
@@ -1333,38 +945,14 @@
       "namespace": "SampleApi",
       "kind": "interface",
       "accessibility": "public",
-      "ai": {
-        "name": "CustomerService",
-        "description": "Service for creating, reading, updating, and searching customers.",
-        "category": "Services",
-        "role": "service",
-        "tags": [
-          "customer",
-          "crud",
-          "service"
-        ]
-      },
       "docs": {
         "summary": "Service for managing customers.",
         "remarks": "Provides CRUD operations and search capabilities for customer entities."
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "CustomerService",
-            "Description": "Service for creating, reading, updating, and searching customers.",
-            "Category": "Services",
-            "Role": "service",
-            "Tags": "customer,crud,service"
-          }
-        }
-      ],
       "members": [
         {
           "name": "CreateAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<Customer> ICustomerService.CreateAsync(Customer customer)",
           "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
           "isAbstract": true,
@@ -1385,7 +973,6 @@
         {
           "name": "DeactivateAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<bool> ICustomerService.DeactivateAsync(Guid id)",
           "returnType": "System.Threading.Tasks.Task<bool>",
           "isAbstract": true,
@@ -1406,7 +993,6 @@
         {
           "name": "GetByIdAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<Customer?> ICustomerService.GetByIdAsync(Guid id)",
           "returnType": "System.Threading.Tasks.Task<SampleApi.Customer?>",
           "isAbstract": true,
@@ -1427,7 +1013,6 @@
         {
           "name": "SearchAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<IReadOnlyList<Customer>> ICustomerService.SearchAsync(string query, int skip = 0, int take = 25)",
           "returnType": "System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SampleApi.Customer>>",
           "isAbstract": true,
@@ -1462,7 +1047,6 @@
         {
           "name": "UpdateAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<Customer> ICustomerService.UpdateAsync(Customer customer)",
           "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
           "isAbstract": true,
@@ -1488,18 +1072,6 @@
       "namespace": "SampleApi",
       "kind": "interface",
       "accessibility": "public",
-      "ai": {
-        "name": "OrderNotificationService",
-        "description": "Publishes events for order lifecycle transitions such as placement, shipment, and cancellation.",
-        "category": "Services",
-        "role": "service",
-        "tags": [
-          "event",
-          "order",
-          "notification",
-          "service"
-        ]
-      },
       "docs": {
         "summary": "A service that publishes notifications for key order lifecycle events.",
         "remarks": "Consumers subscribe to the events exposed by this interface to react to order state transitions. Implementations are responsible for raising events at the appropriate points in the order processing pipeline.",
@@ -1508,23 +1080,10 @@
           "T:SampleApi.Order"
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "OrderNotificationService",
-            "Description": "Publishes events for order lifecycle transitions such as placement, shipment, and cancellation.",
-            "Category": "Services",
-            "Role": "service",
-            "Tags": "event,order,notification,service"
-          }
-        }
-      ],
       "members": [
         {
           "name": "OrderCancelled",
           "kind": "event",
-          "accessibility": "public",
           "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderCancelled",
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
@@ -1535,7 +1094,6 @@
         {
           "name": "OrderDelivered",
           "kind": "event",
-          "accessibility": "public",
           "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderDelivered",
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
@@ -1546,7 +1104,6 @@
         {
           "name": "OrderPlaced",
           "kind": "event",
-          "accessibility": "public",
           "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderPlaced",
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
@@ -1557,7 +1114,6 @@
         {
           "name": "OrderShipped",
           "kind": "event",
-          "accessibility": "public",
           "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderShipped",
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
@@ -1568,7 +1124,6 @@
         {
           "name": "NotifyOrderCancelled",
           "kind": "method",
-          "accessibility": "public",
           "signature": "void IOrderNotificationService.NotifyOrderCancelled(Order order)",
           "returnType": "void",
           "isAbstract": true,
@@ -1588,7 +1143,6 @@
         {
           "name": "NotifyOrderPlaced",
           "kind": "method",
-          "accessibility": "public",
           "signature": "void IOrderNotificationService.NotifyOrderPlaced(Order order)",
           "returnType": "void",
           "isAbstract": true,
@@ -1608,7 +1162,6 @@
         {
           "name": "NotifyOrderShipped",
           "kind": "method",
-          "accessibility": "public",
           "signature": "void IOrderNotificationService.NotifyOrderShipped(Order order)",
           "returnType": "void",
           "isAbstract": true,
@@ -1642,18 +1195,6 @@
           ]
         }
       ],
-      "ai": {
-        "name": "Repository",
-        "description": "Generic repository providing CRUD and query operations for any entity type.",
-        "category": "DataAccess",
-        "role": "repository",
-        "tags": [
-          "repository",
-          "generic",
-          "crud",
-          "data-access"
-        ]
-      },
       "docs": {
         "summary": "A generic repository interface for performing CRUD and query operations on entities.",
         "remarks": "Implementations should handle persistence concerns such as connection management and transaction scoping. Consumers should depend on this abstraction rather than concrete data-access implementations.",
@@ -1661,23 +1202,10 @@
           "T:SampleApi.PagedResult`1"
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Repository",
-            "Description": "Generic repository providing CRUD and query operations for any entity type.",
-            "Category": "DataAccess",
-            "Role": "repository",
-            "Tags": "repository,generic,crud,data-access"
-          }
-        }
-      ],
       "members": [
         {
           "name": "AddAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<TEntity> IRepository<TEntity>.AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<TEntity>",
           "isAbstract": true,
@@ -1704,7 +1232,6 @@
         {
           "name": "CountAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<int> IRepository<TEntity>.CountAsync(CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<int>",
           "isAbstract": true,
@@ -1726,7 +1253,6 @@
         {
           "name": "DeleteAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<bool> IRepository<TEntity>.DeleteAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<bool>",
           "isAbstract": true,
@@ -1753,7 +1279,6 @@
         {
           "name": "ExistsAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<bool> IRepository<TEntity>.ExistsAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<bool>",
           "isAbstract": true,
@@ -1780,7 +1305,6 @@
         {
           "name": "GetAllAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<IReadOnlyList<TEntity>> IRepository<TEntity>.GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TEntity>>",
           "isAbstract": true,
@@ -1802,7 +1326,6 @@
         {
           "name": "GetByIdAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<TEntity?> IRepository<TEntity>.GetByIdAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<TEntity?>",
           "isAbstract": true,
@@ -1829,7 +1352,6 @@
         {
           "name": "GetPagedAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<PagedResult<TEntity>> IRepository<TEntity>.GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<SampleApi.PagedResult<TEntity>>",
           "isAbstract": true,
@@ -1861,7 +1383,6 @@
         {
           "name": "UpdateAsync",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Task<TEntity> IRepository<TEntity>.UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))",
           "returnType": "System.Threading.Tasks.Task<TEntity>",
           "isAbstract": true,
@@ -1897,18 +1418,6 @@
       "interfaces": [
         "System.IEquatable<SampleApi.Money>"
       ],
-      "ai": {
-        "name": "Money",
-        "description": "A value object representing a monetary amount with an associated currency code.",
-        "category": "Domain",
-        "role": "value-object",
-        "tags": [
-          "money",
-          "currency",
-          "value-object",
-          "finance"
-        ]
-      },
       "docs": {
         "summary": "Represents a monetary amount in a specific currency.",
         "remarks": "is a value object implemented as a readonly record struct to ensure immutability and value-based equality. Use this type instead of bare values to avoid accidental mixing of different currencies.",
@@ -1937,23 +1446,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Money",
-            "Description": "A value object representing a monetary amount with an associated currency code.",
-            "Category": "Domain",
-            "Role": "value-object",
-            "Tags": "money,currency,value-object,finance"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "Money.Money(decimal Amount, string Currency)",
           "returnType": "void",
           "parameters": [
@@ -1978,7 +1474,6 @@
         {
           "name": "Eur",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Money Money.Eur(decimal amount)",
           "returnType": "SampleApi.Money",
           "isStatic": true,
@@ -1999,7 +1494,6 @@
         {
           "name": "ToString",
           "kind": "method",
-          "accessibility": "public",
           "signature": "string Money.ToString()",
           "returnType": "string",
           "isOverride": true,
@@ -2011,7 +1505,6 @@
         {
           "name": "Usd",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Money Money.Usd(decimal amount)",
           "returnType": "SampleApi.Money",
           "isStatic": true,
@@ -2032,35 +1525,19 @@
         {
           "name": "Amount",
           "kind": "property",
-          "accessibility": "public",
           "signature": "decimal Money.Amount",
           "returnType": "decimal",
           "docs": {
             "summary": "The numeric value of the monetary amount."
-          },
-          "json": {
-            "clrName": "Amount",
-            "jsonName": "amount",
-            "jsonType": "number",
-            "clrType": "decimal",
-            "description": "The numeric value of the monetary amount."
           }
         },
         {
           "name": "Currency",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string Money.Currency",
           "returnType": "string",
           "docs": {
             "summary": "The ISO 4217 currency code (e.g., \"USD\", \"EUR\")."
-          },
-          "json": {
-            "clrName": "Currency",
-            "jsonName": "currency",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The ISO 4217 currency code (e.g., \"USD\", \"EUR\")."
           }
         }
       ]
@@ -2071,16 +1548,6 @@
       "namespace": "SampleApi",
       "kind": "class",
       "accessibility": "public",
-      "ai": {
-        "name": "Order",
-        "description": "An order with line items and total calculation.",
-        "category": "Domain",
-        "role": "entity",
-        "tags": [
-          "order",
-          "commerce"
-        ]
-      },
       "docs": {
         "summary": "Represents an order placed by a customer."
       },
@@ -2134,121 +1601,59 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Order",
-            "Description": "An order with line items and total calculation.",
-            "Category": "Domain",
-            "Role": "entity",
-            "Tags": "order,commerce"
-          }
-        }
-      ],
       "members": [
         {
           "name": "CustomerId",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Guid Order.CustomerId",
           "returnType": "System.Guid",
           "docs": {
             "summary": "Gets or sets the customer who placed this order."
-          },
-          "json": {
-            "clrName": "CustomerId",
-            "jsonName": "customerId",
-            "jsonType": "string",
-            "clrType": "System.Guid",
-            "required": true,
-            "description": "Gets or sets the customer who placed this order."
           }
         },
         {
           "name": "Id",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Guid Order.Id",
           "returnType": "System.Guid",
           "docs": {
             "summary": "Gets or sets the order identifier."
-          },
-          "json": {
-            "clrName": "Id",
-            "jsonName": "id",
-            "jsonType": "string",
-            "clrType": "System.Guid",
-            "required": true,
-            "description": "Gets or sets the order identifier."
           }
         },
         {
           "name": "Items",
           "kind": "property",
-          "accessibility": "public",
           "signature": "List<OrderItem> Order.Items",
           "returnType": "System.Collections.Generic.List<SampleApi.OrderItem>",
           "docs": {
             "summary": "Gets or sets the line items in the order."
-          },
-          "json": {
-            "clrName": "Items",
-            "jsonName": "items",
-            "jsonType": "array",
-            "clrType": "System.Collections.Generic.List<SampleApi.OrderItem>",
-            "description": "Gets or sets the line items in the order."
           }
         },
         {
           "name": "OrderDate",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset Order.OrderDate",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the order date."
-          },
-          "json": {
-            "clrName": "OrderDate",
-            "jsonName": "orderDate",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the order date."
           }
         },
         {
           "name": "Status",
           "kind": "property",
-          "accessibility": "public",
           "signature": "OrderStatus Order.Status",
           "returnType": "SampleApi.OrderStatus",
           "docs": {
             "summary": "Gets or sets the order status."
-          },
-          "json": {
-            "clrName": "Status",
-            "jsonName": "status",
-            "jsonType": "string",
-            "clrType": "SampleApi.OrderStatus",
-            "description": "Gets or sets the order status."
           }
         },
         {
           "name": "TotalPrice",
           "kind": "property",
-          "accessibility": "public",
           "signature": "decimal Order.TotalPrice",
           "returnType": "decimal",
           "docs": {
             "summary": "Gets the total price of the order."
-          },
-          "json": {
-            "clrName": "TotalPrice",
-            "jsonName": "totalPrice",
-            "jsonType": "number",
-            "clrType": "decimal",
-            "description": "Gets the total price of the order."
           }
         }
       ]
@@ -2260,17 +1665,6 @@
       "kind": "class",
       "accessibility": "public",
       "baseType": "System.EventArgs",
-      "ai": {
-        "name": "OrderEventArgs",
-        "description": "Event data carrying an order and the timestamp of the event.",
-        "category": "Events",
-        "role": "event-args",
-        "tags": [
-          "event",
-          "order",
-          "notification"
-        ]
-      },
       "docs": {
         "summary": "Provides data for order-related events.",
         "remarks": "This class extends  to carry the that triggered the event along with a UTC timestamp indicating when the event occurred.",
@@ -2299,23 +1693,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "OrderEventArgs",
-            "Description": "Event data carrying an order and the timestamp of the event.",
-            "Category": "Events",
-            "Role": "event-args",
-            "Tags": "event,order,notification"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "OrderEventArgs.OrderEventArgs(Order order)",
           "returnType": "void",
           "parameters": [
@@ -2334,35 +1715,19 @@
         {
           "name": "Order",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Order OrderEventArgs.Order",
           "returnType": "SampleApi.Order",
           "docs": {
             "summary": "Gets the order associated with this event."
-          },
-          "json": {
-            "clrName": "Order",
-            "jsonName": "order",
-            "jsonType": "object",
-            "clrType": "SampleApi.Order",
-            "description": "Gets the order associated with this event."
           }
         },
         {
           "name": "Timestamp",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset OrderEventArgs.Timestamp",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets the UTC timestamp indicating when the event was raised."
-          },
-          "json": {
-            "clrName": "Timestamp",
-            "jsonName": "timestamp",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets the UTC timestamp indicating when the event was raised."
           }
         }
       ]
@@ -2408,53 +1773,28 @@
         {
           "name": "ProductName",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string OrderItem.ProductName",
           "returnType": "string",
           "docs": {
             "summary": "Gets or sets the product name."
-          },
-          "json": {
-            "clrName": "ProductName",
-            "jsonName": "productName",
-            "jsonType": "string",
-            "clrType": "string",
-            "required": true,
-            "description": "Gets or sets the product name."
           }
         },
         {
           "name": "Quantity",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int OrderItem.Quantity",
           "returnType": "int",
           "docs": {
             "summary": "Gets or sets the quantity ordered."
-          },
-          "json": {
-            "clrName": "Quantity",
-            "jsonName": "quantity",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "Gets or sets the quantity ordered."
           }
         },
         {
           "name": "UnitPrice",
           "kind": "property",
-          "accessibility": "public",
           "signature": "decimal OrderItem.UnitPrice",
           "returnType": "decimal",
           "docs": {
             "summary": "Gets or sets the unit price."
-          },
-          "json": {
-            "clrName": "UnitPrice",
-            "jsonName": "unitPrice",
-            "jsonType": "number",
-            "clrType": "decimal",
-            "description": "Gets or sets the unit price."
           }
         }
       ]
@@ -2513,18 +1853,6 @@
       "interfaces": [
         "System.IEquatable<SampleApi.PagedResult<T>>"
       ],
-      "ai": {
-        "name": "PagedResult",
-        "description": "A paged result containing a subset of items along with pagination metadata.",
-        "category": "DataAccess",
-        "role": "response",
-        "tags": [
-          "pagination",
-          "generic",
-          "response",
-          "collection"
-        ]
-      },
       "docs": {
         "summary": "Represents a paged subset of a larger collection.",
         "remarks": "Use this type to return paginated results from queries. The property is computed automatically from  and .",
@@ -2593,23 +1921,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "PagedResult",
-            "Description": "A paged result containing a subset of items along with pagination metadata.",
-            "Category": "DataAccess",
-            "Role": "response",
-            "Tags": "pagination,generic,response,collection"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "PagedResult<T>.PagedResult(IReadOnlyList<T> Items, int TotalCount, int Page, int PageSize)",
           "returnType": "void",
           "parameters": [
@@ -2647,120 +1962,64 @@
         {
           "name": "HasNextPage",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool PagedResult<T>.HasNextPage",
           "returnType": "bool",
           "docs": {
             "summary": "Gets a value indicating whether there is a subsequent page."
-          },
-          "json": {
-            "clrName": "HasNextPage",
-            "jsonName": "hasNextPage",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets a value indicating whether there is a subsequent page."
           }
         },
         {
           "name": "HasPreviousPage",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool PagedResult<T>.HasPreviousPage",
           "returnType": "bool",
           "docs": {
             "summary": "Gets a value indicating whether there is a preceding page."
-          },
-          "json": {
-            "clrName": "HasPreviousPage",
-            "jsonName": "hasPreviousPage",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets a value indicating whether there is a preceding page."
           }
         },
         {
           "name": "Items",
           "kind": "property",
-          "accessibility": "public",
           "signature": "IReadOnlyList<T> PagedResult<T>.Items",
           "returnType": "System.Collections.Generic.IReadOnlyList<T>",
           "docs": {
             "summary": "The items on the current page."
-          },
-          "json": {
-            "clrName": "Items",
-            "jsonName": "items",
-            "jsonType": "array",
-            "clrType": "System.Collections.Generic.IReadOnlyList<T>",
-            "description": "The items on the current page."
           }
         },
         {
           "name": "Page",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int PagedResult<T>.Page",
           "returnType": "int",
           "docs": {
             "summary": "The one-based page number of this result."
-          },
-          "json": {
-            "clrName": "Page",
-            "jsonName": "page",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "The one-based page number of this result."
           }
         },
         {
           "name": "PageSize",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int PagedResult<T>.PageSize",
           "returnType": "int",
           "docs": {
             "summary": "The maximum number of items per page."
-          },
-          "json": {
-            "clrName": "PageSize",
-            "jsonName": "pageSize",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "The maximum number of items per page."
           }
         },
         {
           "name": "TotalCount",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int PagedResult<T>.TotalCount",
           "returnType": "int",
           "docs": {
             "summary": "The total number of items across all pages."
-          },
-          "json": {
-            "clrName": "TotalCount",
-            "jsonName": "totalCount",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "The total number of items across all pages."
           }
         },
         {
           "name": "TotalPages",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int PagedResult<T>.TotalPages",
           "returnType": "int",
           "docs": {
             "summary": "Gets the total number of pages available."
-          },
-          "json": {
-            "clrName": "TotalPages",
-            "jsonName": "totalPages",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "Gets the total number of pages available."
           }
         }
       ]
@@ -2771,18 +2030,6 @@
       "namespace": "SampleApi",
       "kind": "class",
       "accessibility": "public",
-      "ai": {
-        "name": "ProblemDetails",
-        "description": "RFC 9457 problem details object for standardised HTTP API error responses.",
-        "category": "Patterns",
-        "role": "error",
-        "tags": [
-          "error",
-          "http",
-          "rfc9457",
-          "problem-details"
-        ]
-      },
       "docs": {
         "summary": "A machine-readable format for specifying errors in HTTP API responses, based on RFC 9457.",
         "remarks": "provides a standardised error response body that clients can parse without knowledge of the specific API. The dictionary allows API authors to attach additional context that is not covered by the core properties.",
@@ -2844,130 +2091,65 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "ProblemDetails",
-            "Description": "RFC 9457 problem details object for standardised HTTP API error responses.",
-            "Category": "Patterns",
-            "Role": "error",
-            "Tags": "error,http,rfc9457,problem-details"
-          }
-        }
-      ],
       "members": [
         {
           "name": "Detail",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProblemDetails.Detail",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets a human-readable explanation specific to this occurrence of the problem."
-          },
-          "json": {
-            "clrName": "Detail",
-            "jsonName": "detail",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets a human-readable explanation specific to this occurrence of the problem."
           }
         },
         {
           "name": "Extensions",
           "kind": "property",
-          "accessibility": "public",
           "signature": "IDictionary<string, object?> ProblemDetails.Extensions",
           "returnType": "System.Collections.Generic.IDictionary<string, object?>",
           "docs": {
             "summary": "Gets the extension members for this problem details instance.",
             "remarks": "Use this dictionary to include additional context such as trace identifiers, validation errors, or retry-after hints."
-          },
-          "json": {
-            "clrName": "Extensions",
-            "jsonName": "extensions",
-            "jsonType": "array",
-            "clrType": "System.Collections.Generic.IDictionary<string, object?>",
-            "description": "Gets the extension members for this problem details instance."
           }
         },
         {
           "name": "Instance",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProblemDetails.Instance",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets a URI reference that identifies the specific occurrence of the problem."
-          },
-          "json": {
-            "clrName": "Instance",
-            "jsonName": "instance",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets a URI reference that identifies the specific occurrence of the problem."
           }
         },
         {
           "name": "Status",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int? ProblemDetails.Status",
           "returnType": "int?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the HTTP status code generated by the origin server for this occurrence."
-          },
-          "json": {
-            "clrName": "Status",
-            "jsonName": "status",
-            "jsonType": "object",
-            "clrType": "int?",
-            "nullable": true,
-            "description": "Gets or sets the HTTP status code generated by the origin server for this occurrence."
           }
         },
         {
           "name": "Title",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProblemDetails.Title",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets a short, human-readable summary of the problem type."
-          },
-          "json": {
-            "clrName": "Title",
-            "jsonName": "title",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets a short, human-readable summary of the problem type."
           }
         },
         {
           "name": "Type",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProblemDetails.Type",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets a URI reference that identifies the problem type."
-          },
-          "json": {
-            "clrName": "Type",
-            "jsonName": "type",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets a URI reference that identifies the problem type."
           }
         }
       ]
@@ -2978,18 +2160,6 @@
       "namespace": "SampleApi",
       "kind": "class",
       "accessibility": "public",
-      "ai": {
-        "name": "ProductDto",
-        "description": "Product data transfer object with System.Text.Json serialization attributes.",
-        "category": "DTOs",
-        "role": "dto",
-        "tags": [
-          "product",
-          "dto",
-          "serialization",
-          "json"
-        ]
-      },
       "docs": {
         "summary": "A data transfer object for product information, annotated with System.Text.Json serialization attributes.",
         "remarks": "This DTO demonstrates common JSON customisation patterns: to control the serialised property names. to exclude properties from serialisation. to enforce presence during deserialisation. to apply a custom converter.",
@@ -3080,198 +2250,99 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "ProductDto",
-            "Description": "Product data transfer object with System.Text.Json serialization attributes.",
-            "Category": "DTOs",
-            "Role": "dto",
-            "Tags": "product,dto,serialization,json"
-          }
-        }
-      ],
       "members": [
         {
           "name": "AddedAt",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset ProductDto.AddedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
             "summary": "Gets or sets the date the product was added to the catalogue."
-          },
-          "json": {
-            "clrName": "AddedAt",
-            "jsonName": "added_at",
-            "jsonType": "string",
-            "clrType": "System.DateTimeOffset",
-            "description": "Gets or sets the date the product was added to the catalogue."
           }
         },
         {
           "name": "Category",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProductDto.Category",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the product category."
-          },
-          "json": {
-            "clrName": "Category",
-            "jsonName": "category",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the product category."
           }
         },
         {
           "name": "Description",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProductDto.Description",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the product description."
-          },
-          "json": {
-            "clrName": "Description",
-            "jsonName": "description",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the product description."
           }
         },
         {
           "name": "Id",
           "kind": "property",
-          "accessibility": "public",
           "signature": "Guid ProductDto.Id",
           "returnType": "System.Guid",
           "docs": {
             "summary": "Gets or sets the unique product identifier."
-          },
-          "json": {
-            "clrName": "Id",
-            "jsonName": "id",
-            "jsonType": "string",
-            "clrType": "System.Guid",
-            "required": true,
-            "description": "Gets or sets the unique product identifier."
           }
         },
         {
           "name": "InternalTrackingCode",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProductDto.InternalTrackingCode",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "An internal tracking code that should not be exposed through the API."
-          },
-          "json": {
-            "clrName": "InternalTrackingCode",
-            "jsonName": "internalTrackingCode",
-            "jsonType": "string",
-            "clrType": "string?",
-            "ignored": true,
-            "nullable": true,
-            "description": "An internal tracking code that should not be exposed through the API."
           }
         },
         {
           "name": "IsAvailable",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool ProductDto.IsAvailable",
           "returnType": "bool",
           "docs": {
             "summary": "Gets or sets whether the product is currently available for purchase."
-          },
-          "json": {
-            "clrName": "IsAvailable",
-            "jsonName": "available",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets or sets whether the product is currently available for purchase."
           }
         },
         {
           "name": "Name",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string ProductDto.Name",
           "returnType": "string",
           "docs": {
             "summary": "Gets or sets the product name."
-          },
-          "json": {
-            "clrName": "Name",
-            "jsonName": "name",
-            "jsonType": "string",
-            "clrType": "string",
-            "required": true,
-            "description": "Gets or sets the product name."
           }
         },
         {
           "name": "Price",
           "kind": "property",
-          "accessibility": "public",
           "signature": "decimal ProductDto.Price",
           "returnType": "decimal",
           "docs": {
             "summary": "Gets or sets the unit price."
-          },
-          "json": {
-            "clrName": "Price",
-            "jsonName": "price",
-            "jsonType": "number",
-            "clrType": "decimal",
-            "description": "Gets or sets the unit price."
           }
         },
         {
           "name": "Sku",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ProductDto.Sku",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the stock keeping unit code."
-          },
-          "json": {
-            "clrName": "Sku",
-            "jsonName": "sku",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the stock keeping unit code."
           }
         },
         {
           "name": "Tags",
           "kind": "property",
-          "accessibility": "public",
           "signature": "List<string> ProductDto.Tags",
           "returnType": "System.Collections.Generic.List<string>",
           "docs": {
             "summary": "Gets or sets the product tags for search and filtering."
-          },
-          "json": {
-            "clrName": "Tags",
-            "jsonName": "tags",
-            "jsonType": "array",
-            "clrType": "System.Collections.Generic.List<string>",
-            "description": "Gets or sets the product tags for search and filtering."
           }
         }
       ]
@@ -3282,18 +2353,6 @@
       "namespace": "SampleApi",
       "kind": "class",
       "accessibility": "public",
-      "ai": {
-        "name": "RateLimitOptions",
-        "description": "Options that control the API rate-limiting behaviour.",
-        "category": "Configuration",
-        "role": "configuration",
-        "tags": [
-          "rate-limit",
-          "configuration",
-          "options",
-          "throttling"
-        ]
-      },
       "docs": {
         "summary": "Configuration options for API rate limiting.",
         "remarks": "Bind an instance of  from the application's configuration section (e.g., \"RateLimiting\") to control how many requests a client may make within a sliding time window."
@@ -3325,68 +2384,32 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "RateLimitOptions",
-            "Description": "Options that control the API rate-limiting behaviour.",
-            "Category": "Configuration",
-            "Role": "configuration",
-            "Tags": "rate-limit,configuration,options,throttling"
-          }
-        }
-      ],
       "members": [
         {
           "name": "MaxRequests",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int RateLimitOptions.MaxRequests",
           "returnType": "int",
           "docs": {
             "summary": "Gets or sets the maximum number of requests allowed within the time window."
-          },
-          "json": {
-            "clrName": "MaxRequests",
-            "jsonName": "maxRequests",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "Gets or sets the maximum number of requests allowed within the time window."
           }
         },
         {
           "name": "RetryAfterSeconds",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int RateLimitOptions.RetryAfterSeconds",
           "returnType": "int",
           "docs": {
             "summary": "Gets or sets the number of seconds a client should wait before retrying after being rate-limited."
-          },
-          "json": {
-            "clrName": "RetryAfterSeconds",
-            "jsonName": "retryAfterSeconds",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "Gets or sets the number of seconds a client should wait before retrying after being rate-limited."
           }
         },
         {
           "name": "WindowSeconds",
           "kind": "property",
-          "accessibility": "public",
           "signature": "int RateLimitOptions.WindowSeconds",
           "returnType": "int",
           "docs": {
             "summary": "Gets or sets the duration of the sliding window in seconds."
-          },
-          "json": {
-            "clrName": "WindowSeconds",
-            "jsonName": "windowSeconds",
-            "jsonType": "number",
-            "clrType": "int",
-            "description": "Gets or sets the duration of the sliding window in seconds."
           }
         }
       ]
@@ -3403,18 +2426,6 @@
           "name": "T"
         }
       ],
-      "ai": {
-        "name": "Result",
-        "description": "A generic result type that represents either a successful value or an error.",
-        "category": "Patterns",
-        "role": "response",
-        "tags": [
-          "result",
-          "error-handling",
-          "generic",
-          "pattern"
-        ]
-      },
       "docs": {
         "summary": "Encapsulates the outcome of an operation, holding either a success value or an error message.",
         "remarks": "Use the static factory methods  and  to create instances. Callers should inspect  before accessing .",
@@ -3459,23 +2470,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "Result",
-            "Description": "A generic result type that represents either a successful value or an error.",
-            "Category": "Patterns",
-            "Role": "response",
-            "Tags": "result,error-handling,generic,pattern"
-          }
-        }
-      ],
       "members": [
         {
           "name": "Fail",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Result<T> Result<T>.Fail(string error)",
           "returnType": "SampleApi.Result<T>",
           "isStatic": true,
@@ -3496,7 +2494,6 @@
         {
           "name": "Ok",
           "kind": "method",
-          "accessibility": "public",
           "signature": "Result<T> Result<T>.Ok(T value)",
           "returnType": "SampleApi.Result<T>",
           "isStatic": true,
@@ -3517,73 +2514,39 @@
         {
           "name": "Error",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? Result<T>.Error",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets the error message describing why the operation failed."
-          },
-          "json": {
-            "clrName": "Error",
-            "jsonName": "error",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets the error message describing why the operation failed."
           }
         },
         {
           "name": "IsFailure",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool Result<T>.IsFailure",
           "returnType": "bool",
           "docs": {
             "summary": "Gets a value indicating whether the operation failed."
-          },
-          "json": {
-            "clrName": "IsFailure",
-            "jsonName": "isFailure",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets a value indicating whether the operation failed."
           }
         },
         {
           "name": "IsSuccess",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool Result<T>.IsSuccess",
           "returnType": "bool",
           "docs": {
             "summary": "Gets a value indicating whether the operation succeeded."
-          },
-          "json": {
-            "clrName": "IsSuccess",
-            "jsonName": "isSuccess",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets a value indicating whether the operation succeeded."
           }
         },
         {
           "name": "Value",
           "kind": "property",
-          "accessibility": "public",
           "signature": "T? Result<T>.Value",
           "returnType": "T?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets the value produced by a successful operation."
-          },
-          "json": {
-            "clrName": "Value",
-            "jsonName": "value",
-            "jsonType": "object",
-            "clrType": "T?",
-            "nullable": true,
-            "description": "Gets the value produced by a successful operation."
           }
         }
       ]
@@ -3596,19 +2559,6 @@
       "accessibility": "public",
       "isAbstract": true,
       "baseType": "SampleApi.AuditableEntity",
-      "ai": {
-        "name": "SoftDeletableEntity",
-        "description": "Abstract base class that extends AuditableEntity with soft-delete support.",
-        "category": "Domain",
-        "role": "entity-base",
-        "tags": [
-          "audit",
-          "soft-delete",
-          "entity",
-          "abstract",
-          "base-class"
-        ]
-      },
       "docs": {
         "summary": "Base class for entities that support soft deletion in addition to audit tracking.",
         "remarks": "Entities derived from  are never physically removed from the data store. Instead, the  flag is set to and  records the time of deletion. Query logic should filter out soft-deleted entities by default.",
@@ -3645,23 +2595,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "SoftDeletableEntity",
-            "Description": "Abstract base class that extends AuditableEntity with soft-delete support.",
-            "Category": "Domain",
-            "Role": "entity-base",
-            "Tags": "audit,soft-delete,entity,abstract,base-class"
-          }
-        }
-      ],
       "members": [
         {
           "name": "Restore",
           "kind": "method",
-          "accessibility": "public",
           "signature": "void SoftDeletableEntity.Restore()",
           "returnType": "void",
           "docs": {
@@ -3671,7 +2608,6 @@
         {
           "name": "SoftDelete",
           "kind": "method",
-          "accessibility": "public",
           "signature": "void SoftDeletableEntity.SoftDelete(string? deletedBy = null)",
           "returnType": "void",
           "parameters": [
@@ -3692,56 +2628,30 @@
         {
           "name": "DeletedAt",
           "kind": "property",
-          "accessibility": "public",
           "signature": "DateTimeOffset? SoftDeletableEntity.DeletedAt",
           "returnType": "System.DateTimeOffset?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the UTC date and time when the entity was soft-deleted."
-          },
-          "json": {
-            "clrName": "DeletedAt",
-            "jsonName": "deletedAt",
-            "jsonType": "object",
-            "clrType": "System.DateTimeOffset?",
-            "nullable": true,
-            "description": "Gets or sets the UTC date and time when the entity was soft-deleted."
           }
         },
         {
           "name": "DeletedBy",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? SoftDeletableEntity.DeletedBy",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "Gets or sets the identifier of the user who deleted the entity."
-          },
-          "json": {
-            "clrName": "DeletedBy",
-            "jsonName": "deletedBy",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "Gets or sets the identifier of the user who deleted the entity."
           }
         },
         {
           "name": "IsDeleted",
           "kind": "property",
-          "accessibility": "public",
           "signature": "bool SoftDeletableEntity.IsDeleted",
           "returnType": "bool",
           "docs": {
             "summary": "Gets or sets a value indicating whether the entity has been soft-deleted."
-          },
-          "json": {
-            "clrName": "IsDeleted",
-            "jsonName": "isDeleted",
-            "jsonType": "boolean",
-            "clrType": "bool",
-            "description": "Gets or sets a value indicating whether the entity has been soft-deleted."
           }
         }
       ]
@@ -3755,18 +2665,6 @@
       "interfaces": [
         "System.IEquatable<SampleApi.ValidationError>"
       ],
-      "ai": {
-        "name": "ValidationError",
-        "description": "A record describing a validation failure for a specific input field.",
-        "category": "Patterns",
-        "role": "error",
-        "tags": [
-          "validation",
-          "error",
-          "field",
-          "pattern"
-        ]
-      },
       "docs": {
         "summary": "Describes a validation error associated with a specific input field.",
         "remarks": "Validation errors are typically collected during request processing and returned as part of a  response.",
@@ -3808,23 +2706,10 @@
           }
         ]
       },
-      "attributes": [
-        {
-          "name": "ApiContractAttribute",
-          "arguments": {
-            "Name": "ValidationError",
-            "Description": "A record describing a validation failure for a specific input field.",
-            "Category": "Patterns",
-            "Role": "error",
-            "Tags": "validation,error,field,pattern"
-          }
-        }
-      ],
       "members": [
         {
           "name": ".ctor",
           "kind": "constructor",
-          "accessibility": "public",
           "signature": "ValidationError.ValidationError(string Field, string Message, string? Code = null)",
           "returnType": "void",
           "parameters": [
@@ -3860,58 +2745,32 @@
         {
           "name": "Code",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string? ValidationError.Code",
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
             "summary": "An application-specific error code for programmatic handling."
-          },
-          "json": {
-            "clrName": "Code",
-            "jsonName": "code",
-            "jsonType": "string",
-            "clrType": "string?",
-            "nullable": true,
-            "description": "An application-specific error code for programmatic handling."
           }
         },
         {
           "name": "Field",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string ValidationError.Field",
           "returnType": "string",
           "docs": {
             "summary": "The name of the field that failed validation."
-          },
-          "json": {
-            "clrName": "Field",
-            "jsonName": "field",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "The name of the field that failed validation."
           }
         },
         {
           "name": "Message",
           "kind": "property",
-          "accessibility": "public",
           "signature": "string ValidationError.Message",
           "returnType": "string",
           "docs": {
             "summary": "A human-readable message describing the validation failure."
-          },
-          "json": {
-            "clrName": "Message",
-            "jsonName": "message",
-            "jsonType": "string",
-            "clrType": "string",
-            "description": "A human-readable message describing the validation failure."
           }
         }
       ]
     }
-  ],
-  "apiHash": "sha256:d5dbe44a66cf9c54a107f58ca8e8c8a84cffa81ed7dc03d34547f4d3e9f709f4"
+  ]
 }

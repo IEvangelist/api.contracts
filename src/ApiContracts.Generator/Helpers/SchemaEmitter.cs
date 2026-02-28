@@ -7,6 +7,8 @@ namespace ApiContracts.Generator.Helpers;
 
 /// <summary>
 /// Emits the assembly schema JSON with deterministic formatting.
+/// The output contains only public types/members with parsed docs and is
+/// ordered so that two identical API surfaces always produce identical JSON.
 /// </summary>
 internal static class SchemaEmitter
 {
@@ -21,15 +23,26 @@ internal static class SchemaEmitter
     {
         var sb = new StringBuilder();
         sb.AppendLine("{");
+        sb.AppendLine($"  \"$schema\": \"https://ievangelist.github.io/api.contracts/schemas/api-schema.json\",");
         sb.AppendLine($"  \"schemaVersion\": \"1.0.0\",");
-        sb.AppendLine($"  \"rootSchema\": \"../../schema.json\",");
         sb.AppendLine($"  \"package\": {{");
         sb.AppendLine($"    \"name\": \"{EscapeJson(assemblyName)}\",");
         sb.AppendLine($"    \"version\": \"{EscapeJson(assemblyVersion)}\",");
         sb.AppendLine($"    \"targetFramework\": \"{EscapeJson(targetFramework)}\"");
         sb.AppendLine($"  }},");
+        sb.AppendLine($"  \"apiHash\": \"{EscapeJson(apiHash)}\",");
 
-        // Types
+        // Signature envelope (optional)
+        if (signatureValue is not null && config.SigningKeyId is not null)
+        {
+            sb.AppendLine($"  \"signature\": {{");
+            sb.AppendLine($"    \"algorithm\": \"RSA-SHA256\",");
+            sb.AppendLine($"    \"publicKeyId\": \"{EscapeJson(config.SigningKeyId)}\",");
+            sb.AppendLine($"    \"value\": \"{EscapeJson(signatureValue)}\"");
+            sb.AppendLine($"  }},");
+        }
+
+        // Types — deterministically sorted
         sb.AppendLine($"  \"types\": [");
 
         var sortedTypes = types
@@ -44,22 +57,7 @@ internal static class SchemaEmitter
             else sb.AppendLine();
         }
 
-        sb.AppendLine($"  ],");
-        sb.AppendLine($"  \"apiHash\": \"{EscapeJson(apiHash)}\",");
-
-        // Signature envelope
-        if (signatureValue is not null && config.SigningKeyId is not null)
-        {
-            sb.AppendLine($"  \"signature\": {{");
-            sb.AppendLine($"    \"algorithm\": \"RSA-SHA256\",");
-            sb.AppendLine($"    \"publicKeyId\": \"{EscapeJson(config.SigningKeyId)}\",");
-            sb.AppendLine($"    \"value\": \"{EscapeJson(signatureValue)}\"");
-            sb.AppendLine($"  }},");
-        }
-
-        // Remove trailing comma on last property
-        // Rewrite: emit generatedAt as final property (no trailing comma)
-        sb.AppendLine($"  \"generatedAt\": \"{DateTime.UtcNow:O}\"");
+        sb.AppendLine($"  ]");
         sb.AppendLine("}");
 
         return sb.ToString();
@@ -72,106 +70,87 @@ internal static class SchemaEmitter
         sb.AppendLine($"{indent}  \"fullName\": \"{EscapeJson(type.FullName)}\",");
         sb.AppendLine($"{indent}  \"namespace\": \"{EscapeJson(type.Namespace)}\",");
         sb.AppendLine($"{indent}  \"kind\": \"{EscapeJson(type.Kind)}\",");
-        sb.AppendLine($"{indent}  \"accessibility\": \"{EscapeJson(type.Accessibility)}\",");
 
-        // Boolean flags
-        if (type.IsAbstract) sb.AppendLine($"{indent}  \"isAbstract\": true,");
-        if (type.IsSealed) sb.AppendLine($"{indent}  \"isSealed\": true,");
-        if (type.IsStatic) sb.AppendLine($"{indent}  \"isStatic\": true,");
-        if (type.IsGeneric)
+        // Collect remaining properties so we can avoid trailing commas
+        var parts = new List<string>();
+
+        // Boolean flags — only emit when true
+        if (type.IsAbstract) parts.Add($"{indent}  \"isAbstract\": true");
+        if (type.IsSealed) parts.Add($"{indent}  \"isSealed\": true");
+        if (type.IsStatic) parts.Add($"{indent}  \"isStatic\": true");
+        if (type.IsGeneric) parts.Add($"{indent}  \"isGeneric\": true");
+
+        // Generic parameters
+        if (type.GenericParameters is { Count: > 0 })
         {
-            sb.AppendLine($"{indent}  \"isGeneric\": true,");
-            if (type.GenericParameters is { Count: > 0 })
+            var gpSb = new StringBuilder();
+            gpSb.Append($"{indent}  \"genericParameters\": [");
+            for (int i = 0; i < type.GenericParameters.Count; i++)
             {
-                sb.AppendLine($"{indent}  \"genericParameters\": [");
-                for (int i = 0; i < type.GenericParameters.Count; i++)
+                var gp = type.GenericParameters[i];
+                gpSb.Append($"{{\"name\": \"{EscapeJson(gp.Name)}\"");
+                if (gp.Constraints.Count > 0)
                 {
-                    var gp = type.GenericParameters[i];
-                    sb.Append($"{indent}    {{\"name\": \"{EscapeJson(gp.Name)}\"");
-                    if (gp.Constraints.Count > 0)
-                    {
-                        sb.Append(", \"constraints\": [");
-                        sb.Append(string.Join(", ", gp.Constraints.Select(c => $"\"{EscapeJson(c)}\"")));
-                        sb.Append(']');
-                    }
-                    sb.Append('}');
-                    if (i < type.GenericParameters.Count - 1) sb.AppendLine(",");
-                    else sb.AppendLine();
+                    gpSb.Append(", \"constraints\": [");
+                    gpSb.Append(string.Join(", ", gp.Constraints.Select(c => $"\"{EscapeJson(c)}\"")));
+                    gpSb.Append(']');
                 }
-                sb.AppendLine($"{indent}  ],");
+                gpSb.Append('}');
+                if (i < type.GenericParameters.Count - 1) gpSb.Append(", ");
             }
+            gpSb.Append(']');
+            parts.Add(gpSb.ToString());
         }
 
         // Base type
         if (type.BaseType is not null)
         {
-            sb.AppendLine($"{indent}  \"baseType\": \"{EscapeJson(type.BaseType)}\",");
+            parts.Add($"{indent}  \"baseType\": \"{EscapeJson(type.BaseType)}\"");
         }
 
         // Interfaces
         if (type.Interfaces.Count > 0)
         {
-            sb.Append($"{indent}  \"interfaces\": [");
-            sb.Append(string.Join(", ", type.Interfaces.Select(i => $"\"{EscapeJson(i)}\"")));
-            sb.AppendLine("],");
-        }
-
-        // AI metadata
-        if (type.AI is not null)
-        {
-            sb.AppendLine($"{indent}  \"ai\": {{");
-            var aiParts = new List<string>();
-            if (type.AI.Name is not null) aiParts.Add($"\"name\": \"{EscapeJson(type.AI.Name)}\"");
-            if (type.AI.Description is not null) aiParts.Add($"\"description\": \"{EscapeJson(type.AI.Description)}\"");
-            if (type.AI.Category is not null) aiParts.Add($"\"category\": \"{EscapeJson(type.AI.Category)}\"");
-            if (type.AI.Role is not null) aiParts.Add($"\"role\": \"{EscapeJson(type.AI.Role)}\"");
-            if (type.AI.Tags is { Count: > 0 })
-            {
-                aiParts.Add($"\"tags\": [{string.Join(", ", type.AI.Tags.Select(t => $"\"{EscapeJson(t)}\""))}]");
-            }
-            sb.AppendLine($"{indent}    {string.Join($",\n{indent}    ", aiParts)}");
-            sb.AppendLine($"{indent}  }},");
+            var ifaces = string.Join(", ", type.Interfaces.Select(i => $"\"{EscapeJson(i)}\""));
+            parts.Add($"{indent}  \"interfaces\": [{ifaces}]");
         }
 
         // Docs
         if (type.Docs is not null)
         {
-            EmitDocumentation(sb, type.Docs, indent + "  ");
+            parts.Add(BuildDocumentation(type.Docs, indent + "  "));
         }
 
         // JSON contract
         if (type.Json is not null)
         {
-            EmitJsonContract(sb, type.Json, indent + "  ");
+            parts.Add(BuildJsonContract(type.Json, indent + "  "));
         }
 
         // Enum members
         if (type.EnumMembers is { Count: > 0 })
         {
-            sb.AppendLine($"{indent}  \"enumMembers\": [");
+            var emSb = new StringBuilder();
+            emSb.AppendLine($"{indent}  \"enumMembers\": [");
             for (int i = 0; i < type.EnumMembers.Count; i++)
             {
                 var em = type.EnumMembers[i];
-                sb.Append($"{indent}    {{\"name\": \"{EscapeJson(em.Name)}\", \"value\": {em.Value}");
+                emSb.Append($"{indent}    {{\"name\": \"{EscapeJson(em.Name)}\", \"value\": {em.Value}");
                 if (em.Description is not null)
                 {
-                    sb.Append($", \"description\": \"{EscapeJson(em.Description)}\"");
+                    emSb.Append($", \"description\": \"{EscapeJson(em.Description)}\"");
                 }
-                sb.Append('}');
-                if (i < type.EnumMembers.Count - 1) sb.AppendLine(",");
-                else sb.AppendLine();
+                emSb.Append('}');
+                if (i < type.EnumMembers.Count - 1) emSb.AppendLine(",");
+                else emSb.AppendLine();
             }
-            sb.AppendLine($"{indent}  ],");
+            emSb.Append($"{indent}  ]");
+            parts.Add(emSb.ToString());
         }
 
-        // Attributes
-        if (type.Attributes is { Count: > 0 })
-        {
-            EmitAttributes(sb, type.Attributes, indent + "  ");
-        }
-
-        // Members
-        sb.AppendLine($"{indent}  \"members\": [");
+        // Members — deterministically sorted
+        var membersSb = new StringBuilder();
+        membersSb.AppendLine($"{indent}  \"members\": [");
         var sortedMembers = type.Members
             .OrderBy(m => m.Kind)
             .ThenBy(m => m.Name)
@@ -179,11 +158,23 @@ internal static class SchemaEmitter
 
         for (int i = 0; i < sortedMembers.Count; i++)
         {
-            EmitMember(sb, sortedMembers[i], indent + "    ");
-            if (i < sortedMembers.Count - 1) sb.AppendLine(",");
-            else sb.AppendLine();
+            EmitMember(membersSb, sortedMembers[i], indent + "    ");
+            if (i < sortedMembers.Count - 1) membersSb.AppendLine(",");
+            else membersSb.AppendLine();
         }
-        sb.AppendLine($"{indent}  ]");
+        membersSb.Append($"{indent}  ]");
+        parts.Add(membersSb.ToString());
+
+        // Write accessibility as last simple prop before the parts
+        sb.Append($"{indent}  \"accessibility\": \"{EscapeJson(type.Accessibility)}\"");
+
+        foreach (var part in parts)
+        {
+            sb.AppendLine(",");
+            sb.Append(part);
+        }
+
+        sb.AppendLine();
         sb.Append($"{indent}}}");
     }
 
@@ -192,90 +183,67 @@ internal static class SchemaEmitter
         sb.AppendLine($"{indent}{{");
         sb.AppendLine($"{indent}  \"name\": \"{EscapeJson(member.Name)}\",");
         sb.AppendLine($"{indent}  \"kind\": \"{EscapeJson(member.Kind)}\",");
-        sb.AppendLine($"{indent}  \"accessibility\": \"{EscapeJson(member.Accessibility)}\",");
-        sb.AppendLine($"{indent}  \"signature\": \"{EscapeJson(member.Signature)}\",");
+        sb.Append($"{indent}  \"signature\": \"{EscapeJson(member.Signature)}\"");
+
+        var parts = new List<string>();
 
         if (member.ReturnType is not null)
         {
-            sb.AppendLine($"{indent}  \"returnType\": \"{EscapeJson(member.ReturnType)}\",");
+            parts.Add($"{indent}  \"returnType\": \"{EscapeJson(member.ReturnType)}\"");
             if (member.IsReturnNullable)
             {
-                sb.AppendLine($"{indent}  \"isReturnNullable\": true,");
+                parts.Add($"{indent}  \"isReturnNullable\": true");
             }
         }
 
-        if (member.IsStatic) sb.AppendLine($"{indent}  \"isStatic\": true,");
-        if (member.IsAbstract) sb.AppendLine($"{indent}  \"isAbstract\": true,");
-        if (member.IsVirtual) sb.AppendLine($"{indent}  \"isVirtual\": true,");
-        if (member.IsOverride) sb.AppendLine($"{indent}  \"isOverride\": true,");
-        if (member.IsAsync) sb.AppendLine($"{indent}  \"isAsync\": true,");
+        if (member.IsStatic) parts.Add($"{indent}  \"isStatic\": true");
+        if (member.IsAbstract) parts.Add($"{indent}  \"isAbstract\": true");
+        if (member.IsVirtual) parts.Add($"{indent}  \"isVirtual\": true");
+        if (member.IsOverride) parts.Add($"{indent}  \"isOverride\": true");
+        if (member.IsAsync) parts.Add($"{indent}  \"isAsync\": true");
 
         // Parameters
         if (member.Parameters is { Count: > 0 })
         {
-            sb.AppendLine($"{indent}  \"parameters\": [");
+            var pSb = new StringBuilder();
+            pSb.AppendLine($"{indent}  \"parameters\": [");
             for (int i = 0; i < member.Parameters.Count; i++)
             {
                 var p = member.Parameters[i];
-                sb.Append($"{indent}    {{\"name\": \"{EscapeJson(p.Name)}\", \"type\": \"{EscapeJson(p.Type)}\"");
-                if (p.IsNullable) sb.Append(", \"isNullable\": true");
+                pSb.Append($"{indent}    {{\"name\": \"{EscapeJson(p.Name)}\", \"type\": \"{EscapeJson(p.Type)}\"");
+                if (p.IsNullable) pSb.Append(", \"isNullable\": true");
                 if (p.IsOptional)
                 {
-                    sb.Append(", \"isOptional\": true");
-                    if (p.DefaultValue is not null) sb.Append($", \"defaultValue\": \"{EscapeJson(p.DefaultValue)}\"");
+                    pSb.Append(", \"isOptional\": true");
+                    if (p.DefaultValue is not null) pSb.Append($", \"defaultValue\": \"{EscapeJson(p.DefaultValue)}\"");
                 }
-                if (p.Modifier is not null) sb.Append($", \"modifier\": \"{EscapeJson(p.Modifier)}\"");
-                sb.Append('}');
-                if (i < member.Parameters.Count - 1) sb.AppendLine(",");
-                else sb.AppendLine();
+                if (p.Modifier is not null) pSb.Append($", \"modifier\": \"{EscapeJson(p.Modifier)}\"");
+                pSb.Append('}');
+                if (i < member.Parameters.Count - 1) pSb.AppendLine(",");
+                else pSb.AppendLine();
             }
-            sb.AppendLine($"{indent}  ],");
-        }
-
-        // AI metadata
-        if (member.AI is not null)
-        {
-            sb.AppendLine($"{indent}  \"ai\": {{");
-            var aiParts = new List<string>();
-            if (member.AI.Name is not null) aiParts.Add($"\"name\": \"{EscapeJson(member.AI.Name)}\"");
-            if (member.AI.Description is not null) aiParts.Add($"\"description\": \"{EscapeJson(member.AI.Description)}\"");
-            if (member.AI.Category is not null) aiParts.Add($"\"category\": \"{EscapeJson(member.AI.Category)}\"");
-            if (member.AI.Role is not null) aiParts.Add($"\"role\": \"{EscapeJson(member.AI.Role)}\"");
-            sb.AppendLine($"{indent}    {string.Join($",\n{indent}    ", aiParts)}");
-            sb.AppendLine($"{indent}  }},");
+            pSb.Append($"{indent}  ]");
+            parts.Add(pSb.ToString());
         }
 
         // Docs
         if (member.Docs is not null)
         {
-            EmitDocumentation(sb, member.Docs, indent + "  ");
+            parts.Add(BuildDocumentation(member.Docs, indent + "  "));
         }
 
-        // JSON property metadata
-        if (member.Json is not null)
+        foreach (var part in parts)
         {
-            sb.AppendLine($"{indent}  \"json\": {{");
-            sb.AppendLine($"{indent}    \"clrName\": \"{EscapeJson(member.Json.ClrName)}\",");
-            sb.AppendLine($"{indent}    \"jsonName\": \"{EscapeJson(member.Json.JsonName)}\",");
-            sb.AppendLine($"{indent}    \"jsonType\": \"{EscapeJson(member.Json.JsonType)}\",");
-            sb.AppendLine($"{indent}    \"clrType\": \"{EscapeJson(member.Json.ClrType)}\",");
-            if (member.Json.Ignored) sb.AppendLine($"{indent}    \"ignored\": true,");
-            if (member.Json.Nullable) sb.AppendLine($"{indent}    \"nullable\": true,");
-            if (member.Json.Required) sb.AppendLine($"{indent}    \"required\": true,");
-            if (member.Json.Description is not null)
-                sb.AppendLine($"{indent}    \"description\": \"{EscapeJson(member.Json.Description)}\",");
-            // Remove trailing comma from last property
-            sb.AppendLine($"{indent}  }},");
+            sb.AppendLine(",");
+            sb.Append(part);
         }
 
-        // Remove trailing comma by checking last character
-        sb.AppendLine($"{indent}  \"_\": true");
+        sb.AppendLine();
         sb.Append($"{indent}}}");
     }
 
-    private static void EmitDocumentation(StringBuilder sb, CanonicalDocumentation docs, string indent)
+    private static string BuildDocumentation(CanonicalDocumentation docs, string indent)
     {
-        sb.AppendLine($"{indent}\"docs\": {{");
         var docParts = new List<string>();
 
         if (docs.Summary is not null) docParts.Add($"\"summary\": \"{EscapeJson(docs.Summary)}\"");
@@ -290,31 +258,21 @@ internal static class SchemaEmitter
             docParts.Add($"\"parameters\": {{{string.Join(", ", paramParts)}}}");
         }
 
-        if (docs.Examples is { Count: > 0 })
-        {
-            var exampleParts = new List<string>();
-            foreach (var example in docs.Examples)
-            {
-                var parts = new List<string> { $"\"language\": \"{EscapeJson(example.Language)}\"" };
-                if (example.Region is not null) parts.Add($"\"region\": \"{EscapeJson(example.Region)}\"");
-                parts.Add($"\"code\": \"{EscapeJson(example.Code)}\"");
-                if (example.Description is not null) parts.Add($"\"description\": \"{EscapeJson(example.Description)}\"");
-                exampleParts.Add($"{{{string.Join(", ", parts)}}}");
-            }
-            docParts.Add($"\"examples\": [{string.Join(", ", exampleParts)}]");
-        }
-
         if (docs.SeeAlso is { Count: > 0 })
         {
             docParts.Add($"\"seeAlso\": [{string.Join(", ", docs.SeeAlso.Select(s => $"\"{EscapeJson(s)}\""))}]");
         }
 
+        var sb = new StringBuilder();
+        sb.AppendLine($"{indent}\"docs\": {{");
         sb.AppendLine($"{indent}  {string.Join($",\n{indent}  ", docParts)}");
-        sb.AppendLine($"{indent}}},");
+        sb.Append($"{indent}}}");
+        return sb.ToString();
     }
 
-    private static void EmitJsonContract(StringBuilder sb, CanonicalJsonContract contract, string indent)
+    private static string BuildJsonContract(CanonicalJsonContract contract, string indent)
     {
+        var sb = new StringBuilder();
         sb.AppendLine($"{indent}\"json\": {{");
         sb.AppendLine($"{indent}  \"contractType\": \"{EscapeJson(contract.ContractType)}\",");
         sb.AppendLine($"{indent}  \"useCamelCase\": {(contract.UseCamelCase ? "true" : "false")},");
@@ -334,27 +292,8 @@ internal static class SchemaEmitter
         }
 
         sb.AppendLine($"{indent}  ]");
-        sb.AppendLine($"{indent}}},");
-    }
-
-    private static void EmitAttributes(StringBuilder sb, List<CanonicalAttribute> attrs, string indent)
-    {
-        sb.AppendLine($"{indent}\"attributes\": [");
-        for (int i = 0; i < attrs.Count; i++)
-        {
-            var a = attrs[i];
-            sb.Append($"{indent}  {{\"name\": \"{EscapeJson(a.Name)}\"");
-            if (a.Arguments is { Count: > 0 })
-            {
-                sb.Append(", \"arguments\": {");
-                sb.Append(string.Join(", ", a.Arguments.Select(kvp => $"\"{EscapeJson(kvp.Key)}\": \"{EscapeJson(kvp.Value)}\"")));
-                sb.Append('}');
-            }
-            sb.Append('}');
-            if (i < attrs.Count - 1) sb.AppendLine(",");
-            else sb.AppendLine();
-        }
-        sb.AppendLine($"{indent}],");
+        sb.Append($"{indent}}}");
+        return sb.ToString();
     }
 
     private static string EscapeJson(string value)

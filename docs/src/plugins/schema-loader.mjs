@@ -1,7 +1,7 @@
 /**
  * Schema Loader Plugin for Astro/Starlight
  *
- * Loads ai-skills/apis/schema.json and ai-skills/apis/reference/*.ai-schema.json
+ * Loads ai-skills/apis/schema.json and ai-skills/apis/reference/*.api-schema.json
  * and exposes them as context objects for templates and components.
  */
 
@@ -32,7 +32,7 @@ export function loadSchemas(basePath = resolve('..')) {
   // Load assembly schemas
   const assemblySchemas = [];
   if (existsSync(referencePath)) {
-    const files = readdirSync(referencePath).filter(f => f.endsWith('.ai-schema.json'));
+    const files = readdirSync(referencePath).filter(f => f.endsWith('.api-schema.json'));
     for (const file of files) {
       const data = JSON.parse(readFileSync(join(referencePath, file), 'utf-8'));
       assemblySchemas.push({ fileName: file, ...data });

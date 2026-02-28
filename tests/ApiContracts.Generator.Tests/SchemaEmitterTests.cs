@@ -28,7 +28,7 @@ public class SchemaEmitterTests
             "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
 
         Assert.Contains("\"schemaVersion\": \"1.0.0\"", json);
-        Assert.Contains("\"rootSchema\": \"../../schema.json\"", json);
+        Assert.Contains("\"$schema\":", json);
         Assert.Contains("\"name\": \"TestAssembly\"", json);
         Assert.Contains("\"version\": \"1.0.0\"", json);
         Assert.Contains("\"targetFramework\": \"net10.0\"", json);
@@ -116,24 +116,27 @@ public class SchemaEmitterTests
     }
 
     [Fact]
-    public void EmitAssemblySchema_IncludesAIMetadata()
+    public void EmitAssemblySchema_DoesNotContainTrailingCommasOrSentinels()
     {
         var types = new List<CanonicalType>
         {
             new()
             {
-                Name = "Svc",
-                FullName = "TestNs.Svc",
+                Name = "Clean",
+                FullName = "TestNs.Clean",
                 Namespace = "TestNs",
-                Kind = "interface",
-                AI = new CanonicalAIMetadata
-                {
-                    Name = "TestService",
-                    Description = "A test service",
-                    Category = "Services",
-                    Role = "service",
-                    Tags = ["api", "test"],
-                }
+                Kind = "class",
+                Accessibility = "public",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "Id",
+                        Kind = "property",
+                        Signature = "int Clean.Id",
+                        ReturnType = "int",
+                    }
+                ]
             }
         };
 
@@ -141,11 +144,9 @@ public class SchemaEmitterTests
         var json = SchemaEmitter.EmitAssemblySchema(
             "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
 
-        Assert.Contains("\"ai\":", json);
-        Assert.Contains("\"name\": \"TestService\"", json);
-        Assert.Contains("\"description\": \"A test service\"", json);
-        Assert.Contains("\"category\": \"Services\"", json);
-        Assert.Contains("\"role\": \"service\"", json);
+        Assert.DoesNotContain("\"_\":", json);
+        Assert.DoesNotContain("\"generatedAt\":", json);
+        Assert.DoesNotContain("\"attributes\":", json);
     }
 
     [Fact]
@@ -261,37 +262,34 @@ public class SchemaEmitterTests
     }
 
     [Fact]
-    public void EmitAssemblySchema_IncludesAttributes()
+    public void EmitAssemblySchema_IsDeterministic()
     {
         var types = new List<CanonicalType>
         {
             new()
             {
-                Name = "Legacy",
-                FullName = "TestNs.Legacy",
+                Name = "B",
+                FullName = "TestNs.B",
                 Namespace = "TestNs",
                 Kind = "class",
-                Attributes =
-                [
-                    new CanonicalAttribute
-                    {
-                        Name = "ObsoleteAttribute",
-                        Arguments = new Dictionary<string, string>
-                        {
-                            ["Message"] = "Use NewClass instead"
-                        }
-                    }
-                ]
-            }
+                Accessibility = "public",
+            },
+            new()
+            {
+                Name = "A",
+                FullName = "TestNs.A",
+                Namespace = "TestNs",
+                Kind = "class",
+                Accessibility = "public",
+            },
         };
 
         var config = new AssemblyConfig();
-        var json = SchemaEmitter.EmitAssemblySchema(
+        var json1 = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+        var json2 = SchemaEmitter.EmitAssemblySchema(
             "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
 
-        Assert.Contains("\"attributes\":", json);
-        Assert.Contains("\"name\": \"ObsoleteAttribute\"", json);
-        Assert.Contains("\"Message\"", json);
-        Assert.Contains("Use NewClass instead", json);
+        Assert.Equal(json1, json2);
     }
 }
