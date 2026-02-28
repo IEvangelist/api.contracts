@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using Xunit;
 using ApiContracts.Generator.Helpers;
 
@@ -162,5 +165,133 @@ public class SchemaEmitterTests
         var zIndex = json.IndexOf("\"fullName\": \"B.Z\"");
 
         Assert.True(aIndex < zIndex);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesDocumentation()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Documented",
+                FullName = "TestNs.Documented",
+                Namespace = "TestNs",
+                Kind = "class",
+                Docs = new CanonicalDocumentation
+                {
+                    Summary = "A documented class.",
+                    Remarks = "Some remarks.",
+                    Returns = "The result.",
+                    Parameters = new Dictionary<string, string>
+                    {
+                        ["id"] = "The identifier."
+                    }
+                }
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"summary\": \"A documented class.\"", json);
+        Assert.Contains("\"remarks\": \"Some remarks.\"", json);
+        Assert.Contains("\"returns\": \"The result.\"", json);
+        Assert.Contains("\"id\": \"The identifier.\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesGenericParameters()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Repo",
+                FullName = "TestNs.Repo",
+                Namespace = "TestNs",
+                Kind = "class",
+                IsGeneric = true,
+                GenericParameters =
+                [
+                    new CanonicalGenericParameter
+                    {
+                        Name = "T",
+                        Constraints = ["class", "new()"]
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"isGeneric\": true", json);
+        Assert.Contains("\"genericParameters\":", json);
+        Assert.Contains("\"name\": \"T\"", json);
+        Assert.Contains("\"constraints\":", json);
+        Assert.Contains("\"class\"", json);
+        Assert.Contains("\"new()\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesInterfaces()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "MyClass",
+                FullName = "TestNs.MyClass",
+                Namespace = "TestNs",
+                Kind = "class",
+                Interfaces = ["System.IDisposable", "System.IComparable"]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"interfaces\":", json);
+        Assert.Contains("\"System.IDisposable\"", json);
+        Assert.Contains("\"System.IComparable\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesAttributes()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Legacy",
+                FullName = "TestNs.Legacy",
+                Namespace = "TestNs",
+                Kind = "class",
+                Attributes =
+                [
+                    new CanonicalAttribute
+                    {
+                        Name = "ObsoleteAttribute",
+                        Arguments = new Dictionary<string, string>
+                        {
+                            ["Message"] = "Use NewClass instead"
+                        }
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"attributes\":", json);
+        Assert.Contains("\"name\": \"ObsoleteAttribute\"", json);
+        Assert.Contains("\"Message\"", json);
+        Assert.Contains("Use NewClass instead", json);
     }
 }

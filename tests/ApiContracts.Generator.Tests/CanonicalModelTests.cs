@@ -1,6 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Xunit;
 using ApiContracts.Generator.Helpers;
 
@@ -8,14 +11,39 @@ namespace ApiContracts.Generator.Tests;
 
 public class CanonicalModelTests
 {
-    [Fact]
-    public void CanonicalType_GetTypeKind_ReturnsCorrectKind()
+    [Theory]
+    [InlineData("public class MyClass { }", "MyClass", "class")]
+    [InlineData("public interface IMyInterface { }", "IMyInterface", "interface")]
+    [InlineData("public enum MyEnum { A, B }", "MyEnum", "enum")]
+    [InlineData("public struct MyStruct { }", "MyStruct", "struct")]
+    [InlineData("public record MyRecord;", "MyRecord", "record")]
+    [InlineData("public record struct MyRecordStruct;", "MyRecordStruct", "record struct")]
+    [InlineData("public delegate void MyDelegate();", "MyDelegate", "delegate")]
+    public void CanonicalType_GetTypeKind_ReturnsCorrectKind(string source, string typeName, string expectedKind)
     {
-        // This is a basic smoke test for the static helper
-        // More thorough testing would require Roslyn compilation fixtures
-        Assert.Equal("class", "class");
-        Assert.Equal("interface", "interface");
-        Assert.Equal("enum", "enum");
+        var compilation = CreateCompilation($"namespace TestNs {{ {source} }}");
+        var symbol = compilation.GetTypeByMetadataName($"TestNs.{typeName}")!;
+
+        var result = CanonicalType.GetTypeKind(symbol);
+
+        Assert.Equal(expectedKind, result);
+    }
+
+    private static CSharpCompilation CreateCompilation(string source)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(source);
+
+        var references = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location))
+            .Select(a => MetadataReference.CreateFromFile(a.Location))
+            .Cast<MetadataReference>()
+            .ToList();
+
+        return CSharpCompilation.Create(
+            "TestAssembly",
+            [syntaxTree],
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 
     [Fact]
