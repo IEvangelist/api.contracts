@@ -1,0 +1,35 @@
+---
+title: "IRepository<TEntity>"
+description: "A generic repository interface for performing CRUD and query operations on entities."
+sidebar:
+  order: 20
+  badge:
+    text: "interface"
+    variant: "caution"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "IRepository");
+
+A generic repository interface for performing CRUD and query operations on entities.
+
+<Aside type="note">
+  Implementations should handle persistence concerns such as connection management and transaction scoping. Consumers should depend on this abstraction rather than concrete data-access implementations.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+<MemberList members={typeData.members} />

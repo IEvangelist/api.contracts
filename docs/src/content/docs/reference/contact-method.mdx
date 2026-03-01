@@ -1,0 +1,36 @@
+---
+title: "ContactMethod"
+description: "Available contact methods for a customer."
+sidebar:
+  order: 21
+  badge:
+    text: "enum"
+    variant: "tip"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "ContactMethod");
+
+Available contact methods for a customer.
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+| Name | Value | Description |
+|------|------:|-------------|
+| `Email` | `0` | Contact via email. |
+| `Phone` | `1` | Contact via phone. |
+| `Sms` | `2` | Contact via SMS. |
+| `Mail` | `3` | Contact via postal mail. |

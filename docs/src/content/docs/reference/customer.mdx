@@ -1,0 +1,39 @@
+---
+title: "Customer"
+description: "Represents a customer in the system."
+sidebar:
+  order: 4
+  badge:
+    text: "class"
+    variant: "note"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "Customer");
+
+Represents a customer in the system.
+
+<Aside type="note">
+  This is a sample domain model demonstrating the API Contracts generator. It shows how types, properties, and methods are captured in the schema.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+<MemberList members={typeData.members} />
+
+## JSON Serialization
+
+<JsonContract json={typeData.json} typeName="Customer" />

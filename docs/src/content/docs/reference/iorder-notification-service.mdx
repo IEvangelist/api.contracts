@@ -1,0 +1,35 @@
+---
+title: "IOrderNotificationService"
+description: "A service that publishes notifications for key order lifecycle events."
+sidebar:
+  order: 19
+  badge:
+    text: "interface"
+    variant: "caution"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "IOrderNotificationService");
+
+A service that publishes notifications for key order lifecycle events.
+
+<Aside type="note">
+  Consumers subscribe to the events exposed by this interface to react to order state transitions. Implementations are responsible for raising events at the appropriate points in the order processing pipeline.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+<MemberList members={typeData.members} />
