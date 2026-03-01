@@ -140,14 +140,6 @@ internal static class CanonicalSerializer
         sb.Append(',');
         AppendProperty(sb, "namespace", type.Namespace);
 
-        // AI metadata contributes to hash
-        if (type.AI is not null)
-        {
-            sb.Append(',');
-            AppendKey(sb, "ai");
-            SerializeAIMetadata(sb, type.AI);
-        }
-
         // Docs contribute to hash (excluding code sample content)
         if (type.Docs is not null)
         {
@@ -164,13 +156,6 @@ internal static class CanonicalSerializer
         sb.Append('{');
         AppendProperty(sb, "accessibility", member.Accessibility);
         sb.Append(',');
-
-        if (member.AI is not null)
-        {
-            AppendKey(sb, "ai");
-            SerializeAIMetadata(sb, member.AI);
-            sb.Append(',');
-        }
 
         if (member.Attributes is { Count: > 0 })
         {
@@ -217,13 +202,6 @@ internal static class CanonicalSerializer
         sb.Append(',');
         AppendProperty(sb, "isVirtual", member.IsVirtual);
         sb.Append(',');
-
-        if (member.Json is not null)
-        {
-            AppendKey(sb, "json");
-            SerializeJsonProperty(sb, member.Json);
-            sb.Append(',');
-        }
 
         AppendProperty(sb, "kind", member.Kind);
         sb.Append(',');
@@ -308,44 +286,6 @@ internal static class CanonicalSerializer
         AppendProperty(sb, "nullable", prop.Nullable);
         sb.Append(',');
         AppendProperty(sb, "required", prop.Required);
-        sb.Append('}');
-    }
-
-    private static void SerializeAIMetadata(StringBuilder sb, CanonicalAIMetadata ai)
-    {
-        sb.Append('{');
-        var first = true;
-
-        if (ai.Category is not null)
-        {
-            AppendProperty(sb, "category", ai.Category);
-            first = false;
-        }
-        if (ai.Description is not null)
-        {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "description", ai.Description);
-            first = false;
-        }
-        if (ai.Name is not null)
-        {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "name", ai.Name);
-            first = false;
-        }
-        if (ai.Role is not null)
-        {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "role", ai.Role);
-            first = false;
-        }
-        if (ai.Tags is { Count: > 0 })
-        {
-            if (!first) sb.Append(',');
-            AppendKey(sb, "tags");
-            SerializeStringArray(sb, ai.Tags);
-        }
-
         sb.Append('}');
     }
 

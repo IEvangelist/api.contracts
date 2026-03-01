@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -19,12 +17,6 @@ namespace SampleApi;
 /// </remarks>
 /// <param name="order">The order associated with the event.</param>
 /// <exception cref="ArgumentNullException">Thrown when <paramref name="order"/> is <see langword="null"/>.</exception>
-[ApiContract(
-    Name = "OrderEventArgs",
-    Description = "Event data carrying an order and the timestamp of the event.",
-    Category = "Events",
-    Role = "event-args",
-    Tags = "event,order,notification")]
 public class OrderEventArgs(Order order) : EventArgs
 {
 
@@ -49,12 +41,6 @@ public class OrderEventArgs(Order order) : EventArgs
 /// </remarks>
 /// <seealso cref="OrderEventArgs"/>
 /// <seealso cref="Order"/>
-[ApiContract(
-    Name = "OrderNotificationService",
-    Description = "Publishes events for order lifecycle transitions such as placement, shipment, and cancellation.",
-    Category = "Services",
-    Role = "service",
-    Tags = "event,order,notification,service")]
 public interface IOrderNotificationService
 {
     /// <summary>

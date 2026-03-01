@@ -62,8 +62,6 @@ export function loadSchemas(basePath = resolve('..')) {
         namespace: type.namespace,
         typeKind: type.kind,
         summary: type.docs?.summary ?? '',
-        category: type.ai?.category ?? '',
-        tags: type.ai?.tags ?? [],
         package: schema.package?.name ?? '',
       });
 
@@ -94,16 +92,13 @@ export function loadSchemas(basePath = resolve('..')) {
  */
 export function buildTypeContext(type, rootSchema) {
   return {
-    name: type.ai?.name || type.name,
+    name: type.name,
     fullName: type.fullName,
     namespace: type.namespace,
     kind: type.kind,
     accessibility: type.accessibility,
     summary: type.docs?.summary || '',
     remarks: type.docs?.remarks || '',
-    category: type.ai?.category || '',
-    role: type.ai?.role || '',
-    tags: type.ai?.tags || [],
     members: (type.members || []).map(m => buildMemberContext(m)),
     json: type.json || null,
     enumMembers: type.enumMembers || null,
@@ -126,7 +121,7 @@ export function buildTypeContext(type, rootSchema) {
  */
 export function buildMemberContext(member) {
   return {
-    name: member.ai?.name || member.name,
+    name: member.name,
     kind: member.kind,
     accessibility: member.accessibility,
     signature: member.signature,
@@ -142,8 +137,6 @@ export function buildMemberContext(member) {
     remarks: member.docs?.remarks || '',
     returns: member.docs?.returns || '',
     examples: member.docs?.examples || [],
-    json: member.json || null,
-    ai: member.ai || null,
     attributes: member.attributes || [],
   };
 }

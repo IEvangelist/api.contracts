@@ -6,98 +6,122 @@
  */
 const { members = [] } = Astro.props;
 
-const grouped = members.reduce((acc: Record<string, any[]>, m: any) => {
-  const kind = m.kind ?? 'other';
-  if (!Object.hasOwn(acc, kind)) acc[kind] = [];
-  acc[kind].push(m);
-  return acc;
-}, Object.create(null) as Record<string, any[]>);
+const grouped = members.reduce(
+    (acc: Record<string, any[]>, m: any) => {
+        const kind = m.kind ?? "other";
+        if (!Object.hasOwn(acc, kind)) acc[kind] = [];
+        acc[kind].push(m);
+        return acc;
+    },
+    Object.create(null) as Record<string, any[]>,
+);
 
-const kindOrder = ['constructor', 'property', 'method', 'field', 'event', 'indexer'];
+const kindOrder = [
+    "constructor",
+    "property",
+    "method",
+    "field",
+    "event",
+    "indexer",
+];
 const sortedKinds = Object.keys(grouped).sort(
-  (a, b) => (kindOrder.indexOf(a) === -1 ? 999 : kindOrder.indexOf(a)) -
-            (kindOrder.indexOf(b) === -1 ? 999 : kindOrder.indexOf(b))
+    (a, b) =>
+        (kindOrder.indexOf(a) === -1 ? 999 : kindOrder.indexOf(a)) -
+        (kindOrder.indexOf(b) === -1 ? 999 : kindOrder.indexOf(b)),
 );
 
 const kindLabels: Record<string, string> = {
-  constructor: '🏗️ Constructors',
-  property: '📋 Properties',
-  method: '⚡ Methods',
-  field: '📌 Fields',
-  event: '🔔 Events',
-  indexer: '🔍 Indexers',
+    constructor: "🏗️ Constructors",
+    property: "📋 Properties",
+    method: "⚡ Methods",
+    field: "📌 Fields",
+    event: "🔔 Events",
+    indexer: "🔍 Indexers",
 };
 ---
 
 <div class="member-list">
-  {sortedKinds.map((kind) => (
-    <div class="member-group">
-      <h3>{kindLabels[kind] ?? kind}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Signature</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {grouped[kind].map((m: any) => (
-            <tr>
-              <td>
-                <code>{m.name}</code>
-                {m.isStatic && <span class="badge">static</span>}
-                {m.isAbstract && <span class="badge">abstract</span>}
-                {m.isVirtual && <span class="badge">virtual</span>}
-                {m.isAsync && <span class="badge">async</span>}
-              </td>
-              <td><code class="signature">{m.signature}</code></td>
-              <td>{m.docs?.summary ?? m.ai?.description ?? '—'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  ))}
+    {
+        sortedKinds.map((kind) => (
+            <div class="member-group">
+                <h3>{kindLabels[kind] ?? kind}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Signature</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {grouped[kind].map((m: any) => (
+                            <tr>
+                                <td>
+                                    <code>{m.name}</code>
+                                    {m.isStatic && (
+                                        <span class="badge">static</span>
+                                    )}
+                                    {m.isAbstract && (
+                                        <span class="badge">abstract</span>
+                                    )}
+                                    {m.isVirtual && (
+                                        <span class="badge">virtual</span>
+                                    )}
+                                    {m.isAsync && (
+                                        <span class="badge">async</span>
+                                    )}
+                                </td>
+                                <td>
+                                    <code class="signature">{m.signature}</code>
+                                </td>
+                                <td>{m.docs?.summary ?? "—"}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        ))
+    }
 </div>
 
 <style>
-  .member-list {
-    margin: 1rem 0;
-  }
-  .member-group {
-    margin-bottom: 1.5rem;
-  }
-  .member-group h3 {
-    font-size: 1.125rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--sl-color-gray-5);
-    padding-bottom: 0.25rem;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.875rem;
-  }
-  th, td {
-    text-align: left;
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--sl-color-gray-6);
-  }
-  th {
-    font-weight: 600;
-    color: var(--sl-color-gray-2);
-  }
-  .badge {
-    font-size: 0.75rem;
-    padding: 0.1rem 0.3rem;
-    border-radius: 0.2rem;
-    background: var(--sl-color-gray-5);
-    color: var(--sl-color-gray-1);
-    margin-left: 0.25rem;
-  }
-  .signature {
-    font-size: 0.8rem;
-    word-break: break-all;
-  }
+    .member-list {
+        margin: 1rem 0;
+    }
+    .member-group {
+        margin-bottom: 1.5rem;
+    }
+    .member-group h3 {
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid var(--sl-color-gray-5);
+        padding-bottom: 0.25rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+    }
+    th,
+    td {
+        text-align: left;
+        padding: 0.5rem;
+        border-bottom: 1px solid var(--sl-color-gray-6);
+    }
+    th {
+        font-weight: 600;
+        color: var(--sl-color-gray-2);
+    }
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.2rem;
+        background: var(--sl-color-gray-5);
+        color: var(--sl-color-gray-1);
+        margin-left: 0.25rem;
+    }
+    .signature {
+        font-size: 0.8rem;
+        word-break: break-all;
+    }
 </style>

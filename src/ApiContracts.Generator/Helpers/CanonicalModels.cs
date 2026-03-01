@@ -19,7 +19,6 @@ internal sealed class CanonicalType
     public string? BaseType { get; set; }
     public List<string> Interfaces { get; set; } = [];
     public List<CanonicalMember> Members { get; set; } = [];
-    public CanonicalAIMetadata? AI { get; set; }
     public CanonicalDocumentation? Docs { get; set; }
     public CanonicalJsonContract? Json { get; set; }
     public List<CanonicalEnumMember>? EnumMembers { get; set; }
@@ -63,9 +62,7 @@ internal sealed class CanonicalMember
     public List<CanonicalParameter>? Parameters { get; set; }
     public List<CanonicalGenericParameter>? GenericParameters { get; set; }
     public string Signature { get; set; } = "";
-    public CanonicalAIMetadata? AI { get; set; }
     public CanonicalDocumentation? Docs { get; set; }
-    public CanonicalJsonProperty? Json { get; set; }
     public List<CanonicalAttribute>? Attributes { get; set; }
 }
 
@@ -93,16 +90,6 @@ internal sealed class CanonicalAttribute
 {
     public string Name { get; set; } = "";
     public Dictionary<string, string>? Arguments { get; set; }
-}
-
-/// <summary>Canonical AI metadata.</summary>
-internal sealed class CanonicalAIMetadata
-{
-    public string? Name { get; set; }
-    public string? Description { get; set; }
-    public string? Category { get; set; }
-    public string? Role { get; set; }
-    public List<string>? Tags { get; set; }
 }
 
 /// <summary>Canonical documentation.</summary>

@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -15,12 +13,6 @@ namespace SampleApi;
 /// identity of the user who performed the respective action.
 /// </remarks>
 /// <seealso cref="SoftDeletableEntity"/>
-[ApiContract(
-    Name = "AuditableEntity",
-    Description = "Abstract base class providing identity and audit timestamp properties for entities.",
-    Category = "Domain",
-    Role = "entity-base",
-    Tags = "audit,entity,abstract,base-class")]
 public abstract class AuditableEntity
 {
     /// <summary>
@@ -59,12 +51,6 @@ public abstract class AuditableEntity
 /// Query logic should filter out soft-deleted entities by default.
 /// </remarks>
 /// <seealso cref="AuditableEntity"/>
-[ApiContract(
-    Name = "SoftDeletableEntity",
-    Description = "Abstract base class that extends AuditableEntity with soft-delete support.",
-    Category = "Domain",
-    Role = "entity-base",
-    Tags = "audit,soft-delete,entity,abstract,base-class")]
 public abstract class SoftDeletableEntity : AuditableEntity
 {
     /// <summary>

@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -15,12 +13,6 @@ namespace SampleApi;
 /// immutability and value-based equality. Use this type instead of bare <see cref="decimal"/>
 /// values to avoid accidental mixing of different currencies.
 /// </remarks>
-[ApiContract(
-    Name = "Money",
-    Description = "A value object representing a monetary amount with an associated currency code.",
-    Category = "Domain",
-    Role = "value-object",
-    Tags = "money,currency,value-object,finance")]
 public readonly record struct Money(decimal Amount, string Currency)
 {
     /// <summary>
@@ -57,12 +49,6 @@ public readonly record struct Money(decimal Amount, string Currency)
 /// making it suitable for use as an embedded value object within aggregate roots.
 /// </remarks>
 /// <seealso cref="Customer"/>
-[ApiContract(
-    Name = "Address",
-    Description = "A postal address with street, city, state, postal code, and country.",
-    Category = "Domain",
-    Role = "value-object",
-    Tags = "address,location,value-object")]
 public record class Address(
     string Street,
     string City,
@@ -79,12 +65,6 @@ public record class Address(
 /// calculated time span between the two boundary dates. A <see cref="DateRange"/> is considered
 /// valid when <see cref="Start"/> is less than or equal to <see cref="End"/>.
 /// </remarks>
-[ApiContract(
-    Name = "DateRange",
-    Description = "An inclusive date range defined by a start and end date.",
-    Category = "Domain",
-    Role = "value-object",
-    Tags = "date,range,value-object,temporal")]
 public readonly struct DateRange : IEquatable<DateRange>
 {
     /// <summary>

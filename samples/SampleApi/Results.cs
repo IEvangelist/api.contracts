@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -15,12 +13,6 @@ namespace SampleApi;
 /// </remarks>
 /// <seealso cref="ValidationError"/>
 /// <seealso cref="ProblemDetails"/>
-[ApiContract(
-    Name = "Result",
-    Description = "A generic result type that represents either a successful value or an error.",
-    Category = "Patterns",
-    Role = "response",
-    Tags = "result,error-handling,generic,pattern")]
 public class Result<T>
 {
     /// <summary>
@@ -87,12 +79,6 @@ public class Result<T>
 /// </remarks>
 /// <seealso cref="ProblemDetails"/>
 /// <seealso cref="Result{T}"/>
-[ApiContract(
-    Name = "ValidationError",
-    Description = "A record describing a validation failure for a specific input field.",
-    Category = "Patterns",
-    Role = "error",
-    Tags = "validation,error,field,pattern")]
 public record class ValidationError(
     string Field,
     string Message,
@@ -110,12 +96,6 @@ public record class ValidationError(
 /// </remarks>
 /// <seealso cref="ValidationError"/>
 /// <seealso cref="Result{T}"/>
-[ApiContract(
-    Name = "ProblemDetails",
-    Description = "RFC 9457 problem details object for standardised HTTP API error responses.",
-    Category = "Patterns",
-    Role = "error",
-    Tags = "error,http,rfc9457,problem-details")]
 public class ProblemDetails
 {
     /// <summary>

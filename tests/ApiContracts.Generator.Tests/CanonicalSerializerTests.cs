@@ -132,36 +132,6 @@ public class CanonicalSerializerTests
     }
 
     [Fact]
-    public void SerializeForHashing_IncludesAIMetadata()
-    {
-        var types = new List<CanonicalType>
-        {
-            new()
-            {
-                Name = "Svc",
-                FullName = "Test.Svc",
-                Namespace = "Test",
-                Kind = "interface",
-                AI = new CanonicalAIMetadata
-                {
-                    Name = "MyService",
-                    Description = "A test service",
-                    Category = "Services",
-                    Role = "service",
-                    Tags = ["api", "test"]
-                }
-            }
-        };
-
-        var result = CanonicalSerializer.SerializeForHashing(types);
-
-        Assert.Contains("\"ai\":", result);
-        Assert.Contains("\"name\":\"MyService\"", result);
-        Assert.Contains("\"category\":\"Services\"", result);
-        Assert.Contains("\"tags\":[\"api\",\"test\"]", result);
-    }
-
-    [Fact]
     public void SerializeForHashing_ExcludesCodeSampleContent()
     {
         var types = new List<CanonicalType>

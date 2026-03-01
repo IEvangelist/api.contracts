@@ -64,7 +64,6 @@ public class CanonicalModelTests
         Assert.Null(type.BaseType);
         Assert.Empty(type.Interfaces);
         Assert.Empty(type.Members);
-        Assert.Null(type.AI);
         Assert.Null(type.Docs);
         Assert.Null(type.Json);
         Assert.Null(type.EnumMembers);
@@ -117,18 +116,6 @@ public class CanonicalModelTests
         Assert.False(param.IsOptional);
         Assert.Null(param.DefaultValue);
         Assert.Null(param.Modifier);
-    }
-
-    [Fact]
-    public void CanonicalAIMetadata_DefaultValues_AreAllNull()
-    {
-        var ai = new CanonicalAIMetadata();
-
-        Assert.Null(ai.Name);
-        Assert.Null(ai.Description);
-        Assert.Null(ai.Category);
-        Assert.Null(ai.Role);
-        Assert.Null(ai.Tags);
     }
 
     [Fact]

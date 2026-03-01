@@ -9,8 +9,8 @@ Deterministic, signed, versioned JSON schemas that describe a .NET assembly's pu
 
 **API Contracts** is a Roslyn incremental source generator that walks public symbols in a .NET compilation and emits:
 
-- **Root schema** (`ai-skills/apis/schema.json`) — language definitions, polyglot type mappings, documentation templates, and placeholders.
-- **Assembly schemas** (`ai-skills/apis/reference/<AssemblyName>.ai-schema.json`) — data-only snapshots of every public type, member, JSON contract, XML doc, and AI metadata.
+- **Root schema** (`schemas/api-schema.json`) — JSON Schema definition that validates the structure of assembly data files.
+- **Assembly data files** (`{PackageName}.{Version}.json`) — data-only snapshots of every public type, member, JSON contract, and XML documentation.
 - **Optional signed variants** with RSA-SHA256 signature envelopes.
 
 Each schema includes a deterministic `apiHash` (SHA-256 of the canonical API model) so consumers can detect API surface changes without diffing source.
@@ -35,28 +35,22 @@ Each schema includes a deterministic `apiHash` (SHA-256 of the canonical API mod
                   ReferenceOutputAssembly="false" />
 ```
 
-### 2. Annotate your types (optional)
+### 2. Mark your assembly
+
+All public types are included automatically. Use `[ApiContract(Ignore = true)]` to exclude specific types or members:
 
 ```csharp
 using ApiContracts;
 
-[ApiContract(
-    Name = "Customer",
-    Description = "A customer entity.",
-    Category = "Domain",
-    Role = "entity",
-    Tags = "customer,crm")]
-public class Customer
-{
-    public required Guid Id { get; set; }
-    public required string FullName { get; set; }
-    public string? Email { get; set; }
-}
+// All public types in this assembly are emitted to the data file.
+// To exclude a type:
+[ApiContract(Ignore = true)]
+public class InternalHelper { }
 ```
 
 ### 3. Build
 
-The generator emits schema code during compilation. The schema captures all public types, members, signatures, XML docs, JSON serialization contracts, and AI metadata.
+The generator emits data file code during compilation. The data file captures all public types, members, signatures, XML docs, and JSON serialization contracts.
 
 ## Configuration
 
@@ -114,7 +108,7 @@ To emit vendor-specific copies of your schema:
 </PropertyGroup>
 ```
 
-This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.ai-schema.json`.
+This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.json`.
 
 ## Schema Format
 
@@ -143,6 +137,7 @@ This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.ai-schema.
 ### Canonical Hashing
 
 The `apiHash` is computed by:
+
 1. Building a canonical model of all public types and members
 2. Sorting by namespace → type → member
 3. Serializing to UTF-8 JSON with sorted properties and no whitespace
@@ -196,7 +191,7 @@ npm run dev
 
 ### How it works
 
-1. The schema loader plugin (`docs/src/plugins/schema-loader.mjs`) loads `schema.json` and all `*.ai-schema.json` files at build time
+1. The schema loader plugin (`docs/src/plugins/schema-loader.mjs`) loads `schema.json` and all `*.json` data files at build time
 2. It builds type and namespace indexes for fast lookup
 3. Astro components (`TypeSignature`, `MemberList`, `JsonContract`, `Examples`) render API documentation from the schema data
 4. Polyglot code samples are shown in tabbed views with copy buttons

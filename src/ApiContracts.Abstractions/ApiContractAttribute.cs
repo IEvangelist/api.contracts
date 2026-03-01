@@ -4,10 +4,12 @@
 namespace ApiContracts;
 
 /// <summary>
-/// Controls how a public API element appears in the emitted AI schema.
-/// Apply to types, methods, properties, or parameters to override defaults.
+/// Marks an assembly for API schema generation. All public types are included
+/// implicitly unless a type or member is annotated with <c>Ignore = true</c>.
+/// Apply at the type or member level only when you need to exclude an element.
 /// </summary>
 [AttributeUsage(
+    AttributeTargets.Assembly |
     AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface |
     AttributeTargets.Enum | AttributeTargets.Method | AttributeTargets.Property |
     AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Event,
@@ -16,32 +18,7 @@ namespace ApiContracts;
 public sealed class ApiContractAttribute : Attribute
 {
     /// <summary>
-    /// Overrides the display name in the schema.
+    /// When <see langword="true"/>, excludes this element from the generated schema.
     /// </summary>
-    public string? Name { get; set; }
-
-    /// <summary>
-    /// Provides a human-readable description for AI consumers.
-    /// </summary>
-    public string? Description { get; set; }
-
-    /// <summary>
-    /// Assigns a category for grouping in documentation and tooling.
-    /// </summary>
-    public string? Category { get; set; }
-
-    /// <summary>
-    /// Assigns a semantic role (e.g., "request", "response", "configuration").
-    /// </summary>
-    public string? Role { get; set; }
-
-    /// <summary>
-    /// Comma-separated tags for search and filtering.
-    /// </summary>
-    public string? Tags { get; set; }
-
-    /// <summary>
-    /// When <see langword="true"/>, excludes this element from the schema.
-    /// </summary>
-    public bool Exclude { get; set; }
+    public bool Ignore { get; set; }
 }

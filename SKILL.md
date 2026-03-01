@@ -2,42 +2,39 @@
 
 ## Purpose
 
-Teach an AI agent how to consume, interpret, and act on emitted `*.ai-schema.json` files and the root `schema.json`. The agent can plan API calls, generate code, produce documentation, validate inputs, and reason about .NET API surfaces deterministically.
+Teach an AI agent how to consume, interpret, and act on emitted API surface data files and the root `schema.json`. The agent can plan API calls, generate code, produce documentation, validate inputs, and reason about .NET API surfaces deterministically.
 
 ## Schema Sources
 
 - `ai-skills/apis/schema.json` — Root schema with language definitions, documentation templates, and placeholders.
-- `ai-skills/apis/reference/*.ai-schema.json` — Per-assembly API surface snapshots.
+- `ai-skills/apis/reference/*.json` — Per-assembly API surface data files.
 
 ## Interpretation Rules
 
 ### Types
+
 - Each entry in `types[]` describes a public type (class, struct, interface, enum, record, delegate).
-- Use `ai.name` and `ai.description` when available; fall back to `name` and `docs.summary`.
+- Use `name` and `docs.summary` for display and description.
 - `kind` indicates the type category; `accessibility` is always `"public"` unless internals are included.
 
 ### Members
+
 - Each type has `members[]` containing methods, properties, fields, events, and constructors.
 - `signature` provides the full method/property signature for display and matching.
 - `parameters[]` includes name, type, nullability, optionality, and default values.
 
 ### JSON Contracts
+
 - `json.properties[]` on a type describes its System.Text.Json serialization shape.
 - Each property has `jsonName` (wire name), `jsonType`, `nullable`, `required`, `ignored`.
 - Use `json.contractType` to determine if the type serializes as `object`, `array`, or `value`.
 
 ### Documentation
+
 - `docs.summary` provides a one-line description.
 - `docs.remarks` provides extended explanation.
 - `docs.parameters` maps parameter names to descriptions.
 - `docs.examples[]` provides code samples with `language`, `region`, and `code`.
-
-### AI Metadata
-- `ai.name` overrides the display name for agent-facing contexts.
-- `ai.description` provides an agent-oriented summary.
-- `ai.category` groups related types (e.g., `"Domain"`, `"Services"`).
-- `ai.role` assigns a semantic role (`"entity"`, `"service"`, `"request"`, `"response"`, `"configuration"`).
-- `ai.tags` enables keyword-based search and filtering.
 
 ## Context Objects
 
@@ -45,45 +42,43 @@ When rendering templates or reasoning about API surfaces, build these context ob
 
 ```json
 {
-  "typeContext": {
-    "name": "{type.name}",
-    "fullName": "{type.fullName}",
-    "namespace": "{type.namespace}",
-    "kind": "{type.kind}",
-    "ai": "{type.ai}",
-    "docs": "{type.docs}",
-    "json": "{type.json}",
-    "members": "{type.members[]}"
-  },
-  "memberContext": {
-    "name": "{member.name}",
-    "kind": "{member.kind}",
-    "signature": "{member.signature}",
-    "returnType": "{member.returnType}",
-    "parameters": "{member.parameters[]}",
-    "docs": "{member.docs}",
-    "json": "{member.json}"
-  },
-  "packageContext": {
-    "name": "{package.name}",
-    "version": "{package.version}",
-    "targetFramework": "{package.targetFramework}",
-    "apiHash": "{apiHash}"
-  }
+    "typeContext": {
+        "name": "{type.name}",
+        "fullName": "{type.fullName}",
+        "namespace": "{type.namespace}",
+        "kind": "{type.kind}",
+        "docs": "{type.docs}",
+        "json": "{type.json}",
+        "members": "{type.members[]}"
+    },
+    "memberContext": {
+        "name": "{member.name}",
+        "kind": "{member.kind}",
+        "signature": "{member.signature}",
+        "returnType": "{member.returnType}",
+        "parameters": "{member.parameters[]}",
+        "docs": "{member.docs}"
+    },
+    "packageContext": {
+        "name": "{package.name}",
+        "version": "{package.version}",
+        "targetFramework": "{package.targetFramework}",
+        "apiHash": "{apiHash}"
+    }
 }
 ```
 
 ## Planning & Execution Model
 
-1. **Load** — Read `schema.json` and all `*.ai-schema.json` files. Verify signatures if present.
-2. **Index** — Build a searchable index of types, members, JSON contracts, and examples. Key by `fullName`, `ai.name`, `ai.category`, and `ai.tags`.
+1. **Load** — Read `schema.json` and all per-assembly data files from `reference/`. Verify signatures if present.
+2. **Index** — Build a searchable index of types, members, JSON contracts, and examples. Key by `fullName`, `docs.summary`, and `namespace`.
 3. **Interpret** — Map user intent to candidate API targets:
-   - Search by `ai.tags`, `ai.category`, `docs.summary`, or `fullName`.
-   - Rank by relevance using `ai.description` and `ai.role`.
+    - Search by `docs.summary`, `fullName`, or `namespace`.
+    - Rank by relevance using `docs.remarks`.
 4. **Plan** — Construct a minimal action sequence:
-   - Identify target type and member.
-   - Validate required parameters using `parameters[]` and `json.properties[]`.
-   - Build request payload per JSON contract rules.
+    - Identify target type and member.
+    - Validate required parameters using `parameters[]` and `json.properties[]`.
+    - Build request payload per JSON contract rules.
 5. **Execute** — Invoke the planned action (API call, code generation, or documentation rendering).
 6. **Validate** — Check response against return type, nullability, and expected shape.
 7. **Reflect** — On failure, consult `docs.examples[]`, fill missing `required` fields, correct type mismatches, and retry.
@@ -96,7 +91,7 @@ The root schema defines `documentation.templates` and `documentation.placeholder
 - **Templates** map page types to template files (e.g., `"type": "TypePage.mdx"`).
 - **Placeholders** use the syntax `{path.to.value}` and are replaced with context object values.
 
-Example: `{type.ai.name}` → `"Customer"`, `{member.signature}` → `"Task<Customer> CreateAsync(Customer customer)"`.
+Example: `{type.fullName}` → `"SampleApi.Customer"`, `{member.signature}` → `"Task<Customer> CreateAsync(Customer customer)"`.
 
 ## Polyglot Code Generation Rules
 
@@ -104,11 +99,11 @@ When generating code from schema data:
 
 1. Use `languages.available[]` from the root schema to determine supported target languages.
 2. Map CLR types to target language types:
-   - `string` → `string` (C#), `string` (TS), `str` (Python), `String` (Java)
-   - `int` → `int` (C#), `number` (TS), `int` (Python), `int` (Java)
-   - `bool` → `bool` (C#), `boolean` (TS), `bool` (Python), `boolean` (Java)
-   - `Guid` → `Guid` (C#), `string` (TS), `str` (Python), `UUID` (Java)
-   - `List<T>` → `List<T>` (C#), `T[]` (TS), `list[T]` (Python), `List<T>` (Java)
+    - `string` → `string` (C#), `string` (TS), `str` (Python), `String` (Java)
+    - `int` → `int` (C#), `number` (TS), `int` (Python), `int` (Java)
+    - `bool` → `bool` (C#), `boolean` (TS), `bool` (Python), `boolean` (Java)
+    - `Guid` → `Guid` (C#), `string` (TS), `str` (Python), `UUID` (Java)
+    - `List<T>` → `List<T>` (C#), `T[]` (TS), `list[T]` (Python), `List<T>` (Java)
 3. Respect `json.jsonName` for serialization field names.
 4. Mark `json.nullable` fields as optional in target language.
 5. Enforce `json.required` fields in constructors or builders.
@@ -130,13 +125,16 @@ When generating code from schema data:
 **User intent**: "What is the Customer type?"
 
 **Agent plan**:
-1. Search `types[]` where `ai.name == "Customer"` or `name == "Customer"`.
-2. Return `ai.description`, `docs.summary`, and list `members[]` with signatures.
+
+1. Search `types[]` where `name == "Customer"` or `fullName` contains `"Customer"`.
+2. Return `docs.summary` and list `members[]` with signatures.
 
 **Result**:
+
 > **Customer** — A customer entity with contact information and order history.
-> 
+>
 > Members:
+>
 > - `Guid Id` (required)
 > - `string FullName` (required)
 > - `string? Email` (nullable)
@@ -150,20 +148,22 @@ When generating code from schema data:
 **User intent**: "Generate a TypeScript interface for the Customer type."
 
 **Agent plan**:
+
 1. Find type `Customer` in schema.
 2. Read `json.properties[]`.
 3. Map each property to TypeScript type using polyglot rules.
 
 **Result**:
+
 ```typescript
 export interface Customer {
-  id: string;           // required
-  fullName: string;     // required
-  email?: string;       // nullable
-  createdAt: string;    // DateTimeOffset → string
-  isActive: boolean;
-  tags: string[];
-  preferredContact: ContactMethod;
+    id: string; // required
+    fullName: string; // required
+    email?: string; // nullable
+    createdAt: string; // DateTimeOffset → string
+    isActive: boolean;
+    tags: string[];
+    preferredContact: ContactMethod;
 }
 ```
 
@@ -172,18 +172,20 @@ export interface Customer {
 **User intent**: "Create a new customer named Alice."
 
 **Agent plan**:
+
 1. Find `ICustomerService.CreateAsync(Customer customer)`.
 2. Identify required fields: `id`, `fullName`.
 3. Build JSON payload with `json.jsonName` values.
 
 **Result**:
+
 ```json
 {
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "fullName": "Alice",
-  "isActive": true,
-  "tags": [],
-  "preferredContact": "Email"
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "fullName": "Alice",
+    "isActive": true,
+    "tags": [],
+    "preferredContact": "Email"
 }
 ```
 
@@ -192,6 +194,7 @@ export interface Customer {
 **User intent**: "Submit this customer: `{ "fullName": "Bob" }`"
 
 **Agent plan**:
+
 1. Find `Customer` type and read `json.properties[]`.
 2. Validate payload against required fields.
 3. Detect missing `id` (required, type `Guid`).
@@ -200,6 +203,7 @@ export interface Customer {
 6. Submit corrected payload.
 
 **Remediation steps**:
+
 - **Missing required field**: Auto-generate a default value if the type is deterministic (`Guid` → new GUID, `DateTime` → `DateTime.UtcNow`). Otherwise, prompt the user.
 - **Type mismatch**: Attempt coercion only for safe conversions (`"42"` → `42` for numeric fields). Reject unsafe coercions.
 - **Unknown enum value**: List valid values from `enumMembers[].name` and ask the user to choose.
@@ -207,13 +211,14 @@ export interface Customer {
 - **Retry logic**: After each correction, re-validate the full payload before proceeding. Maximum 3 retry attempts.
 
 **Corrected result**:
+
 ```json
 {
-  "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
-  "fullName": "Bob",
-  "isActive": true,
-  "tags": [],
-  "preferredContact": "Email"
+    "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    "fullName": "Bob",
+    "isActive": true,
+    "tags": [],
+    "preferredContact": "Email"
 }
 ```
 

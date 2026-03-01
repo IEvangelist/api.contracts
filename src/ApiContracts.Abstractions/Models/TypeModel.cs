@@ -47,9 +47,6 @@ public sealed class TypeModel
     /// <summary>Members of this type.</summary>
     public List<MemberModel> Members { get; set; } = [];
 
-    /// <summary>AI metadata overrides.</summary>
-    public AIMetadata? AI { get; set; }
-
     /// <summary>Normalized XML documentation.</summary>
     public DocumentationModel? Docs { get; set; }
 
@@ -119,14 +116,8 @@ public sealed class MemberModel
     /// <summary>Complete member signature string.</summary>
     public string Signature { get; set; } = "";
 
-    /// <summary>AI metadata overrides.</summary>
-    public AIMetadata? AI { get; set; }
-
     /// <summary>Normalized XML documentation.</summary>
     public DocumentationModel? Docs { get; set; }
-
-    /// <summary>JSON serialization metadata for this member.</summary>
-    public JsonPropertyModel? Json { get; set; }
 
     /// <summary>Member-level attributes that affect the API shape.</summary>
     public List<AttributeModel>? Attributes { get; set; }

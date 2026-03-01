@@ -14,24 +14,17 @@ description: Get up and running with API Contracts in under 5 minutes.
 </ItemGroup>
 ```
 
-## 2. Annotate Your Types (Optional)
+## 2. Mark Your Assembly
+
+All public types are included automatically. Use `[ApiContract(Ignore = true)]` to exclude specific types or members:
 
 ```csharp
 using ApiContracts;
 
-[ApiContract(
-    Name = "Customer",
-    Description = "A customer entity with contact info.",
-    Category = "Domain",
-    Role = "entity",
-    Tags = "customer,crm")]
-public class Customer
-{
-    public required Guid Id { get; set; }
-    public required string FullName { get; set; }
-    public string? Email { get; set; }
-    public bool IsActive { get; set; } = true;
-}
+// All public types are emitted to the data file.
+// To exclude a type:
+[ApiContract(Ignore = true)]
+public class InternalHelper { }
 ```
 
 ## 3. Build

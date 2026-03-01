@@ -11,19 +11,19 @@ description: Learn about API Contracts — deterministic, signed, versioned JSON
 - **Deterministic**: Every build produces the same schema for the same API surface. Changes are detectable via `apiHash`.
 - **Signed**: Optional RSA-SHA256 signatures ensure schema integrity and provenance.
 - **Versioned**: Schema format versioning enables backward-compatible evolution.
-- **Documentation-Driven**: Normalized XML docs, code examples, and AI metadata are captured in every schema.
+- **Documentation-Driven**: Normalized XML docs and code examples are captured in every data file.
 
 ## How It Works
 
 1. Add the `ApiContracts.Generator` source generator to your project.
-2. Optionally annotate types with `[ApiContract]` for enhanced AI metadata.
-3. Build your project — the generator emits JSON schemas automatically.
-4. Consume the schemas in documentation sites, AI agents, or tooling.
+2. Build your project — all public types are captured automatically.
+3. Optionally use `[ApiContract(Ignore = true)]` to exclude specific types or members.
+4. Consume the data files in documentation sites, AI agents, or tooling.
 
 ## Schema Outputs
 
 | Output | Location | Description |
 |---|---|---|
-| Root Schema | `schemas/api-schema.json` | JSON Schema definition for assembly schemas |
-| Assembly Schema | `ai-skills/apis/reference/<Name>.api-schema.json` | Per-assembly API surface snapshot |
-| Vendor Mirror | `<vendor>/apis/reference/<Name>.api-schema.json` | Optional vendor-specific copy |
+| Root Schema | `schemas/api-schema.json` | JSON Schema definition for data files |
+| Data File | `{PackageName}.{Version}.json` | Per-assembly API surface snapshot |
+| Vendor Mirror | `<vendor>/apis/reference/{PackageName}.{Version}.json` | Optional vendor-specific copy |

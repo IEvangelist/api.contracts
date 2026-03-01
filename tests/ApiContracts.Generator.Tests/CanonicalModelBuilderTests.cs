@@ -23,12 +23,7 @@ public class CanonicalModelBuilderTests
                 AllowMultiple = false, Inherited = true)]
             public sealed class ApiContractAttribute : System.Attribute
             {
-                public string? Name { get; set; }
-                public string? Description { get; set; }
-                public string? Category { get; set; }
-                public string? Role { get; set; }
-                public string? Tags { get; set; }
-                public bool Exclude { get; set; }
+                public bool Ignore { get; set; }
             }
         }
         """;
@@ -149,35 +144,6 @@ public class CanonicalModelBuilderTests
     }
 
     [Fact]
-    public void BuildTypes_CapturesAIMetadata()
-    {
-        var source = """
-            using ApiContracts;
-
-            namespace TestNs
-            {
-                [ApiContract(Name = "TestService", Description = "A test service", Category = "Services", Role = "service", Tags = "api,test")]
-                public class MyService
-                {
-                    public int Id { get; set; }
-                }
-            }
-            """;
-
-        var result = BuildTypesFromSource(source);
-
-        var svc = Assert.Single(result);
-        Assert.NotNull(svc.AI);
-        Assert.Equal("TestService", svc.AI!.Name);
-        Assert.Equal("A test service", svc.AI.Description);
-        Assert.Equal("Services", svc.AI.Category);
-        Assert.Equal("service", svc.AI.Role);
-        Assert.NotNull(svc.AI.Tags);
-        Assert.Contains("api", svc.AI.Tags!);
-        Assert.Contains("test", svc.AI.Tags!);
-    }
-
-    [Fact]
     public void BuildTypes_CapturesGenericTypes()
     {
         var source = """
@@ -202,14 +168,14 @@ public class CanonicalModelBuilderTests
     }
 
     [Fact]
-    public void BuildTypes_ExcludesTypesMarkedWithExclude()
+    public void BuildTypes_ExcludesTypesMarkedWithIgnore()
     {
         var source = """
             using ApiContracts;
 
             namespace TestNs
             {
-                [ApiContract(Exclude = true)]
+                [ApiContract(Ignore = true)]
                 public class Hidden { }
 
                 public class Visible

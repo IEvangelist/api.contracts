@@ -6,18 +6,20 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 ---
 
 **Primary outputs**
+
 - **Root schema**: `ai-skills/apis/schema.json` (language definitions, templates, placeholders, languages list).  
-- **Assembly schemas**: `ai-skills/apis/reference/<AssemblyName>.ai-schema.json` (data-only snapshots referencing the root schema).  
-- **Optional vendor mirrors**: `<vendor>/apis/reference/<AssemblyName>.ai-schema.json`.
+- **Assembly schemas**: `ai-skills/apis/reference/<AssemblyName>.json` (data-only snapshots referencing the root schema).  
+- **Optional vendor mirrors**: `<vendor>/apis/reference/<AssemblyName>.json`.
 
 ---
 
 **Core responsibilities**
+
 - Walk public symbols (optionally internals when configured).  
 - Normalize XML docs (summary, remarks, params, returns, examples, inline code, inheritdoc).  
 - Extract and normalize code samples with `language` and `region`.  
 - Model System.Text.Json behavior (jsonName, ignored, nullable, required, contractType).  
-- Apply `ApiContractAttribute` overrides (name, description, category, role, tags, exclude).  
+- Apply `ApiContractAttribute` overrides (ignore/exclude types from schema).  
 - Build a canonical API model and compute a deterministic `apiHash`.  
 - Optionally sign the emitted schema with a private key and embed signature metadata.  
 - Emit root schema once and one assembly schema per assembly.
@@ -25,13 +27,15 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 ---
 
 **Canonical hashing rules**
-- **Include**: public types, public members, signatures (param names/types/nullability), attributes that affect shape, JSON serialization metadata, ApiContractAttribute metadata, XML docs *excluding* code sample content.  
+
+- **Include**: public types, public members, signatures (param names/types/nullability), attributes that affect shape, JSON serialization metadata, XML docs *excluding* code sample content.  
 - **Exclude**: file paths, timestamps, build metadata, code sample content, ordering differences, whitespace.  
 - **Process**: build canonical model → sort (namespace → type → member) → serialize to UTF‑8 JSON with sorted properties and no whitespace → SHA‑256 → `apiHash: "sha256:<hex>"`.
 
 ---
 
 **Signature envelope**
+
 ```json
 "signature": {
   "algorithm": "RSA-SHA256",
@@ -43,12 +47,14 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 ---
 
 **Configuration surface**
+
 - MSBuild props: `AISchemaEmitStandard`, `AISchemaEmitVendor`, `AISchemaVendorFolder`, `AISchemaSign`, `AISchemaSigningPrivateKey`, `AISchemaIncludeInternals`.  
 - Assembly attribute: `ApiContractConfig(OutputFolder = "...", EmitStandard = true, Sign = true, SigningKeyId = "...")`.
 
 ---
 
 **Implementation notes**
+
 - Use an **incremental Roslyn source generator** for performance.  
 - Cache XML docs per assembly.  
 - Produce compact, deterministic JSON.  
@@ -58,6 +64,7 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 ---
 
 **Deliverables & next steps**
+
 - Implement canonical model spec and serializer.  
 - Implement hash + signing pipeline.  
 - Emit sample `schema.json` and one assembly schema.  
@@ -75,12 +82,14 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **Primary inputs**
+
 - `ai-skills/apis/schema.json` (root language + templates + placeholders).  
-- `ai-skills/apis/reference/*.ai-schema.json` (assembly snapshots).
+- `ai-skills/apis/reference/*.json` (assembly snapshots).
 
 ---
 
 **Core responsibilities**
+
 - Load root schema and all assembly schemas at build time.  
 - Build an in-memory documentation model (namespaces, types, members, examples, JSON contracts).  
 - Generate pages: namespace index, type pages, member pages, JSON contract pages, examples pages.  
@@ -92,13 +101,15 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **Template & placeholder model**
-- Root schema provides `documentation.templates` mapping (e.g., `type: TypePage.mdx`) and `documentation.placeholders` (e.g., `typeName: "{type.ai.name}"`).  
+
+- Root schema provides `documentation.templates` mapping (e.g., `type: TypePage.mdx`) and `documentation.placeholders` (e.g., `typeName: "{type.name}"`).  
 - SSG replaces placeholders with context objects such as `{ type, member, namespace, package, assembly, apiHash }`.  
 - Templates are MDX/MD with components (TypeSignature, MemberList, JsonContract, Examples).
 
 ---
 
 **Polyglot code sample handling**
+
 - Render each `docs.examples[]` entry as a tab labeled by `language`.  
 - Allow SSG-level language transforms or generated stubs (optional).  
 - Provide copy and run affordances where safe.
@@ -106,6 +117,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **Versioning strategies**
+
 - **Folder-based**: `docs/v3.4.1/`, `docs/latest/`.  
 - **Schema-based**: use `package.version` from assembly schema to drive routing and navigation.  
 - SSG can build multiple versions in one run by loading multiple assembly schema snapshots.
@@ -113,6 +125,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **Cross-referencing rules**
+
 - Auto-link by `fullName`, `namespace`, and signature types.  
 - Resolve `seeAlso` and `cref` to target pages.  
 - If multiple versions exist, link to the version matching the current doc context.
@@ -120,8 +133,9 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **SSG pipeline**
+
 1. Load `schema.json`.  
-2. Load all `*.ai-schema.json`.  
+2. Load all per-assembly data files from `reference/`.  
 3. Validate signatures and `apiHash` if verification is required.  
 4. Build doc model and navigation.  
 5. Render templates with placeholders replaced by context objects.  
@@ -130,6 +144,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 ---
 
 **Deliverables & next steps**
+
 - Provide a Starlight starter site with components and example templates.  
 - Provide a plugin/loader that imports `ai-skills` JSON files and exposes context to templates.  
 - Provide sample versioned site output and CI integration.
@@ -146,6 +161,7 @@ Define a SKILL.md format and operational rules that teach an AI agent how to *us
 ---
 
 **SKILL.md role**
+
 - Declarative behavioral contract for agents.  
 - Maps schema artifacts to actionable capabilities.  
 - Encodes interpretation rules, validation rules, template usage, and execution patterns.
@@ -153,6 +169,7 @@ Define a SKILL.md format and operational rules that teach an AI agent how to *us
 ---
 
 **SKILL.md canonical sections**
+
 - **Skill Overview** — capability summary and intended use cases.  
 - **Schema Sources** — paths to `schema.json` and assembly schemas.  
 - **Interpretation Rules** — how to read `types`, `members`, `json`, `docs`, `ai` metadata, and examples.  
@@ -167,9 +184,10 @@ Define a SKILL.md format and operational rules that teach an AI agent how to *us
 ---
 
 **Agentic behavior model (concise)**
+
 1. **Load** root schema and assembly schemas; verify signature if required.  
 2. **Index** types, members, JSON contracts, and examples into a searchable model.  
-3. **Interpret** user intent and map to candidate API targets using `ai` metadata and docs.  
+3. **Interpret** user intent and map to candidate API targets using docs and type metadata.  
 4. **Plan** a minimal sequence of steps (validate → build → call/simulate → verify → respond).  
 5. **Execute** using JSON contract rules; when calling external services, follow safety and rate limits.  
 6. **Reflect** on failures and apply deterministic remediation (fill missing required fields, correct types, consult examples).  
@@ -178,6 +196,7 @@ Define a SKILL.md format and operational rules that teach an AI agent how to *us
 ---
 
 **SKILL.md example skeleton**
+
 ````md
 # Skill: <Skill Name>
 
@@ -186,16 +205,16 @@ Short description.
 
 ## Schema Sources
 - ai-skills/apis/schema.json
-- ai-skills/apis/reference/*.ai-schema.json
+- ai-skills/apis/reference/*.json
 
 ## Interpretation Rules
-- Types: use `types[]` and `ai` metadata.
+- Types: use `types[]` and `docs` metadata.
 - Members: use `members[]` and `signature`.
 - JSON: use `json.properties[]`, `nullable`, `required`.
 
 ## Context Objects
-- typeContext: { fullName, namespace, ai, docs, json, members }
-- memberContext: { name, signature, docs, json }
+- typeContext: { fullName, namespace, docs, json, members }
+- memberContext: { name, signature, docs }
 
 ## Plan Template
 1. Identify candidate API.

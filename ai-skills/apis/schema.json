@@ -155,13 +155,11 @@
       "searchIndex": "SearchIndex.json"
     },
     "placeholders": {
-      "typeName": "{type.ai.name}",
+      "typeName": "{type.name}",
       "typeFullName": "{type.fullName}",
       "typeNamespace": "{type.namespace}",
       "typeKind": "{type.kind}",
       "typeSummary": "{type.docs.summary}",
-      "typeCategory": "{type.ai.category}",
-      "typeRole": "{type.ai.role}",
       "memberName": "{member.name}",
       "memberSignature": "{member.signature}",
       "memberSummary": "{member.docs.summary}",
@@ -173,11 +171,11 @@
     },
     "context": {
       "typeContext": {
-        "fields": ["fullName", "namespace", "kind", "accessibility", "ai", "docs", "json", "members", "baseType", "interfaces", "attributes"],
+        "fields": ["fullName", "namespace", "kind", "accessibility", "docs", "json", "members", "baseType", "interfaces", "attributes"],
         "description": "Full context object for rendering type pages"
       },
       "memberContext": {
-        "fields": ["name", "kind", "signature", "returnType", "parameters", "ai", "docs", "json", "attributes"],
+        "fields": ["name", "kind", "signature", "returnType", "parameters", "docs", "attributes"],
         "description": "Context object for rendering member pages"
       },
       "namespaceContext": {

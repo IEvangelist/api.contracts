@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -12,12 +10,6 @@ namespace SampleApi;
 /// This is a sample domain model demonstrating the API Contracts generator.
 /// It shows how types, properties, and methods are captured in the schema.
 /// </remarks>
-[ApiContract(
-    Name = "Customer",
-    Description = "A customer entity with contact information and order history.",
-    Category = "Domain",
-    Role = "entity",
-    Tags = "customer,crm,domain")]
 public class Customer
 {
     /// <summary>
@@ -77,12 +69,6 @@ public enum ContactMethod
 /// <summary>
 /// Represents an order placed by a customer.
 /// </summary>
-[ApiContract(
-    Name = "Order",
-    Description = "An order with line items and total calculation.",
-    Category = "Domain",
-    Role = "entity",
-    Tags = "order,commerce")]
 public class Order
 {
     /// <summary>

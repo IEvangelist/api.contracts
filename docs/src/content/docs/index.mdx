@@ -27,7 +27,7 @@ import { Card, CardGrid, LinkCard, Steps, Tabs, TabItem, Badge, Aside } from '@a
     Every build produces the **same schema** for the same API surface. Detect changes instantly via `apiHash` (SHA-256) — no more silent breaking changes.
   </Card>
   <Card title="AI-Ready Metadata" icon="rocket">
-    Enrich your types with `[ApiContract]` for agent-oriented descriptions, categories, roles, and tags. **LLMs and agents** consume schemas natively.
+    All public types are captured automatically with their XML documentation, JSON contracts, and full type signatures. **LLMs and agents** consume data files natively.
   </Card>
   <Card title="Cryptographic Signatures" icon="approve-check">
     Optional **RSA-SHA256 signatures** ensure schema integrity and provenance. Verify that schemas haven't been tampered with.
@@ -50,22 +50,14 @@ import { Card, CardGrid, LinkCard, Steps, Tabs, TabItem, Badge, Aside } from '@a
 
 2. **Annotate** your types (optional — all public types are captured automatically)
 
-   ```csharp title="Customer.cs"
-   [ApiContract(
-       Name = "Customer",
-       Description = "A customer entity with contact information.",
-       Category = "Domain",
-       Role = "entity",
-       Tags = "customer,crm,domain")]
-   public class Customer
-   {
-       public required Guid Id { get; set; }
-       public required string FullName { get; set; }
-       public string? Email { get; set; }
-   }
+   ```csharp title="InternalHelper.cs"
+   // All public types are included implicitly.
+   // Use [ApiContract(Ignore = true)] to exclude a type:
+   [ApiContract(Ignore = true)]
+   public class InternalHelper { }
    ```
 
-3. **Build** — the generator walks all public types, extracts XML docs, models JSON serialization, and emits deterministic schemas
+3. **Build** — the generator walks all public types, extracts XML docs, models JSON serialization, and emits deterministic data files
 
    ```bash
    dotnet build
@@ -104,7 +96,7 @@ import { Card, CardGrid, LinkCard, Steps, Tabs, TabItem, Badge, Aside } from '@a
   <TabItem label="XML Documentation">
     All XML documentation is **normalized** and captured: summaries, remarks, parameter descriptions, return docs, `<example>` blocks, and `<seealso>` references.
 
-    ```json title="Documentation schema"
+    ```json title="Documentation in data file"
     {
       "docs": {
         "summary": "Service for managing customers.",
@@ -113,21 +105,6 @@ import { Card, CardGrid, LinkCard, Steps, Tabs, TabItem, Badge, Aside } from '@a
           "id": "The customer identifier."
         },
         "returns": "The customer if found; otherwise, null."
-      }
-    }
-    ```
-  </TabItem>
-  <TabItem label="AI Metadata">
-    The `[ApiContract]` attribute enriches schemas with **human- and AI-readable** descriptions, categories, semantic roles, and searchable tags.
-
-    ```json title="AI metadata"
-    {
-      "ai": {
-        "name": "CustomerService",
-        "description": "Service for creating, reading, updating, and searching customers.",
-        "category": "Services",
-        "role": "service",
-        "tags": ["customer", "crud", "service"]
       }
     }
     ```

@@ -60,6 +60,6 @@ public sealed class DocumentationConfig
     /// <summary>Template mappings (e.g., type → TypePage.mdx).</summary>
     public Dictionary<string, string> Templates { get; set; } = [];
 
-    /// <summary>Placeholder definitions (e.g., typeName → "{type.ai.name}").</summary>
+    /// <summary>Placeholder definitions (e.g., typeName → "{type.name}").</summary>
     public Dictionary<string, string> Placeholders { get; set; } = [];
 }

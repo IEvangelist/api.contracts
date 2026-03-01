@@ -69,9 +69,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         // Members
         type.Members = BuildMembers(symbol);
 
-        // AI metadata
-        type.AI = ExtractAIMetadata(symbol);
-
         // XML docs
         type.Docs = ExtractDocumentation(symbol);
 
@@ -171,7 +168,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
             ? [.. method.TypeParameters.Select(BuildGenericParameter)]
             : null,
         Signature = method.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-        AI = ExtractAIMetadata(method),
         Docs = ExtractDocumentation(method),
         Attributes = ExtractShapeAttributes(method),
     };
@@ -196,9 +192,7 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
             })]
             : null,
         Signature = property.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-        AI = ExtractAIMetadata(property),
         Docs = ExtractDocumentation(property),
-        Json = BuildJsonProperty(property),
         Attributes = ExtractShapeAttributes(property),
     };
 
@@ -211,7 +205,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         ReturnType = field.Type.ToDisplayString(),
         IsReturnNullable = field.Type.NullableAnnotation == NullableAnnotation.Annotated,
         Signature = field.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-        AI = ExtractAIMetadata(field),
         Docs = ExtractDocumentation(field),
         Attributes = ExtractShapeAttributes(field),
     };
@@ -227,7 +220,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         IsOverride = evt.IsOverride,
         ReturnType = evt.Type.ToDisplayString(),
         Signature = evt.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
-        AI = ExtractAIMetadata(evt),
         Docs = ExtractDocumentation(evt),
         Attributes = ExtractShapeAttributes(evt),
     };
@@ -254,47 +246,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         }
 
         return constraints;
-    }
-
-    private static CanonicalAIMetadata? ExtractAIMetadata(ISymbol symbol)
-    {
-        var attr = symbol.GetAttributes()
-            .FirstOrDefault(a =>
-                a.AttributeClass?.Name == "ApiContractAttribute" ||
-                a.AttributeClass?.ToDisplayString() == "ApiContracts.ApiContractAttribute");
-
-        if (attr is null)
-        {
-            return null;
-        }
-
-        var metadata = new CanonicalAIMetadata();
-
-        foreach (var named in attr.NamedArguments)
-        {
-            switch (named.Key)
-            {
-                case "Name" when named.Value.Value is string name:
-                    metadata.Name = name;
-                    break;
-                case "Description" when named.Value.Value is string desc:
-                    metadata.Description = desc;
-                    break;
-                case "Category" when named.Value.Value is string cat:
-                    metadata.Category = cat;
-                    break;
-                case "Role" when named.Value.Value is string role:
-                    metadata.Role = role;
-                    break;
-                case "Tags" when named.Value.Value is string tags:
-                    metadata.Tags = [.. tags.Split(',')
-                        .Select(t => t.Trim())
-                        .Where(t => t.Length > 0)];
-                    break;
-            }
-        }
-
-        return metadata;
     }
 
     private static CanonicalDocumentation? ExtractDocumentation(ISymbol symbol)
@@ -560,7 +511,7 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
                     return false;
                 }
 
-                return a.NamedArguments.Any(n => n.Key == "Exclude" && n.Value.Value is true);
+                return a.NamedArguments.Any(n => n.Key == "Ignore" && n.Value.Value is true);
             });
     }
 

@@ -3,7 +3,7 @@ title: Assembly Schema
 description: Each assembly produces a data-only snapshot of its public API surface.
 ---
 
-Assembly schemas are emitted to `ai-skills/apis/reference/<AssemblyName>.api-schema.json`.
+Assembly data files are emitted as `{PackageName}.{Version}.json`.
 
 ## Structure
 
@@ -20,7 +20,7 @@ Assembly schemas are emitted to `ai-skills/apis/reference/<AssemblyName>.api-sch
 
 ## Types
 
-Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `ai`, `docs`, `json`, and `members[]`.
+Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `docs`, `json`, and `members[]`.
 
 ### Type Kinds
 
@@ -28,7 +28,7 @@ Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `ai`, `
 
 ### Members
 
-Each member has `name`, `kind`, `signature`, `returnType`, `parameters[]`, `docs`, `ai`, and `json`.
+Each member has `name`, `kind`, `signature`, `returnType`, `parameters[]`, and `docs`.
 
 ### JSON Contract
 

@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -15,12 +13,6 @@ namespace SampleApi;
 /// concrete data-access implementations.
 /// </remarks>
 /// <seealso cref="PagedResult{T}"/>
-[ApiContract(
-    Name = "Repository",
-    Description = "Generic repository providing CRUD and query operations for any entity type.",
-    Category = "DataAccess",
-    Role = "repository",
-    Tags = "repository,generic,crud,data-access")]
 public interface IRepository<TEntity> where TEntity : class
 {
     /// <summary>
@@ -100,12 +92,6 @@ public interface IRepository<TEntity> where TEntity : class
 /// property is computed automatically from <see cref="TotalCount"/> and <see cref="PageSize"/>.
 /// </remarks>
 /// <seealso cref="IRepository{TEntity}"/>
-[ApiContract(
-    Name = "PagedResult",
-    Description = "A paged result containing a subset of items along with pagination metadata.",
-    Category = "DataAccess",
-    Role = "response",
-    Tags = "pagination,generic,response,collection")]
 public record class PagedResult<T>(
     IReadOnlyList<T> Items,
     int TotalCount,

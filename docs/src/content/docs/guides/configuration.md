@@ -37,13 +37,8 @@ API Contracts supports configuration through MSBuild properties and assembly-lev
 
 ## ApiContractAttribute
 
-Apply `[ApiContract]` to types, methods, properties, or parameters:
+Apply `[ApiContract]` at the assembly level to opt-in to schema generation. All public types are included automatically. Use `[ApiContract(Ignore = true)]` on individual types or members to exclude them from the data file:
 
 | Property | Type | Description |
 |---|---|---|
-| `Name` | `string?` | Override display name |
-| `Description` | `string?` | AI-oriented description |
-| `Category` | `string?` | Grouping category |
-| `Role` | `string?` | Semantic role |
-| `Tags` | `string?` | Comma-separated tags |
-| `Exclude` | `bool` | Exclude from schema |
+| `Ignore` | `bool` | When `true`, excludes the element from the generated data file |

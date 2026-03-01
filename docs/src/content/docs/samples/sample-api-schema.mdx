@@ -5,7 +5,7 @@ description: A real-world schema generated from the SampleApi project — showca
 
 import { Tabs, TabItem, Aside, Badge, LinkCard } from '@astrojs/starlight/components';
 
-The **SampleApi** project demonstrates every major feature of the API Contracts generator. The full schema is [available as JSON](/api.contracts/schemas/SampleApi.api-schema.json) for consumption by AI agents, documentation pipelines, and automated tooling.
+The **SampleApi** project demonstrates every major feature of the API Contracts generator. The full data file is [available as JSON](/api.contracts/schemas/SampleApi.api-schema.json) for consumption by AI agents, documentation pipelines, and automated tooling.
 
 <Aside type="tip">
   The schema below was generated at build time by the `ApiContracts.Generator` source generator from the [`samples/SampleApi`](https://github.com/IEvangelist/api.contracts/tree/main/samples/SampleApi) project.
@@ -15,31 +15,31 @@ The **SampleApi** project demonstrates every major feature of the API Contracts 
 
 The generated schema contains **23 public types** spanning classes, structs, records, interfaces, enums, and more:
 
-| Type | Kind | Members | AI | JSON | Summary |
-|---|---|---:|:---:|:---:|---|
-| `Address` | `record` | 6 | ✅ | ✅ | Represents a physical or mailing address. |
-| `ApiEndpoints` | `class` | 8 | ✅ | — | Provides well-known route path constants for the sample API. |
-| `ApiResponse<T>` | `class` | 6 | ✅ | ✅ | A generic envelope for API responses containing a data payload and metadata. |
-| `AuditableEntity` | `class` | 5 | ✅ | ✅ | Base class for entities that require audit tracking. |
-| `ContactMethod` | `enum` | 0 | — | — | Available contact methods for a customer. |
-| `Customer` | `class` | 7 | ✅ | ✅ | Represents a customer in the system. |
-| `DateRange` | `struct` | 12 | ✅ | ✅ | Represents an inclusive date range with a start and end date. |
-| `FeatureFlags` | `enum` | 0 | ✅ | — | Feature flags that can be independently enabled for the application. |
-| `ICustomerService` | `interface` | 5 | ✅ | — | Service for managing customers. |
-| `IOrderNotificationService` | `interface` | 7 | ✅ | — | A service that publishes notifications for key order lifecycle events. |
-| `IRepository<TEntity>` | `interface` | 8 | ✅ | — | A generic repository interface for performing CRUD and query operations. |
-| `Money` | `record struct` | 6 | ✅ | ✅ | Represents a monetary amount in a specific currency. |
-| `Order` | `class` | 6 | ✅ | ✅ | Represents an order placed by a customer. |
-| `OrderEventArgs` | `class` | 3 | ✅ | ✅ | Provides data for order-related events. |
-| `OrderItem` | `class` | 3 | — | ✅ | Represents a single item within an order. |
-| `OrderStatus` | `enum` | 0 | — | — | The status of an order. |
-| `PagedResult<T>` | `record` | 8 | ✅ | ✅ | Represents a paged subset of a larger collection. |
-| `ProblemDetails` | `class` | 6 | ✅ | ✅ | A machine-readable format for specifying errors in HTTP API responses (RFC 9457). |
-| `ProductDto` | `class` | 10 | ✅ | ✅ | A DTO annotated with System.Text.Json serialization attributes. |
-| `RateLimitOptions` | `class` | 3 | ✅ | ✅ | Configuration options for API rate limiting. |
-| `Result<T>` | `class` | 6 | ✅ | ✅ | Encapsulates the outcome of an operation with a success value or an error message. |
-| `SoftDeletableEntity` | `class` | 5 | ✅ | ✅ | Base class for entities that support soft deletion with audit tracking. |
-| `ValidationError` | `record` | 4 | ✅ | ✅ | Describes a validation error associated with a specific input field. |
+| Type | Kind | Members | JSON | Summary |
+|---|---|---:|:---:|---|
+| `Address` | `record` | 6 | ✅ | Represents a physical or mailing address. |
+| `ApiEndpoints` | `class` | 8 | — | Provides well-known route path constants for the sample API. |
+| `ApiResponse<T>` | `class` | 6 | ✅ | A generic envelope for API responses containing a data payload and metadata. |
+| `AuditableEntity` | `class` | 5 | ✅ | Base class for entities that require audit tracking. |
+| `ContactMethod` | `enum` | 0 | — | Available contact methods for a customer. |
+| `Customer` | `class` | 7 | ✅ | Represents a customer in the system. |
+| `DateRange` | `struct` | 12 | ✅ | Represents an inclusive date range with a start and end date. |
+| `FeatureFlags` | `enum` | 0 | — | Feature flags that can be independently enabled for the application. |
+| `ICustomerService` | `interface` | 5 | — | Service for managing customers. |
+| `IOrderNotificationService` | `interface` | 7 | — | A service that publishes notifications for key order lifecycle events. |
+| `IRepository<TEntity>` | `interface` | 8 | — | A generic repository interface for performing CRUD and query operations. |
+| `Money` | `record struct` | 6 | ✅ | Represents a monetary amount in a specific currency. |
+| `Order` | `class` | 6 | ✅ | Represents an order placed by a customer. |
+| `OrderEventArgs` | `class` | 3 | ✅ | Provides data for order-related events. |
+| `OrderItem` | `class` | 3 | ✅ | Represents a single item within an order. |
+| `OrderStatus` | `enum` | 0 | — | The status of an order. |
+| `PagedResult<T>` | `record` | 8 | ✅ | Represents a paged subset of a larger collection. |
+| `ProblemDetails` | `class` | 6 | ✅ | A machine-readable format for specifying errors in HTTP API responses (RFC 9457). |
+| `ProductDto` | `class` | 10 | ✅ | A DTO annotated with System.Text.Json serialization attributes. |
+| `RateLimitOptions` | `class` | 3 | ✅ | Configuration options for API rate limiting. |
+| `Result<T>` | `class` | 6 | ✅ | Encapsulates the outcome of an operation with a success value or an error message. |
+| `SoftDeletableEntity` | `class` | 5 | ✅ | Base class for entities that support soft deletion with audit tracking. |
+| `ValidationError` | `record` | 4 | ✅ | Describes a validation error associated with a specific input field. |
 
 ## Use cases demonstrated
 
@@ -48,12 +48,9 @@ The generated schema contains **23 public types** spanning classes, structs, rec
     Classes with properties, required members, and XML documentation:
 
     ```csharp title="Customer.cs"
-    [ApiContract(
-        Name = "Customer",
-        Description = "A customer entity with contact information and order history.",
-        Category = "Domain",
-        Role = "entity",
-        Tags = "customer,crm,domain")]
+    /// <summary>
+    /// Represents a customer in the system.
+    /// </summary>
     public class Customer
     {
         /// <summary>Gets or sets the unique identifier.</summary>
@@ -71,11 +68,9 @@ The generated schema contains **23 public types** spanning classes, structs, rec
     Generic interfaces and records with type constraints:
 
     ```csharp title="IRepository.cs"
-    [ApiContract(
-        Name = "Repository",
-        Description = "A generic repository interface for CRUD and query operations.",
-        Category = "Data Access",
-        Role = "repository")]
+    /// <summary>
+    /// A generic repository interface for CRUD and query operations.
+    /// </summary>
     public interface IRepository<TEntity> where TEntity : class
     {
         Task<TEntity?> GetByIdAsync(Guid id);
@@ -89,11 +84,9 @@ The generated schema contains **23 public types** spanning classes, structs, rec
     Records, readonly structs, and record structs with value semantics:
 
     ```csharp title="Money.cs"
-    [ApiContract(
-        Name = "Money",
-        Description = "A monetary amount in a specific currency.",
-        Category = "Domain",
-        Role = "value-object")]
+    /// <summary>
+    /// Represents a monetary amount in a specific currency.
+    /// </summary>
     public readonly record struct Money(decimal Amount, string Currency)
     {
         public static Money Zero(string currency) => new(0m, currency);
@@ -115,10 +108,9 @@ The generated schema contains **23 public types** spanning classes, structs, rec
     ```
   </TabItem>
   <TabItem label="JSON Serialization">
-    Types with `System.Text.Json` attributes are captured in the schema:
+    Types with `System.Text.Json` attributes are captured in the data file:
 
     ```csharp title="ProductDto.cs"
-    [ApiContract(Name = "Product", Category = "DTOs")]
     public class ProductDto
     {
         [JsonPropertyName("product_id")]
@@ -138,10 +130,6 @@ The generated schema contains **23 public types** spanning classes, structs, rec
 
     ```csharp title="FeatureFlags.cs"
     [Flags]
-    [ApiContract(
-        Name = "FeatureFlags",
-        Description = "Feature flags for the application.",
-        Category = "Configuration")]
     public enum FeatureFlags
     {
         None = 0,

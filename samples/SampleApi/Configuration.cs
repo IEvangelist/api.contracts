@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -12,12 +10,6 @@ namespace SampleApi;
 /// Centralizing route paths in a static class ensures that controllers, clients,
 /// and tests reference the same values, reducing the risk of routing mismatches.
 /// </remarks>
-[ApiContract(
-    Name = "ApiEndpoints",
-    Description = "Static class containing route path constants for every API endpoint.",
-    Category = "Configuration",
-    Role = "configuration",
-    Tags = "routes,constants,configuration,static")]
 public static class ApiEndpoints
 {
     /// <summary>
@@ -69,12 +61,6 @@ public static class ApiEndpoints
 /// section (e.g., "RateLimiting") to control how many requests a client may make
 /// within a sliding time window.
 /// </remarks>
-[ApiContract(
-    Name = "RateLimitOptions",
-    Description = "Options that control the API rate-limiting behaviour.",
-    Category = "Configuration",
-    Role = "configuration",
-    Tags = "rate-limit,configuration,options,throttling")]
 public class RateLimitOptions
 {
     /// <summary>
@@ -105,12 +91,6 @@ public class RateLimitOptions
 /// Use <see cref="AllFeatures"/> as a convenience mask to enable every flag at once.
 /// </remarks>
 [Flags]
-[ApiContract(
-    Name = "FeatureFlags",
-    Description = "Bitwise flags representing independently toggleable application features.",
-    Category = "Configuration",
-    Role = "enum",
-    Tags = "feature-flags,configuration,enum,flags")]
 public enum FeatureFlags
 {
     /// <summary>No features enabled.</summary>

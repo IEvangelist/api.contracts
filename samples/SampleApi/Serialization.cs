@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Text.Json.Serialization;
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -20,12 +18,6 @@ namespace SampleApi;
 /// </list>
 /// </remarks>
 /// <seealso cref="ApiResponse{T}"/>
-[ApiContract(
-    Name = "ProductDto",
-    Description = "Product data transfer object with System.Text.Json serialization attributes.",
-    Category = "DTOs",
-    Role = "dto",
-    Tags = "product,dto,serialization,json")]
 public class ProductDto
 {
     /// <summary>
@@ -101,12 +93,6 @@ public class ProductDto
 /// </remarks>
 /// <seealso cref="ProductDto"/>
 /// <seealso cref="ProblemDetails"/>
-[ApiContract(
-    Name = "ApiResponse",
-    Description = "A generic API response wrapper containing data, a message, and a timestamp.",
-    Category = "DTOs",
-    Role = "response",
-    Tags = "response,generic,dto,serialization,envelope")]
 public class ApiResponse<T>
 {
     /// <summary>

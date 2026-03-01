@@ -1,8 +1,6 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using ApiContracts;
-
 namespace SampleApi;
 
 /// <summary>
@@ -11,12 +9,6 @@ namespace SampleApi;
 /// <remarks>
 /// Provides CRUD operations and search capabilities for customer entities.
 /// </remarks>
-[ApiContract(
-    Name = "CustomerService",
-    Description = "Service for creating, reading, updating, and searching customers.",
-    Category = "Services",
-    Role = "service",
-    Tags = "customer,crud,service")]
 public interface ICustomerService
 {
     /// <summary>
