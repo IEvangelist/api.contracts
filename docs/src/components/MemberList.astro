@@ -8,10 +8,10 @@ const { members = [] } = Astro.props;
 
 const grouped = members.reduce((acc: Record<string, any[]>, m: any) => {
   const kind = m.kind ?? 'other';
-  if (!acc[kind]) acc[kind] = [];
+  if (!Object.hasOwn(acc, kind)) acc[kind] = [];
   acc[kind].push(m);
   return acc;
-}, {} as Record<string, any[]>);
+}, Object.create(null) as Record<string, any[]>);
 
 const kindOrder = ['constructor', 'property', 'method', 'field', 'event', 'indexer'];
 const sortedKinds = Object.keys(grouped).sort(

@@ -1,0 +1,39 @@
+---
+title: "Address"
+description: "Represents a physical or mailing address."
+sidebar:
+  order: 13
+  badge:
+    text: "record"
+    variant: "note"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "Address");
+
+Represents a physical or mailing address.
+
+<Aside type="note">
+  This record class provides value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+<MemberList members={typeData.members} />
+
+## JSON Serialization
+
+<JsonContract json={typeData.json} typeName="Address" />

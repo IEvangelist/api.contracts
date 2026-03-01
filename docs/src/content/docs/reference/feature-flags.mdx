@@ -1,0 +1,42 @@
+---
+title: "FeatureFlags"
+description: "Feature flags that can be independently enabled for the application."
+sidebar:
+  order: 22
+  badge:
+    text: "enum"
+    variant: "tip"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "FeatureFlags");
+
+Feature flags that can be independently enabled for the application.
+
+<Aside type="note">
+  This enum uses the  to allow bitwise combination of values. Use  as a convenience mask to enable every flag at once.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+| Name | Value | Description |
+|------|------:|-------------|
+| `None` | `0` | No features enabled. |
+| `BetaFeatures` | `1` | Enables access to beta features. |
+| `DarkMode` | `2` | Enables the dark mode user interface. |
+| `Analytics` | `4` | Enables analytics and telemetry collection. |
+| `Notifications` | `8` | Enables push notifications. |
+| `AllFeatures` | `15` | Convenience flag that enables all features. |

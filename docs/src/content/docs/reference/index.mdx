@@ -1,0 +1,49 @@
+---
+title: API Reference
+description: Browse the full API surface of the SampleApi project — every public type, member, and JSON contract.
+sidebar:
+  order: 0
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { Aside, Badge, LinkCard, CardGrid } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const types = schema.types;
+export const classes = types.filter(t => t.kind === "class");
+export const records = types.filter(t => t.kind === "record" || t.kind === "record struct");
+export const interfaces = types.filter(t => t.kind === "interface");
+export const enums = types.filter(t => t.kind === "enum");
+export const structs = types.filter(t => t.kind === "struct");
+export function slug(name) { return name.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(); }
+
+This section contains the rendered API reference for the **SampleApi** project — {types.length} public types generated from the [`SampleApi.api-schema.json`](/api.contracts/schemas/SampleApi.api-schema.json) schema.
+
+<Aside type="tip">
+  Every page below is rendered at build time from the generated schema using the **TypeSignature**, **MemberList**, and **JsonContract** components. When the API surface changes, the docs update automatically.
+</Aside>
+
+## Classes
+
+| Type | Summary |
+|------|---------|
+{classes.map(t => `| [\`${t.name}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}
+
+## Records & Structs
+
+| Type | Kind | Summary |
+|------|------|---------|
+{[...records, ...structs].map(t => `| [\`${t.fullName.split(".").pop()}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.kind} | ${t.docs?.summary ?? "—"} |`).join("\n")}
+
+## Interfaces
+
+| Type | Summary |
+|------|---------|
+{interfaces.map(t => `| [\`${t.fullName.split(".").pop()}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}
+
+## Enums
+
+| Type | Summary |
+|------|---------|
+{enums.map(t => `| [\`${t.name}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}

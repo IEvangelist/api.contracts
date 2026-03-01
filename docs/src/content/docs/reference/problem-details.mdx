@@ -1,0 +1,39 @@
+---
+title: "ProblemDetails"
+description: "A machine-readable format for specifying errors in HTTP API responses, based on RFC 9457."
+sidebar:
+  order: 8
+  badge:
+    text: "class"
+    variant: "note"
+---
+
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import TypeSignature from "../../../components/TypeSignature.astro";
+import MemberList from "../../../components/MemberList.astro";
+import JsonContract from "../../../components/JsonContract.astro";
+import { Aside, Badge } from "@astrojs/starlight/components";
+
+export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
+export const typeData = schema.types.find(t => t.name === "ProblemDetails");
+
+A machine-readable format for specifying errors in HTTP API responses, based on RFC 9457.
+
+<Aside type="note">
+  provides a standardised error response body that clients can parse without knowledge of the specific API. The dictionary allows API authors to attach additional context that is not covered by the core properties.
+</Aside>
+
+**Namespace:** `SampleApi` · **Assembly:** `SampleApi`
+
+## Signature
+
+<TypeSignature type={typeData} />
+
+## Members
+
+<MemberList members={typeData.members} />
+
+## JSON Serialization
+
+<JsonContract json={typeData.json} typeName="ProblemDetails" />
