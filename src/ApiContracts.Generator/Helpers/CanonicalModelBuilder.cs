@@ -10,11 +10,9 @@ namespace ApiContracts.Generator.Helpers;
 /// <summary>
 /// Builds canonical API models from Roslyn symbols.
 /// </summary>
-internal sealed class CanonicalModelBuilder
+internal sealed class CanonicalModelBuilder(Compilation compilation)
 {
-    private readonly Compilation _compilation;
-
-    public CanonicalModelBuilder(Compilation compilation) => _compilation = compilation;
+    private readonly Compilation _compilation = compilation;
 
     public List<CanonicalType> BuildTypes(ImmutableArray<INamedTypeSymbol> types)
     {
@@ -51,9 +49,7 @@ internal sealed class CanonicalModelBuilder
         // Generic parameters
         if (symbol.IsGenericType)
         {
-            type.GenericParameters = symbol.TypeParameters
-                .Select(BuildGenericParameter)
-                .ToList();
+            type.GenericParameters = [.. symbol.TypeParameters.Select(BuildGenericParameter)];
         }
 
         // Base type
@@ -66,10 +62,9 @@ internal sealed class CanonicalModelBuilder
         }
 
         // Interfaces
-        type.Interfaces = symbol.Interfaces
+        type.Interfaces = [.. symbol.Interfaces
             .Select(i => i.ToDisplayString())
-            .OrderBy(i => i)
-            .ToList();
+            .OrderBy(i => i)];
 
         // Members
         type.Members = BuildMembers(symbol);
@@ -86,7 +81,7 @@ internal sealed class CanonicalModelBuilder
         // Enum members
         if (symbol.TypeKind == TypeKind.Enum)
         {
-            type.EnumMembers = symbol.GetMembers()
+            type.EnumMembers = [.. symbol.GetMembers()
                 .OfType<IFieldSymbol>()
                 .Where(f => f.HasConstantValue)
                 .Select(f => new CanonicalEnumMember
@@ -94,8 +89,7 @@ internal sealed class CanonicalModelBuilder
                     Name = f.Name,
                     Value = Convert.ToInt64(f.ConstantValue),
                     Description = ExtractSummary(f),
-                })
-                .ToList();
+                })];
         }
 
         // Attributes
@@ -156,7 +150,7 @@ internal sealed class CanonicalModelBuilder
         IsAsync = method.IsAsync,
         ReturnType = method.ReturnsVoid ? "void" : method.ReturnType.ToDisplayString(),
         IsReturnNullable = method.ReturnType.NullableAnnotation == NullableAnnotation.Annotated,
-        Parameters = method.Parameters
+        Parameters = [.. method.Parameters
             .Select(p => new CanonicalParameter
             {
                 Name = p.Name,
@@ -172,10 +166,9 @@ internal sealed class CanonicalModelBuilder
                     RefKind.RefReadOnlyParameter => "ref readonly",
                     _ => p.IsParams ? "params" : null,
                 },
-            })
-            .ToList(),
+            })],
         GenericParameters = method.IsGenericMethod
-            ? method.TypeParameters.Select(BuildGenericParameter).ToList()
+            ? [.. method.TypeParameters.Select(BuildGenericParameter)]
             : null,
         Signature = method.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
         AI = ExtractAIMetadata(method),
@@ -195,12 +188,12 @@ internal sealed class CanonicalModelBuilder
         ReturnType = property.Type.ToDisplayString(),
         IsReturnNullable = property.Type.NullableAnnotation == NullableAnnotation.Annotated,
         Parameters = property.IsIndexer
-            ? property.Parameters.Select(p => new CanonicalParameter
+            ? [.. property.Parameters.Select(p => new CanonicalParameter
             {
                 Name = p.Name,
                 Type = p.Type.ToDisplayString(),
                 IsNullable = p.Type.NullableAnnotation == NullableAnnotation.Annotated,
-            }).ToList()
+            })]
             : null,
         Signature = property.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat),
         AI = ExtractAIMetadata(property),
@@ -294,10 +287,9 @@ internal sealed class CanonicalModelBuilder
                     metadata.Role = role;
                     break;
                 case "Tags" when named.Value.Value is string tags:
-                    metadata.Tags = tags.Split(',')
+                    metadata.Tags = [.. tags.Split(',')
                         .Select(t => t.Trim())
-                        .Where(t => t.Length > 0)
-                        .ToList();
+                        .Where(t => t.Length > 0)];
                     break;
             }
         }
@@ -383,10 +375,9 @@ internal sealed class CanonicalModelBuilder
             var seeAlsoElements = root.Elements("seealso").ToList();
             if (seeAlsoElements.Count > 0)
             {
-                docs.SeeAlso = seeAlsoElements
+                docs.SeeAlso = [.. seeAlsoElements
                     .Select(s => s.Attribute("cref")?.Value ?? s.Value)
-                    .Where(s => !string.IsNullOrEmpty(s))
-                    .ToList();
+                    .Where(s => !string.IsNullOrEmpty(s))];
             }
 
             return docs;

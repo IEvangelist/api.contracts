@@ -14,34 +14,29 @@ namespace SampleApi;
 /// </remarks>
 /// <seealso cref="IOrderNotificationService"/>
 /// <seealso cref="Order"/>
+/// <remarks>
+/// Initializes a new instance of the <see cref="OrderEventArgs"/> class.
+/// </remarks>
+/// <param name="order">The order associated with the event.</param>
+/// <exception cref="ArgumentNullException">Thrown when <paramref name="order"/> is <see langword="null"/>.</exception>
 [ApiContract(
     Name = "OrderEventArgs",
     Description = "Event data carrying an order and the timestamp of the event.",
     Category = "Events",
     Role = "event-args",
     Tags = "event,order,notification")]
-public class OrderEventArgs : EventArgs
+public class OrderEventArgs(Order order) : EventArgs
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="OrderEventArgs"/> class.
-    /// </summary>
-    /// <param name="order">The order associated with the event.</param>
-    /// <exception cref="ArgumentNullException">Thrown when <paramref name="order"/> is <see langword="null"/>.</exception>
-    public OrderEventArgs(Order order)
-    {
-        Order = order ?? throw new ArgumentNullException(nameof(order));
-        Timestamp = DateTimeOffset.UtcNow;
-    }
 
     /// <summary>
     /// Gets the order associated with this event.
     /// </summary>
-    public Order Order { get; }
+    public Order Order { get; } = order ?? throw new ArgumentNullException(nameof(order));
 
     /// <summary>
     /// Gets the UTC timestamp indicating when the event was raised.
     /// </summary>
-    public DateTimeOffset Timestamp { get; }
+    public DateTimeOffset Timestamp { get; } = DateTimeOffset.UtcNow;
 }
 
 /// <summary>

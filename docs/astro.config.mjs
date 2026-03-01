@@ -33,6 +33,11 @@ export default defineConfig({
           label: 'GitHub',
           href: 'https://github.com/IEvangelist/api.contracts',
         },
+        {
+          icon: 'external',
+          label: 'David Pine',
+          href: 'https://davidpine.dev',
+        },
       ],
       sidebar: [
         {

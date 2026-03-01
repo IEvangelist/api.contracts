@@ -318,12 +318,11 @@ public class CanonicalModelBuilderTests
 
     private static ImmutableArray<INamedTypeSymbol> GetPublicTypes(CSharpCompilation compilation)
     {
-        return compilation.Assembly.GlobalNamespace
+        return [.. compilation.Assembly.GlobalNamespace
             .GetNamespaceMembers()
             .Where(ns => ns.Name != "ApiContracts")
             .SelectMany(GetAllTypes)
-            .Where(t => t.DeclaredAccessibility == Accessibility.Public)
-            .ToImmutableArray();
+            .Where(t => t.DeclaredAccessibility == Accessibility.Public)];
     }
 
     private static IEnumerable<INamedTypeSymbol> GetAllTypes(INamespaceSymbol ns)

@@ -132,9 +132,7 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
         var schemaJson = SchemaEmitter.EmitAssemblySchema(
             assemblyName,
             assemblyVersion,
-            compilation.Options is CSharpCompilationOptions csharpOptions
-                ? $"net{(csharpOptions.Platform == Platform.AnyCpu ? "10.0" : "10.0")}"
-                : "net10.0",
+            "net10.0",
             typeModels,
             apiHash,
             config,
@@ -192,7 +190,7 @@ public sealed class ApiSchemaGenerator : IIncrementalGenerator
         List<INamedTypeSymbol> types,
         Compilation compilation,
         bool includeInternals,
-        System.Threading.CancellationToken ct)
+        CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
