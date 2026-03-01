@@ -3,7 +3,7 @@ title: API Reference
 description: Auto-generated API reference from schema files.
 ---
 
-This section contains auto-generated API documentation from the emitted `*.ai-schema.json` files.
+This section contains auto-generated API documentation from the emitted `*.api-schema.json` files.
 
 ## Schema Components
 

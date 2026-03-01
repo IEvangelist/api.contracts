@@ -130,7 +130,7 @@ public class SigningIntegrationTests
     }
 
     [Fact]
-    public void EmitAssemblySchema_IncludesGeneratedAtField()
+    public void EmitAssemblySchema_ProducesValidJson()
     {
         var types = new List<CanonicalType>
         {
@@ -147,7 +147,10 @@ public class SigningIntegrationTests
         var json = SchemaEmitter.EmitAssemblySchema(
             "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
 
-        Assert.Contains("\"generatedAt\":", json);
+        Assert.Contains("\"$schema\":", json);
+        Assert.Contains("\"schemaVersion\":", json);
+        Assert.Contains("\"types\":", json);
+        Assert.DoesNotContain("\"generatedAt\":", json);
     }
 
     [Fact]

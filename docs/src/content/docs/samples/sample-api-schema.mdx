@@ -1,0 +1,278 @@
+---
+title: SampleApi Schema
+description: A real-world schema generated from the SampleApi project — showcasing all features of the API Contracts generator.
+---
+
+import { Tabs, TabItem, Aside, Badge, LinkCard } from '@astrojs/starlight/components';
+
+The **SampleApi** project demonstrates every major feature of the API Contracts generator. The full schema is [available as JSON](/api.contracts/schemas/SampleApi.api-schema.json) for consumption by AI agents, documentation pipelines, and automated tooling.
+
+<Aside type="tip">
+  The schema below was generated at build time by the `ApiContracts.Generator` source generator from the [`samples/SampleApi`](https://github.com/IEvangelist/api.contracts/tree/main/samples/SampleApi) project.
+</Aside>
+
+## Types at a glance
+
+The generated schema contains **23 public types** spanning classes, structs, records, interfaces, enums, and more:
+
+| Type | Kind | Members | AI | JSON | Summary |
+|---|---|---:|:---:|:---:|---|
+| `Address` | `record` | 6 | ✅ | ✅ | Represents a physical or mailing address. |
+| `ApiEndpoints` | `class` | 8 | ✅ | — | Provides well-known route path constants for the sample API. |
+| `ApiResponse<T>` | `class` | 6 | ✅ | ✅ | A generic envelope for API responses containing a data payload and metadata. |
+| `AuditableEntity` | `class` | 5 | ✅ | ✅ | Base class for entities that require audit tracking. |
+| `ContactMethod` | `enum` | 0 | — | — | Available contact methods for a customer. |
+| `Customer` | `class` | 7 | ✅ | ✅ | Represents a customer in the system. |
+| `DateRange` | `struct` | 12 | ✅ | ✅ | Represents an inclusive date range with a start and end date. |
+| `FeatureFlags` | `enum` | 0 | ✅ | — | Feature flags that can be independently enabled for the application. |
+| `ICustomerService` | `interface` | 5 | ✅ | — | Service for managing customers. |
+| `IOrderNotificationService` | `interface` | 7 | ✅ | — | A service that publishes notifications for key order lifecycle events. |
+| `IRepository<TEntity>` | `interface` | 8 | ✅ | — | A generic repository interface for performing CRUD and query operations. |
+| `Money` | `record struct` | 6 | ✅ | ✅ | Represents a monetary amount in a specific currency. |
+| `Order` | `class` | 6 | ✅ | ✅ | Represents an order placed by a customer. |
+| `OrderEventArgs` | `class` | 3 | ✅ | ✅ | Provides data for order-related events. |
+| `OrderItem` | `class` | 3 | — | ✅ | Represents a single item within an order. |
+| `OrderStatus` | `enum` | 0 | — | — | The status of an order. |
+| `PagedResult<T>` | `record` | 8 | ✅ | ✅ | Represents a paged subset of a larger collection. |
+| `ProblemDetails` | `class` | 6 | ✅ | ✅ | A machine-readable format for specifying errors in HTTP API responses (RFC 9457). |
+| `ProductDto` | `class` | 10 | ✅ | ✅ | A DTO annotated with System.Text.Json serialization attributes. |
+| `RateLimitOptions` | `class` | 3 | ✅ | ✅ | Configuration options for API rate limiting. |
+| `Result<T>` | `class` | 6 | ✅ | ✅ | Encapsulates the outcome of an operation with a success value or an error message. |
+| `SoftDeletableEntity` | `class` | 5 | ✅ | ✅ | Base class for entities that support soft deletion with audit tracking. |
+| `ValidationError` | `record` | 4 | ✅ | ✅ | Describes a validation error associated with a specific input field. |
+
+## Use cases demonstrated
+
+<Tabs>
+  <TabItem label="Domain Entities">
+    Classes with properties, required members, and XML documentation:
+
+    ```csharp title="Customer.cs"
+    [ApiContract(
+        Name = "Customer",
+        Description = "A customer entity with contact information and order history.",
+        Category = "Domain",
+        Role = "entity",
+        Tags = "customer,crm,domain")]
+    public class Customer
+    {
+        /// <summary>Gets or sets the unique identifier.</summary>
+        public required Guid Id { get; set; }
+
+        /// <summary>Gets or sets the customer's full name.</summary>
+        public required string FullName { get; set; }
+
+        /// <summary>Gets or sets the email address.</summary>
+        public string? Email { get; set; }
+    }
+    ```
+  </TabItem>
+  <TabItem label="Generics & Constraints">
+    Generic interfaces and records with type constraints:
+
+    ```csharp title="IRepository.cs"
+    [ApiContract(
+        Name = "Repository",
+        Description = "A generic repository interface for CRUD and query operations.",
+        Category = "Data Access",
+        Role = "repository")]
+    public interface IRepository<TEntity> where TEntity : class
+    {
+        Task<TEntity?> GetByIdAsync(Guid id);
+        Task<PagedResult<TEntity>> GetPagedAsync(int page, int pageSize);
+        Task AddAsync(TEntity entity);
+        Task DeleteAsync(Guid id);
+    }
+    ```
+  </TabItem>
+  <TabItem label="Value Objects">
+    Records, readonly structs, and record structs with value semantics:
+
+    ```csharp title="Money.cs"
+    [ApiContract(
+        Name = "Money",
+        Description = "A monetary amount in a specific currency.",
+        Category = "Domain",
+        Role = "value-object")]
+    public readonly record struct Money(decimal Amount, string Currency)
+    {
+        public static Money Zero(string currency) => new(0m, currency);
+        public static Money operator +(Money a, Money b) => /* ... */;
+    }
+    ```
+  </TabItem>
+  <TabItem label="Events">
+    Event patterns with EventArgs and handler delegates:
+
+    ```csharp title="IOrderNotificationService.cs"
+    public interface IOrderNotificationService
+    {
+        event EventHandler<OrderEventArgs>? OrderPlaced;
+        event EventHandler<OrderEventArgs>? OrderShipped;
+        event EventHandler<OrderEventArgs>? OrderCancelled;
+        void NotifyOrderPlaced(Order order);
+    }
+    ```
+  </TabItem>
+  <TabItem label="JSON Serialization">
+    Types with `System.Text.Json` attributes are captured in the schema:
+
+    ```csharp title="ProductDto.cs"
+    [ApiContract(Name = "Product", Category = "DTOs")]
+    public class ProductDto
+    {
+        [JsonPropertyName("product_id")]
+        [JsonRequired]
+        public required Guid Id { get; set; }
+
+        [JsonPropertyName("product_name")]
+        public required string Name { get; set; }
+
+        [JsonIgnore]
+        public string InternalCode { get; set; }
+    }
+    ```
+  </TabItem>
+  <TabItem label="Enums & Flags">
+    Regular enums and `[Flags]` enums with member descriptions:
+
+    ```csharp title="FeatureFlags.cs"
+    [Flags]
+    [ApiContract(
+        Name = "FeatureFlags",
+        Description = "Feature flags for the application.",
+        Category = "Configuration")]
+    public enum FeatureFlags
+    {
+        None = 0,
+        BetaFeatures = 1,
+        DarkMode = 2,
+        Analytics = 4,
+        Notifications = 8,
+        AllFeatures = BetaFeatures | DarkMode | Analytics | Notifications
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Schema envelope
+
+Every generated schema includes a versioned envelope with package metadata and a deterministic API hash:
+
+```json title="Schema envelope"
+{
+  "$schema": "/api.contracts/schemas/api-schema.json",
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "SampleApi",
+    "version": "1.0.0.0",
+    "targetFramework": "net10.0"
+  },
+  "types": [ ... ],
+  "apiHash": "sha256:d5dbe44a66cf9c54a107f58ca8e8c8a84cffa81ed7dc03d34547f4d3e9f709f4"
+}
+```
+
+## Example type output
+
+Here's what the `Customer` type looks like in the generated schema:
+
+```json title="Customer type in schema" collapse={26-58}
+{
+  "name": "Customer",
+  "fullName": "SampleApi.Customer",
+  "namespace": "SampleApi",
+  "kind": "class",
+  "accessibility": "public",
+  "docs": {
+    "summary": "Represents a customer in the system.",
+    "remarks": "This is a sample domain model demonstrating the API Contracts generator. It shows how types, properties, and methods are captured in the schema."
+  },
+  "json": {
+    "contractType": "object",
+    "useCamelCase": true,
+    "properties": [
+      { "clrName": "Id", "jsonName": "id", "jsonType": "string", "clrType": "System.Guid", "required": true },
+      { "clrName": "FullName", "jsonName": "fullName", "jsonType": "string", "clrType": "string", "required": true },
+      { "clrName": "Email", "jsonName": "email", "jsonType": "string", "clrType": "string?", "nullable": true },
+      { "clrName": "CreatedAt", "jsonName": "createdAt", "jsonType": "string", "clrType": "System.DateTimeOffset" },
+      { "clrName": "IsActive", "jsonName": "isActive", "jsonType": "boolean", "clrType": "bool" },
+      { "clrName": "Tags", "jsonName": "tags", "jsonType": "array", "clrType": "System.Collections.Generic.List<string>" },
+      { "clrName": "PreferredContact", "jsonName": "preferredContact", "jsonType": "string", "clrType": "SampleApi.ContactMethod" }
+    ]
+  },
+  "members": [
+    {
+      "name": "CreatedAt",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "DateTimeOffset Customer.CreatedAt",
+      "returnType": "System.DateTimeOffset",
+      "docs": { "summary": "Gets or sets the date when the customer was created." }
+    },
+    {
+      "name": "Email",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "string? Customer.Email",
+      "returnType": "string?",
+      "isReturnNullable": true,
+      "docs": { "summary": "Gets or sets the email address." }
+    },
+    {
+      "name": "FullName",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "string Customer.FullName",
+      "returnType": "string",
+      "docs": { "summary": "Gets or sets the customer's full name." }
+    },
+    {
+      "name": "Id",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "Guid Customer.Id",
+      "returnType": "System.Guid",
+      "docs": { "summary": "Gets or sets the unique identifier." }
+    },
+    {
+      "name": "IsActive",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "bool Customer.IsActive",
+      "returnType": "bool",
+      "docs": { "summary": "Gets or sets whether the customer is active." }
+    },
+    {
+      "name": "PreferredContact",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "ContactMethod Customer.PreferredContact",
+      "returnType": "SampleApi.ContactMethod",
+      "docs": { "summary": "Gets or sets the customer's preferred contact method." }
+    },
+    {
+      "name": "Tags",
+      "kind": "property",
+      "accessibility": "public",
+      "signature": "List<string> Customer.Tags",
+      "returnType": "System.Collections.Generic.List<string>",
+      "docs": { "summary": "Gets or sets the customer's tags for segmentation." }
+    }
+  ]
+}
+```
+
+## Download the full schema
+
+The complete schema JSON for the SampleApi project is published at:
+
+**[`/api.contracts/schemas/SampleApi.api-schema.json`](/api.contracts/schemas/SampleApi.api-schema.json)**
+
+Consumers — including AI agents, SDK generators, and documentation pipelines — can reference this URL directly to discover the full API surface.
+
+<LinkCard
+  title="Assembly Schema Format"
+  description="Learn about the structure and semantics of each field in the schema."
+  href="/api.contracts/schema/assembly-schema/"
+/>
