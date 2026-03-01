@@ -20,7 +20,6 @@ internal sealed class CanonicalType
     public List<string> Interfaces { get; set; } = [];
     public List<CanonicalMember> Members { get; set; } = [];
     public CanonicalDocumentation? Docs { get; set; }
-    public CanonicalJsonContract? Json { get; set; }
     public List<CanonicalEnumMember>? EnumMembers { get; set; }
     public List<CanonicalAttribute>? Attributes { get; set; }
 
@@ -112,23 +111,4 @@ internal sealed class CanonicalCodeExample
     public string? Description { get; set; }
 }
 
-/// <summary>Canonical JSON contract.</summary>
-internal sealed class CanonicalJsonContract
-{
-    public string ContractType { get; set; } = "object";
-    public List<CanonicalJsonProperty> Properties { get; set; } = [];
-    public bool UseCamelCase { get; set; }
-}
 
-/// <summary>Canonical JSON property.</summary>
-internal sealed class CanonicalJsonProperty
-{
-    public string ClrName { get; set; } = "";
-    public string JsonName { get; set; } = "";
-    public string JsonType { get; set; } = "string";
-    public bool Ignored { get; set; }
-    public bool Nullable { get; set; }
-    public bool Required { get; set; }
-    public string ClrType { get; set; } = "";
-    public string? Description { get; set; }
-}

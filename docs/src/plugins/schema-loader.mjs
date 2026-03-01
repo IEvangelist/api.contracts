@@ -100,7 +100,6 @@ export function buildTypeContext(type, rootSchema) {
     summary: type.docs?.summary || '',
     remarks: type.docs?.remarks || '',
     members: (type.members || []).map(m => buildMemberContext(m)),
-    json: type.json || null,
     enumMembers: type.enumMembers || null,
     baseType: type.baseType || null,
     interfaces: type.interfaces || [],

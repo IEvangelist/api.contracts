@@ -44,10 +44,9 @@ Assembly schemas reference the root schema using the `$schema` keyword:
 | Definition | Description |
 |---|---|
 | `package` | Assembly name, version, and target framework |
-| `type` | A public type with name, kind, docs, json contract, and members |
+| `type` | A public type with name, kind, docs, and members |
 | `member` | A type member (property, method, event, field, constructor) |
 | `signature` | Optional RSA-SHA256 signature for integrity verification |
-| `jsonContract` | System.Text.Json serialization contract for a type |
 
 ## Placeholders
 

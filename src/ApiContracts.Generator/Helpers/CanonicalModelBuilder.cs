@@ -72,9 +72,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         // XML docs
         type.Docs = ExtractDocumentation(symbol);
 
-        // JSON contract
-        type.Json = BuildJsonContract(symbol);
-
         // Enum members
         if (symbol.TypeKind == TypeKind.Enum)
         {
@@ -370,108 +367,6 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
 
         var result = string.Join(" ", lines);
         return string.IsNullOrWhiteSpace(result) ? null : result;
-    }
-
-    private static CanonicalJsonContract? BuildJsonContract(INamedTypeSymbol type)
-    {
-        if (type.TypeKind is TypeKind.Interface or TypeKind.Enum or TypeKind.Delegate)
-        {
-            return null;
-        }
-
-        var properties = type.GetMembers()
-            .OfType<IPropertySymbol>()
-            .Where(p => p.DeclaredAccessibility == Accessibility.Public && !p.IsStatic)
-            .Select(BuildJsonProperty)
-            .Where(p => p is not null)
-            .Cast<CanonicalJsonProperty>()
-            .ToList();
-
-        if (properties.Count == 0)
-        {
-            return null;
-        }
-
-        var useCamelCase = type.GetAttributes()
-            .Any(a => a.AttributeClass?.Name == "JsonSourceGenerationOptionsAttribute" ||
-                       a.AttributeClass?.ToDisplayString().Contains("JsonSerializerOptions") == true);
-
-        return new CanonicalJsonContract
-        {
-            ContractType = "object",
-            Properties = properties,
-            UseCamelCase = true, // Default System.Text.Json web defaults
-        };
-    }
-
-    private static CanonicalJsonProperty? BuildJsonProperty(IPropertySymbol property)
-    {
-        // Check for JsonIgnore
-        var isIgnored = property.GetAttributes()
-            .Any(a => a.AttributeClass?.Name == "JsonIgnoreAttribute");
-
-        // Get JSON property name
-        var jsonNameAttr = property.GetAttributes()
-            .FirstOrDefault(a => a.AttributeClass?.Name == "JsonPropertyNameAttribute");
-
-        var jsonName = jsonNameAttr?.ConstructorArguments.FirstOrDefault().Value as string
-            ?? ToCamelCase(property.Name);
-
-        // Check for required
-        var isRequired = property.IsRequired ||
-            property.GetAttributes().Any(a =>
-                a.AttributeClass?.Name == "JsonRequiredAttribute" ||
-                a.AttributeClass?.Name == "RequiredAttribute");
-
-        return new CanonicalJsonProperty
-        {
-            ClrName = property.Name,
-            JsonName = jsonName,
-            JsonType = MapToJsonType(property.Type),
-            Ignored = isIgnored,
-            Nullable = property.Type.NullableAnnotation == NullableAnnotation.Annotated ||
-                       property.Type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T,
-            Required = isRequired,
-            ClrType = property.Type.ToDisplayString(),
-            Description = ExtractSummary(property),
-        };
-    }
-
-    private static string MapToJsonType(ITypeSymbol type)
-    {
-        var displayString = type.WithNullableAnnotation(NullableAnnotation.NotAnnotated).ToDisplayString();
-
-        return displayString switch
-        {
-            "string" => "string",
-            "bool" => "boolean",
-            "int" or "long" or "short" or "byte" or
-            "uint" or "ulong" or "ushort" or "sbyte" or
-            "float" or "double" or "decimal" => "number",
-            "System.DateTime" or "System.DateTimeOffset" or "System.DateOnly" => "string",
-            "System.TimeSpan" or "System.TimeOnly" => "string",
-            "System.Guid" => "string",
-            "System.Uri" => "string",
-            _ when type.TypeKind == TypeKind.Enum => "string",
-            _ when type.TypeKind == TypeKind.Array => "array",
-            _ when IsCollectionType(type) => "array",
-            _ when type.TypeKind == TypeKind.Class || type.TypeKind == TypeKind.Struct => "object",
-            _ => "object",
-        };
-    }
-
-    private static bool IsCollectionType(ITypeSymbol type)
-    {
-        return type.AllInterfaces.Any(i =>
-            i.OriginalDefinition.ToDisplayString() == "System.Collections.Generic.IEnumerable<T>" &&
-            i.ToDisplayString() != "System.Collections.Generic.IEnumerable<char>");
-    }
-
-    private static string ToCamelCase(string name)
-    {
-        if (string.IsNullOrEmpty(name)) return name;
-        if (char.IsLower(name[0])) return name;
-        return char.ToLowerInvariant(name[0]) + name.Substring(1);
     }
 
     private static List<CanonicalAttribute>? ExtractShapeAttributes(ISymbol symbol)

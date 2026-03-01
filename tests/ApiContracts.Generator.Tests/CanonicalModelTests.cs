@@ -65,7 +65,6 @@ public class CanonicalModelTests
         Assert.Empty(type.Interfaces);
         Assert.Empty(type.Members);
         Assert.Null(type.Docs);
-        Assert.Null(type.Json);
         Assert.Null(type.EnumMembers);
         Assert.Null(type.Attributes);
     }
@@ -88,21 +87,6 @@ public class CanonicalModelTests
         Assert.Null(member.Parameters);
         Assert.Null(member.GenericParameters);
         Assert.Equal("", member.Signature);
-    }
-
-    [Fact]
-    public void CanonicalJsonProperty_DefaultValues_AreCorrect()
-    {
-        var prop = new CanonicalJsonProperty();
-
-        Assert.Equal("", prop.ClrName);
-        Assert.Equal("", prop.JsonName);
-        Assert.Equal("string", prop.JsonType);
-        Assert.False(prop.Ignored);
-        Assert.False(prop.Nullable);
-        Assert.False(prop.Required);
-        Assert.Equal("", prop.ClrType);
-        Assert.Null(prop.Description);
     }
 
     [Fact]
@@ -129,15 +113,5 @@ public class CanonicalModelTests
         Assert.Null(docs.Parameters);
         Assert.Null(docs.Examples);
         Assert.Null(docs.SeeAlso);
-    }
-
-    [Fact]
-    public void CanonicalJsonContract_DefaultValues_AreCorrect()
-    {
-        var contract = new CanonicalJsonContract();
-
-        Assert.Equal("object", contract.ContractType);
-        Assert.Empty(contract.Properties);
-        Assert.False(contract.UseCamelCase);
     }
 }

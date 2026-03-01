@@ -4,19 +4,16 @@
 namespace SampleApi;
 
 /// <summary>
-/// Provides data for order-related events.
-/// </summary>
-/// <remarks>
-/// This class extends <see cref="EventArgs"/> to carry the <see cref="Order"/>
+/// Provides data for order-related events, carrying the <see cref="Order"/>
 /// that triggered the event along with a UTC timestamp indicating when the event occurred.
-/// </remarks>
-/// <seealso cref="IOrderNotificationService"/>
-/// <seealso cref="Order"/>
+/// </summary>
 /// <remarks>
 /// Initializes a new instance of the <see cref="OrderEventArgs"/> class.
 /// </remarks>
 /// <param name="order">The order associated with the event.</param>
 /// <exception cref="ArgumentNullException">Thrown when <paramref name="order"/> is <see langword="null"/>.</exception>
+/// <seealso cref="IOrderNotificationService"/>
+/// <seealso cref="Order"/>
 public class OrderEventArgs(Order order) : EventArgs
 {
 

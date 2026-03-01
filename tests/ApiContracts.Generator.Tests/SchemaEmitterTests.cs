@@ -67,55 +67,6 @@ public class SchemaEmitterTests
     }
 
     [Fact]
-    public void EmitAssemblySchema_IncludesJsonContract()
-    {
-        var types = new List<CanonicalType>
-        {
-            new()
-            {
-                Name = "Dto",
-                FullName = "TestNs.Dto",
-                Namespace = "TestNs",
-                Kind = "class",
-                Json = new CanonicalJsonContract
-                {
-                    ContractType = "object",
-                    UseCamelCase = true,
-                    Properties =
-                    [
-                        new CanonicalJsonProperty
-                        {
-                            ClrName = "Name",
-                            JsonName = "name",
-                            JsonType = "string",
-                            ClrType = "string",
-                            Required = true,
-                        },
-                        new CanonicalJsonProperty
-                        {
-                            ClrName = "Age",
-                            JsonName = "age",
-                            JsonType = "number",
-                            ClrType = "int",
-                            Nullable = true,
-                        }
-                    ]
-                }
-            }
-        };
-
-        var config = new AssemblyConfig();
-        var json = SchemaEmitter.EmitAssemblySchema(
-            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
-
-        Assert.Contains("\"contractType\": \"object\"", json);
-        Assert.Contains("\"useCamelCase\": true", json);
-        Assert.Contains("\"jsonName\": \"name\"", json);
-        Assert.Contains("\"required\": true", json);
-        Assert.Contains("\"nullable\": true", json);
-    }
-
-    [Fact]
     public void EmitAssemblySchema_DoesNotContainTrailingCommasOrSentinels()
     {
         var types = new List<CanonicalType>

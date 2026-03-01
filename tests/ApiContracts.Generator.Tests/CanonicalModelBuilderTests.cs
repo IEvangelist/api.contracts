@@ -221,36 +221,6 @@ public class CanonicalModelBuilderTests
     }
 
     [Fact]
-    public void BuildTypes_CapturesJsonContract()
-    {
-        var source = """
-            namespace TestNs
-            {
-                public class UserDto
-                {
-                    public string FirstName { get; set; }
-                    public int Age { get; set; }
-                }
-            }
-            """;
-
-        var result = BuildTypesFromSource(source);
-
-        var dto = Assert.Single(result);
-        Assert.NotNull(dto.Json);
-        Assert.Equal("object", dto.Json!.ContractType);
-        Assert.True(dto.Json.UseCamelCase);
-
-        var firstNameProp = dto.Json.Properties.First(p => p.ClrName == "FirstName");
-        Assert.Equal("firstName", firstNameProp.JsonName);
-        Assert.Equal("string", firstNameProp.JsonType);
-
-        var ageProp = dto.Json.Properties.First(p => p.ClrName == "Age");
-        Assert.Equal("age", ageProp.JsonName);
-        Assert.Equal("number", ageProp.JsonType);
-    }
-
-    [Fact]
     public void BuildTypes_CapturesNullableReturnTypes()
     {
         var source = """

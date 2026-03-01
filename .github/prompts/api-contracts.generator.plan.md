@@ -104,7 +104,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 
 - Root schema provides `documentation.templates` mapping (e.g., `type: TypePage.mdx`) and `documentation.placeholders` (e.g., `typeName: "{type.name}"`).  
 - SSG replaces placeholders with context objects such as `{ type, member, namespace, package, assembly, apiHash }`.  
-- Templates are MDX/MD with components (TypeSignature, MemberList, JsonContract, Examples).
+- Templates are MDX/MD with components (TypeSignature, MemberList, Examples).
 
 ---
 
@@ -172,11 +172,11 @@ Define a SKILL.md format and operational rules that teach an AI agent how to *us
 
 - **Skill Overview** — capability summary and intended use cases.  
 - **Schema Sources** — paths to `schema.json` and assembly schemas.  
-- **Interpretation Rules** — how to read `types`, `members`, `json`, `docs`, `ai` metadata, and examples.  
-- **Context Object Model** — canonical context shapes agents should build (e.g., `{type, member, jsonContract, examples, package, assembly}` ).  
+- **Interpretation Rules** — how to read `types`, `members`, `docs`, and examples.  
+- **Context Object Model** — canonical context shapes agents should build (e.g., `{type, member, examples, package, assembly}` ).  
 - **Planning & Execution Model** — stepwise agent behavior: identify API → validate inputs → construct request → execute or simulate → validate response → format output.  
 - **Template & Placeholder Usage** — how to apply `documentation.templates` and `placeholders` with context objects.  
-- **Polyglot Code Generation Rules** — how to generate code from signatures and JSON contracts across languages.  
+- **Polyglot Code Generation Rules** — how to generate code from signatures and type members across languages.  
 - **Validation & Safety Rules** — required checks (nullability, required fields, enum values), error handling, and retry heuristics.  
 - **Examples** — concrete, annotated examples of planning, request construction, codegen, and error recovery.  
 - **Telemetry & Auditing** — what to log for traceability (schema version, apiHash, signature verification result, actions taken).
@@ -210,10 +210,9 @@ Short description.
 ## Interpretation Rules
 - Types: use `types[]` and `docs` metadata.
 - Members: use `members[]` and `signature`.
-- JSON: use `json.properties[]`, `nullable`, `required`.
 
 ## Context Objects
-- typeContext: { fullName, namespace, docs, json, members }
+- typeContext: { fullName, namespace, docs, members }
 - memberContext: { name, signature, docs }
 
 ## Plan Template

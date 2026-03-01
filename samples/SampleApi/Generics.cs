@@ -4,14 +4,40 @@
 namespace SampleApi;
 
 /// <summary>
-/// A generic repository interface for performing CRUD and query operations on entities.
+/// Defines a generic repository contract for performing CRUD and query
+/// operations against a persistent store of <typeparamref name="TEntity"/> objects.
 /// </summary>
-/// <typeparam name="TEntity">The type of entity managed by the repository. Must be a reference type.</typeparam>
+/// <typeparam name="TEntity">
+/// The entity type managed by this repository. Must be a reference type so that
+/// <see langword="null"/> can be returned from <see cref="GetByIdAsync"/> when an
+/// entity is not found.
+/// </typeparam>
 /// <remarks>
-/// Implementations should handle persistence concerns such as connection management
-/// and transaction scoping. Consumers should depend on this abstraction rather than
-/// concrete data-access implementations.
+/// <see cref="IRepository{TEntity}"/> abstracts the data-access layer, allowing
+/// service classes to operate against an in-memory fake, an EF Core DbContext,
+/// or a Dapper-based implementation without code changes.
+///
+/// Implementations are responsible for:
+/// <list type="bullet">
+///   <item><description>Opening and closing database connections or scoping units of work.</description></item>
+///   <item><description>Mapping between CLR entities and the underlying storage representation.</description></item>
+///   <item><description>Propagating <see cref="CancellationToken"/> to all I/O calls.</description></item>
+/// </list>
 /// </remarks>
+/// <example>
+/// Using the repository to page through all customers:
+/// <code language="csharp">
+/// IRepository&lt;Customer&gt; repo = GetRepository();
+///
+/// var page = await repo.GetPagedAsync(page: 1, pageSize: 20);
+/// Console.WriteLine($"Showing {page.Items.Count} of {page.TotalCount}");
+///
+/// while (page.HasNextPage)
+/// {
+///     page = await repo.GetPagedAsync(page.Page + 1, pageSize: 20);
+/// }
+/// </code>
+/// </example>
 /// <seealso cref="PagedResult{T}"/>
 public interface IRepository<TEntity> where TEntity : class
 {
@@ -80,17 +106,33 @@ public interface IRepository<TEntity> where TEntity : class
 }
 
 /// <summary>
-/// Represents a paged subset of a larger collection.
+/// Represents a single page of results from a paginated query, including
+/// the items on the current page and metadata for navigating the full result set.
 /// </summary>
 /// <typeparam name="T">The type of items in the result set.</typeparam>
-/// <param name="Items">The items on the current page.</param>
-/// <param name="TotalCount">The total number of items across all pages.</param>
-/// <param name="Page">The one-based page number of this result.</param>
+/// <param name="Items">The read-only list of items on the current page.</param>
+/// <param name="TotalCount">The total number of items across all pages in the underlying query.</param>
+/// <param name="Page">The one-based page number represented by this result.</param>
 /// <param name="PageSize">The maximum number of items per page.</param>
 /// <remarks>
-/// Use this type to return paginated results from queries. The <see cref="TotalPages"/>
-/// property is computed automatically from <see cref="TotalCount"/> and <see cref="PageSize"/>.
+/// <see cref="PagedResult{T}"/> is returned by <see cref="IRepository{TEntity}.GetPagedAsync"/>
+/// and other paged query methods. The <see cref="TotalPages"/>, <see cref="HasNextPage"/>,
+/// and <see cref="HasPreviousPage"/> properties are computed automatically to simplify
+/// building pagination controls in UIs and hypermedia links in API responses.
+///
+/// When <see cref="PageSize"/> is zero, <see cref="TotalPages"/> returns zero to
+/// avoid division-by-zero errors.
 /// </remarks>
+/// <example>
+/// Building pagination links from a paged result:
+/// <code language="csharp">
+/// var page = await repo.GetPagedAsync(page: 2, pageSize: 10);
+///
+/// Console.WriteLine($"Page {page.Page} of {page.TotalPages}");
+/// if (page.HasPreviousPage) Console.WriteLine("  ← Previous");
+/// if (page.HasNextPage) Console.WriteLine("  Next →");
+/// </code>
+/// </example>
 /// <seealso cref="IRepository{TEntity}"/>
 public record class PagedResult<T>(
     IReadOnlyList<T> Items,

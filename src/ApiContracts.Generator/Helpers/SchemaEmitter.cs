@@ -121,12 +121,6 @@ internal static class SchemaEmitter
             parts.Add(BuildDocumentation(type.Docs, indent + "  "));
         }
 
-        // JSON contract
-        if (type.Json is not null)
-        {
-            parts.Add(BuildJsonContract(type.Json, indent + "  "));
-        }
-
         // Enum members
         if (type.EnumMembers is { Count: > 0 })
         {
@@ -266,32 +260,6 @@ internal static class SchemaEmitter
         var sb = new StringBuilder();
         sb.AppendLine($"{indent}\"docs\": {{");
         sb.AppendLine($"{indent}  {string.Join($",\n{indent}  ", docParts)}");
-        sb.Append($"{indent}}}");
-        return sb.ToString();
-    }
-
-    private static string BuildJsonContract(CanonicalJsonContract contract, string indent)
-    {
-        var sb = new StringBuilder();
-        sb.AppendLine($"{indent}\"json\": {{");
-        sb.AppendLine($"{indent}  \"contractType\": \"{EscapeJson(contract.ContractType)}\",");
-        sb.AppendLine($"{indent}  \"useCamelCase\": {(contract.UseCamelCase ? "true" : "false")},");
-        sb.AppendLine($"{indent}  \"properties\": [");
-
-        for (int i = 0; i < contract.Properties.Count; i++)
-        {
-            var p = contract.Properties[i];
-            sb.Append($"{indent}    {{\"clrName\": \"{EscapeJson(p.ClrName)}\", \"jsonName\": \"{EscapeJson(p.JsonName)}\", \"jsonType\": \"{EscapeJson(p.JsonType)}\", \"clrType\": \"{EscapeJson(p.ClrType)}\"");
-            if (p.Ignored) sb.Append(", \"ignored\": true");
-            if (p.Nullable) sb.Append(", \"nullable\": true");
-            if (p.Required) sb.Append(", \"required\": true");
-            if (p.Description is not null) sb.Append($", \"description\": \"{EscapeJson(p.Description)}\"");
-            sb.Append('}');
-            if (i < contract.Properties.Count - 1) sb.AppendLine(",");
-            else sb.AppendLine();
-        }
-
-        sb.AppendLine($"{indent}  ]");
         sb.Append($"{indent}}}");
         return sb.ToString();
     }

@@ -142,9 +142,6 @@
         "docs": {
           "$ref": "#/$defs/docs"
         },
-        "json": {
-          "$ref": "#/$defs/jsonContract"
-        },
         "enumMembers": {
           "type": "array",
           "description": "Members of an enum type.",
@@ -303,64 +300,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "jsonContract": {
-      "type": "object",
-      "description": "System.Text.Json serialization contract for the type.",
-      "required": ["contractType", "useCamelCase", "properties"],
-      "additionalProperties": false,
-      "properties": {
-        "contractType": {
-          "type": "string"
-        },
-        "useCamelCase": {
-          "type": "boolean"
-        },
-        "properties": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/jsonProperty"
-          }
-        }
-      }
-    },
-    "jsonProperty": {
-      "type": "object",
-      "description": "A JSON serialization property.",
-      "required": ["clrName", "jsonName", "jsonType", "clrType"],
-      "additionalProperties": false,
-      "properties": {
-        "clrName": {
-          "type": "string",
-          "description": "CLR property name."
-        },
-        "jsonName": {
-          "type": "string",
-          "description": "JSON property name after naming policy."
-        },
-        "jsonType": {
-          "type": "string",
-          "description": "JSON Schema type.",
-          "enum": ["string", "number", "boolean", "object", "array"]
-        },
-        "clrType": {
-          "type": "string",
-          "description": "Fully qualified CLR type."
-        },
-        "ignored": {
-          "type": "boolean"
-        },
-        "nullable": {
-          "type": "boolean"
-        },
-        "required": {
-          "type": "boolean"
-        },
-        "description": {
-          "type": "string",
-          "description": "XML doc summary for the property."
         }
       }
     }

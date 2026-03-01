@@ -50,9 +50,6 @@ public sealed class TypeModel
     /// <summary>Normalized XML documentation.</summary>
     public DocumentationModel? Docs { get; set; }
 
-    /// <summary>JSON serialization contract info.</summary>
-    public JsonContractModel? Json { get; set; }
-
     /// <summary>Enum members (only for enum types).</summary>
     public List<EnumMemberModel>? EnumMembers { get; set; }
 

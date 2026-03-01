@@ -10,7 +10,7 @@ Deterministic, signed, versioned JSON schemas that describe a .NET assembly's pu
 **API Contracts** is a Roslyn incremental source generator that walks public symbols in a .NET compilation and emits:
 
 - **Root schema** (`schemas/api-schema.json`) — JSON Schema definition that validates the structure of assembly data files.
-- **Assembly data files** (`{PackageName}.{Version}.json`) — data-only snapshots of every public type, member, JSON contract, and XML documentation.
+- **Assembly data files** (`{PackageName}.{Version}.json`) — data-only snapshots of every public type, member, and XML documentation.
 - **Optional signed variants** with RSA-SHA256 signature envelopes.
 
 Each schema includes a deterministic `apiHash` (SHA-256 of the canonical API model) so consumers can detect API surface changes without diffing source.
@@ -50,7 +50,7 @@ public class InternalHelper { }
 
 ### 3. Build
 
-The generator emits data file code during compilation. The data file captures all public types, members, signatures, XML docs, and JSON serialization contracts.
+The generator emits data file code during compilation. The data file captures all public types, members, signatures, and XML docs.
 
 ## Configuration
 
@@ -193,7 +193,7 @@ npm run dev
 
 1. The schema loader plugin (`docs/src/plugins/schema-loader.mjs`) loads `schema.json` and all `*.json` data files at build time
 2. It builds type and namespace indexes for fast lookup
-3. Astro components (`TypeSignature`, `MemberList`, `JsonContract`, `Examples`) render API documentation from the schema data
+3. Astro components (`TypeSignature`, `MemberList`, `Examples`) render API documentation from the schema data
 4. Polyglot code samples are shown in tabbed views with copy buttons
 
 The documentation site is deployed to [GitHub Pages](https://ievangelist.github.io/api.contracts/) automatically on changes to `docs/` or `ai-skills/`.

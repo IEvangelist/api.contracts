@@ -94,44 +94,6 @@ public class CanonicalSerializerTests
     }
 
     [Fact]
-    public void SerializeForHashing_IncludesJsonContract()
-    {
-        var types = new List<CanonicalType>
-        {
-            new()
-            {
-                Name = "Dto",
-                FullName = "Test.Dto",
-                Namespace = "Test",
-                Kind = "class",
-                Json = new CanonicalJsonContract
-                {
-                    ContractType = "object",
-                    UseCamelCase = true,
-                    Properties =
-                    [
-                        new CanonicalJsonProperty
-                        {
-                            ClrName = "Name",
-                            JsonName = "name",
-                            JsonType = "string",
-                            ClrType = "string",
-                            Required = true,
-                        }
-                    ]
-                }
-            }
-        };
-
-        var result = CanonicalSerializer.SerializeForHashing(types);
-
-        Assert.Contains("\"json\":", result);
-        Assert.Contains("\"contractType\":\"object\"", result);
-        Assert.Contains("\"jsonName\":\"name\"", result);
-        Assert.Contains("\"required\":true", result);
-    }
-
-    [Fact]
     public void SerializeForHashing_ExcludesCodeSampleContent()
     {
         var types = new List<CanonicalType>

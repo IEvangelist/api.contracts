@@ -23,12 +23,6 @@ Teach an AI agent how to consume, interpret, and act on emitted API surface data
 - `signature` provides the full method/property signature for display and matching.
 - `parameters[]` includes name, type, nullability, optionality, and default values.
 
-### JSON Contracts
-
-- `json.properties[]` on a type describes its System.Text.Json serialization shape.
-- Each property has `jsonName` (wire name), `jsonType`, `nullable`, `required`, `ignored`.
-- Use `json.contractType` to determine if the type serializes as `object`, `array`, or `value`.
-
 ### Documentation
 
 - `docs.summary` provides a one-line description.
@@ -48,7 +42,6 @@ When rendering templates or reasoning about API surfaces, build these context ob
         "namespace": "{type.namespace}",
         "kind": "{type.kind}",
         "docs": "{type.docs}",
-        "json": "{type.json}",
         "members": "{type.members[]}"
     },
     "memberContext": {
@@ -71,14 +64,14 @@ When rendering templates or reasoning about API surfaces, build these context ob
 ## Planning & Execution Model
 
 1. **Load** — Read `schema.json` and all per-assembly data files from `reference/`. Verify signatures if present.
-2. **Index** — Build a searchable index of types, members, JSON contracts, and examples. Key by `fullName`, `docs.summary`, and `namespace`.
+2. **Index** — Build a searchable index of types, members, and examples. Key by `fullName`, `docs.summary`, and `namespace`.
 3. **Interpret** — Map user intent to candidate API targets:
     - Search by `docs.summary`, `fullName`, or `namespace`.
     - Rank by relevance using `docs.remarks`.
 4. **Plan** — Construct a minimal action sequence:
     - Identify target type and member.
-    - Validate required parameters using `parameters[]` and `json.properties[]`.
-    - Build request payload per JSON contract rules.
+    - Validate required parameters using `parameters[]`.
+    - Build request payload from type members and parameter definitions.
 5. **Execute** — Invoke the planned action (API call, code generation, or documentation rendering).
 6. **Validate** — Check response against return type, nullability, and expected shape.
 7. **Reflect** — On failure, consult `docs.examples[]`, fill missing `required` fields, correct type mismatches, and retry.
@@ -104,9 +97,9 @@ When generating code from schema data:
     - `bool` → `bool` (C#), `boolean` (TS), `bool` (Python), `boolean` (Java)
     - `Guid` → `Guid` (C#), `string` (TS), `str` (Python), `UUID` (Java)
     - `List<T>` → `List<T>` (C#), `T[]` (TS), `list[T]` (Python), `List<T>` (Java)
-3. Respect `json.jsonName` for serialization field names.
-4. Mark `json.nullable` fields as optional in target language.
-5. Enforce `json.required` fields in constructors or builders.
+3. Use member `returnType` and `parameters[]` to determine field types.
+4. Mark nullable return types and parameters as optional in the target language.
+5. Enforce required properties (from `members[]` with appropriate attributes) in constructors or builders.
 
 ## Validation & Safety Rules
 
@@ -114,7 +107,7 @@ When generating code from schema data:
 - **Nullable fields**: Properties with `"nullable": true` may be `null`/`undefined`/`None`. Do not assume a value.
 - **Enum values**: For enum types, only use values from `enumMembers[].name`. Reject unknown values.
 - **Type safety**: Match parameter types exactly. Do not coerce `string` to `int` or vice versa.
-- **Ignored fields**: Properties with `"ignored": true` should not appear in serialized payloads.
+- **Ignored fields**: Properties with `[JsonIgnore]` attribute should not appear in serialized payloads.
 - **Hash verification**: If `apiHash` is present, verify it matches the expected version before acting.
 - **Signature verification**: If `signature` envelope is present, verify before trusting schema content.
 
@@ -143,22 +136,22 @@ When generating code from schema data:
 > - `List<string> Tags`
 > - `ContactMethod PreferredContact`
 
-### Example 2: Generate a TypeScript DTO from JSON contract
+### Example 2: Generate a TypeScript interface from schema
 
 **User intent**: "Generate a TypeScript interface for the Customer type."
 
 **Agent plan**:
 
 1. Find type `Customer` in schema.
-2. Read `json.properties[]`.
-3. Map each property to TypeScript type using polyglot rules.
+2. Read `members[]` where `kind == "property"`.
+3. Map each property's `returnType` to TypeScript type using polyglot rules.
 
 **Result**:
 
 ```typescript
 export interface Customer {
-    id: string; // required
-    fullName: string; // required
+    id: string; // Guid → string
+    fullName: string;
     email?: string; // nullable
     createdAt: string; // DateTimeOffset → string
     isActive: boolean;
@@ -174,8 +167,8 @@ export interface Customer {
 **Agent plan**:
 
 1. Find `ICustomerService.CreateAsync(Customer customer)`.
-2. Identify required fields: `id`, `fullName`.
-3. Build JSON payload with `json.jsonName` values.
+2. Identify required fields from `members[]`: `Id`, `FullName`.
+3. Build payload using property names.
 
 **Result**:
 
@@ -195,8 +188,8 @@ export interface Customer {
 
 **Agent plan**:
 
-1. Find `Customer` type and read `json.properties[]`.
-2. Validate payload against required fields.
+1. Find `Customer` type and read `members[]`.
+2. Validate payload against required properties.
 3. Detect missing `id` (required, type `Guid`).
 4. Generate a default value: `Guid.NewGuid()`.
 5. Re-validate: all required fields present.

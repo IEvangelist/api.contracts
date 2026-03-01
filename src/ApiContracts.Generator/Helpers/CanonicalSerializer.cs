@@ -111,13 +111,6 @@ internal static class CanonicalSerializer
         AppendProperty(sb, "isStatic", type.IsStatic);
         sb.Append(',');
 
-        if (type.Json is not null)
-        {
-            AppendKey(sb, "json");
-            SerializeJsonContract(sb, type.Json);
-            sb.Append(',');
-        }
-
         AppendProperty(sb, "kind", type.Kind);
         sb.Append(',');
 
@@ -250,42 +243,6 @@ internal static class CanonicalSerializer
         AppendProperty(sb, "name", param.Name);
         sb.Append(',');
         AppendProperty(sb, "type", param.Type);
-        sb.Append('}');
-    }
-
-    private static void SerializeJsonContract(StringBuilder sb, CanonicalJsonContract contract)
-    {
-        sb.Append('{');
-        AppendProperty(sb, "contractType", contract.ContractType);
-        sb.Append(',');
-        AppendKey(sb, "properties");
-        sb.Append('[');
-        for (int i = 0; i < contract.Properties.Count; i++)
-        {
-            if (i > 0) sb.Append(',');
-            SerializeJsonProperty(sb, contract.Properties[i]);
-        }
-        sb.Append("],");
-        AppendProperty(sb, "useCamelCase", contract.UseCamelCase);
-        sb.Append('}');
-    }
-
-    private static void SerializeJsonProperty(StringBuilder sb, CanonicalJsonProperty prop)
-    {
-        sb.Append('{');
-        AppendProperty(sb, "clrName", prop.ClrName);
-        sb.Append(',');
-        AppendProperty(sb, "clrType", prop.ClrType);
-        sb.Append(',');
-        AppendProperty(sb, "ignored", prop.Ignored);
-        sb.Append(',');
-        AppendProperty(sb, "jsonName", prop.JsonName);
-        sb.Append(',');
-        AppendProperty(sb, "jsonType", prop.JsonType);
-        sb.Append(',');
-        AppendProperty(sb, "nullable", prop.Nullable);
-        sb.Append(',');
-        AppendProperty(sb, "required", prop.Required);
         sb.Append('}');
     }
 

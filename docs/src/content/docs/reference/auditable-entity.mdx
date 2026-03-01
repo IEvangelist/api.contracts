@@ -12,7 +12,6 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import TypeSignature from "../../../components/TypeSignature.astro";
 import MemberList from "../../../components/MemberList.astro";
-import JsonContract from "../../../components/JsonContract.astro";
 import { Aside, Badge } from "@astrojs/starlight/components";
 
 export const schema = JSON.parse(readFileSync(resolve("public/schemas/SampleApi.api-schema.json"), "utf-8"));
@@ -33,7 +32,3 @@ Base class for entities that require audit tracking.
 ## Members
 
 <MemberList members={typeData.members} />
-
-## JSON Serialization
-
-<JsonContract json={typeData.json} typeName="AuditableEntity" />

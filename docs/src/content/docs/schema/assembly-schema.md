@@ -20,7 +20,7 @@ Assembly data files are emitted as `{PackageName}.{Version}.json`.
 
 ## Types
 
-Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `docs`, `json`, and `members[]`.
+Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `docs`, and `members[]`.
 
 ### Type Kinds
 
@@ -29,20 +29,3 @@ Each type has: `name`, `fullName`, `namespace`, `kind`, `accessibility`, `docs`,
 ### Members
 
 Each member has `name`, `kind`, `signature`, `returnType`, `parameters[]`, and `docs`.
-
-### JSON Contract
-
-```json
-{
-  "contractType": "object",
-  "useCamelCase": true,
-  "properties": [
-    {
-      "clrName": "FullName",
-      "jsonName": "fullName",
-      "jsonType": "string",
-      "required": true
-    }
-  ]
-}
-```

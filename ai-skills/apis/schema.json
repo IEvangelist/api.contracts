@@ -150,7 +150,6 @@
       "type": "TypePage.mdx",
       "member": "MemberPage.mdx",
       "enum": "EnumPage.mdx",
-      "jsonContract": "JsonContractPage.mdx",
       "examples": "ExamplesPage.mdx",
       "searchIndex": "SearchIndex.json"
     },
@@ -171,7 +170,7 @@
     },
     "context": {
       "typeContext": {
-        "fields": ["fullName", "namespace", "kind", "accessibility", "docs", "json", "members", "baseType", "interfaces", "attributes"],
+        "fields": ["fullName", "namespace", "kind", "accessibility", "docs", "members", "baseType", "interfaces", "attributes"],
         "description": "Full context object for rendering type pages"
       },
       "memberContext": {
