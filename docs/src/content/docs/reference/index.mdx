@@ -26,24 +26,44 @@ This section contains the rendered API reference for the **SampleApi** project �
 
 ## Classes
 
-| Type | Summary |
-|------|---------|
-{classes.map(t => `| [\`${t.name}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}
+<table>
+  <thead><tr><th>Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    {classes.map(t => (
+      <tr><td><a href={`/api.contracts/reference/${slug(t.name)}/`}><code>{t.name}</code></a></td><td>{t.docs?.summary ?? "—"}</td></tr>
+    ))}
+  </tbody>
+</table>
 
 ## Records & Structs
 
-| Type | Kind | Summary |
-|------|------|---------|
-{[...records, ...structs].map(t => `| [\`${t.fullName.split(".").pop()}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.kind} | ${t.docs?.summary ?? "—"} |`).join("\n")}
+<table>
+  <thead><tr><th>Type</th><th>Kind</th><th>Summary</th></tr></thead>
+  <tbody>
+    {[...records, ...structs].map(t => (
+      <tr><td><a href={`/api.contracts/reference/${slug(t.name)}/`}><code>{t.fullName.split(".").pop()}</code></a></td><td>{t.kind}</td><td>{t.docs?.summary ?? "—"}</td></tr>
+    ))}
+  </tbody>
+</table>
 
 ## Interfaces
 
-| Type | Summary |
-|------|---------|
-{interfaces.map(t => `| [\`${t.fullName.split(".").pop()}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}
+<table>
+  <thead><tr><th>Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    {interfaces.map(t => (
+      <tr><td><a href={`/api.contracts/reference/${slug(t.name)}/`}><code>{t.fullName.split(".").pop()}</code></a></td><td>{t.docs?.summary ?? "—"}</td></tr>
+    ))}
+  </tbody>
+</table>
 
 ## Enums
 
-| Type | Summary |
-|------|---------|
-{enums.map(t => `| [\`${t.name}\`](/api.contracts/reference/${slug(t.name)}/) | ${t.docs?.summary ?? "—"} |`).join("\n")}
+<table>
+  <thead><tr><th>Type</th><th>Summary</th></tr></thead>
+  <tbody>
+    {enums.map(t => (
+      <tr><td><a href={`/api.contracts/reference/${slug(t.name)}/`}><code>{t.name}</code></a></td><td>{t.docs?.summary ?? "—"}</td></tr>
+    ))}
+  </tbody>
+</table>
