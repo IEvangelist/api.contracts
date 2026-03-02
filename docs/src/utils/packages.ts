@@ -33,13 +33,13 @@ export const kindLabels: Record<string, string> = {
 };
 
 export const kindIcons: Record<string, string> = {
-  class: '🏗️',
-  record: '📋',
-  'record struct': '📦',
-  struct: '📦',
-  interface: '🔌',
-  enum: '🔢',
-  delegate: '🔗',
+  class: 'C',
+  record: 'R',
+  'record struct': 'RS',
+  struct: 'S',
+  interface: 'I',
+  enum: 'E',
+  delegate: 'D',
 };
 
 export const memberKindOrder = [
@@ -61,12 +61,12 @@ export const memberKindLabels: Record<string, string> = {
 };
 
 export const memberKindIcons: Record<string, string> = {
-  constructor: '🏗️',
-  property: '📋',
-  method: '⚡',
-  field: '📌',
-  event: '🔔',
-  indexer: '🔍',
+  constructor: 'C',
+  property: 'P',
+  method: 'M',
+  field: 'F',
+  event: 'E',
+  indexer: 'I',
 };
 
 /* ---- type helpers ------------------------------------------------ */
