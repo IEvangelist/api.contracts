@@ -7,7 +7,7 @@ Teach an AI agent how to consume, interpret, and act on emitted API surface data
 ## Schema Sources
 
 - `ai-skills/apis/schema.json` — Root schema with language definitions, documentation templates, and placeholders.
-- `ai-skills/apis/reference/*.json` — Per-assembly API surface data files.
+- `ai-skills/apis/assets/*.json` — Per-assembly API surface data files.
 
 ## Interpretation Rules
 
@@ -63,7 +63,7 @@ When rendering templates or reasoning about API surfaces, build these context ob
 
 ## Planning & Execution Model
 
-1. **Load** — Read `schema.json` and all per-assembly data files from `reference/`. Verify signatures if present.
+1. **Load** — Read `schema.json` and all per-assembly data files from `assets/`. Verify signatures if present.
 2. **Index** — Build a searchable index of types, members, and examples. Key by `fullName`, `docs.summary`, and `namespace`.
 3. **Interpret** — Map user intent to candidate API targets:
     - Search by `docs.summary`, `fullName`, or `namespace`.

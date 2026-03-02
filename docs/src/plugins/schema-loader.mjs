@@ -1,7 +1,7 @@
 /**
  * Schema Loader Plugin for Astro/Starlight
  *
- * Loads ai-skills/apis/schema.json and ai-skills/apis/reference/*.api-schema.json
+ * Loads ai-skills/apis/schema.json and ai-skills/apis/assets/*.api-schema.json
  * and exposes them as context objects for templates and components.
  */
 
@@ -24,7 +24,7 @@ import { join, resolve } from 'node:path';
  */
 export function loadSchemas(basePath = resolve('..')) {
   const schemaPath = join(basePath, 'ai-skills', 'apis', 'schema.json');
-  const referencePath = join(basePath, 'ai-skills', 'apis', 'reference');
+  const referencePath = join(basePath, 'ai-skills', 'apis', 'assets');
 
   // Load root schema
   const rootSchema = JSON.parse(readFileSync(schemaPath, 'utf-8'));

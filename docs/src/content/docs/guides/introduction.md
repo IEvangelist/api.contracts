@@ -26,4 +26,4 @@ description: Learn about API Contracts — deterministic, signed, versioned JSON
 |---|---|---|
 | Root Schema | `schemas/api-schema.json` | JSON Schema definition for data files |
 | Data File | `{PackageName}.{Version}.json` | Per-assembly API surface snapshot |
-| Vendor Mirror | `<vendor>/apis/reference/{PackageName}.{Version}.json` | Optional vendor-specific copy |
+| Vendor Mirror | `<vendor>/apis/assets/{PackageName}.{Version}.json` | Optional vendor-specific copy |

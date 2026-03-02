@@ -3,7 +3,7 @@
   <!--
     Extracts the API contract JSON from the source-generator output
     and writes it as a standalone .json file in the build output.
-    Optionally copies to ai-skills/apis/reference/ and vendor locations.
+    Optionally copies to ai-skills/apis/assets/ and vendor locations.
   -->
 
   <UsingTask TaskName="_ExtractApiSchemaJson"
@@ -66,13 +66,13 @@ if (sb.Length > 0)
 
     <!-- Copy to ai-skills standard location if enabled -->
     <Copy SourceFiles="$(_ApiSchemaOutputFile)"
-          DestinationFolder="$(MSBuildProjectDirectory)\ai-skills\apis\reference\"
+          DestinationFolder="$(MSBuildProjectDirectory)\ai-skills\apis\assets\"
           Condition="'$(AISchemaEmitStandard)' == 'true' AND Exists('$(_ApiSchemaOutputFile)')"
           SkipUnchangedFiles="true" />
 
     <!-- Copy to vendor location if enabled -->
     <Copy SourceFiles="$(_ApiSchemaOutputFile)"
-          DestinationFolder="$(MSBuildProjectDirectory)\$(AISchemaVendorFolder)\apis\reference\"
+          DestinationFolder="$(MSBuildProjectDirectory)\$(AISchemaVendorFolder)\apis\assets\"
           Condition="'$(AISchemaEmitVendor)' == 'true' AND '$(AISchemaVendorFolder)' != '' AND Exists('$(_ApiSchemaOutputFile)')"
           SkipUnchangedFiles="true" />
 

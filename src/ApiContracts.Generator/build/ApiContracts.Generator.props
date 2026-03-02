@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <!-- Emit schema to standard ai-skills/apis/reference/ output -->
+    <!-- Emit schema to standard ai-skills/apis/assets/ output -->
     <AISchemaEmitStandard Condition="'$(AISchemaEmitStandard)' == ''">true</AISchemaEmitStandard>
 
     <!-- Emit vendor-specific mirror -->

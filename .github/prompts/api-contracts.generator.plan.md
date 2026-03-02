@@ -8,8 +8,8 @@ Produce deterministic, signed, versioned JSON schemas that describe a .NET assem
 **Primary outputs**
 
 - **Root schema**: `ai-skills/apis/schema.json` (language definitions, templates, placeholders, languages list).  
-- **Assembly schemas**: `ai-skills/apis/reference/<AssemblyName>.json` (data-only snapshots referencing the root schema).  
-- **Optional vendor mirrors**: `<vendor>/apis/reference/<AssemblyName>.json`.
+- **Assembly schemas**: `ai-skills/apis/assets/<AssemblyName>.json` (data-only snapshots referencing the root schema).  
+- **Optional vendor mirrors**: `<vendor>/apis/assets/<AssemblyName>.json`.
 
 ---
 
@@ -84,7 +84,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 **Primary inputs**
 
 - `ai-skills/apis/schema.json` (root language + templates + placeholders).  
-- `ai-skills/apis/reference/*.json` (assembly snapshots).
+- `ai-skills/apis/assets/*.json` (assembly snapshots).
 
 ---
 
@@ -135,7 +135,7 @@ Consume the emitted schemas to generate versioned, polyglot, template-driven API
 **SSG pipeline**
 
 1. Load `schema.json`.  
-2. Load all per-assembly data files from `reference/`.  
+2. Load all per-assembly data files from `assets/`.  
 3. Validate signatures and `apiHash` if verification is required.  
 4. Build doc model and navigation.  
 5. Render templates with placeholders replaced by context objects.  
@@ -205,7 +205,7 @@ Short description.
 
 ## Schema Sources
 - ai-skills/apis/schema.json
-- ai-skills/apis/reference/*.json
+- ai-skills/apis/assets/*.json
 
 ## Interpretation Rules
 - Types: use `types[]` and `docs` metadata.

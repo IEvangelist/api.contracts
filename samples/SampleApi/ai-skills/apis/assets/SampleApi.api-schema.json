@@ -1,0 +1,2353 @@
+{
+  "$schema": "https://ievangelist.github.io/api.contracts/schemas/api-schema.json",
+  "schemaVersion": "1.0.0",
+  "package": {
+    "name": "SampleApi",
+    "version": "1.0.0.0",
+    "targetFramework": "net10.0"
+  },
+  "apiHash": "sha256:9ab151e9b4dc3e41962fe2c32439aa388b1a5601a640f81d814b076f025d8c6c",
+  "types": [
+    {
+      "name": "Address",
+      "fullName": "SampleApi.Address",
+      "namespace": "SampleApi",
+      "kind": "record",
+      "accessibility": "public",
+      "interfaces": [
+        "System.IEquatable<SampleApi.Address>"
+      ],
+      "docs": {
+        "summary": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components.",
+        "remarks": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as . The  field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage.",
+        "parameters": {
+          "City": "The city or locality name (e.g., \"Seattle\").",
+          "Country": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\").",
+          "PostalCode": "The postal or ZIP code (e.g., \"98101\").",
+          "State": "The state, province, or region (e.g., \"WA\").",
+          "Street": "The street address, including house or building number (e.g., \"123 Main St\")."
+        },
+        "seeAlso": [
+          "T:SampleApi.Customer"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "Address.Address(string Street, string City, string State, string PostalCode, string Country)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "Street",
+              "type": "string"
+            },
+            {
+              "name": "City",
+              "type": "string"
+            },
+            {
+              "name": "State",
+              "type": "string"
+            },
+            {
+              "name": "PostalCode",
+              "type": "string"
+            },
+            {
+              "name": "Country",
+              "type": "string"
+            }
+          ],
+          "docs": {
+            "summary": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components.",
+            "remarks": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as . The  field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage.",
+            "parameters": {
+              "City": "The city or locality name (e.g., \"Seattle\").",
+              "Country": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\").",
+              "PostalCode": "The postal or ZIP code (e.g., \"98101\").",
+              "State": "The state, province, or region (e.g., \"WA\").",
+              "Street": "The street address, including house or building number (e.g., \"123 Main St\")."
+            },
+            "seeAlso": [
+              "T:SampleApi.Customer"
+            ]
+          }
+        },
+        {
+          "name": "City",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Address.City",
+          "returnType": "string",
+          "docs": {
+            "summary": "The city or locality name (e.g., \"Seattle\")."
+          }
+        },
+        {
+          "name": "Country",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Address.Country",
+          "returnType": "string",
+          "docs": {
+            "summary": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\")."
+          }
+        },
+        {
+          "name": "PostalCode",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Address.PostalCode",
+          "returnType": "string",
+          "docs": {
+            "summary": "The postal or ZIP code (e.g., \"98101\")."
+          }
+        },
+        {
+          "name": "State",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Address.State",
+          "returnType": "string",
+          "docs": {
+            "summary": "The state, province, or region (e.g., \"WA\")."
+          }
+        },
+        {
+          "name": "Street",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Address.Street",
+          "returnType": "string",
+          "docs": {
+            "summary": "The street address, including house or building number (e.g., \"123 Main St\")."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ApiEndpoints",
+      "fullName": "SampleApi.ApiEndpoints",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "isStatic": true,
+      "docs": {
+        "summary": "Provides well-known route path constants for the sample API.",
+        "remarks": "Centralizing route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
+      },
+      "members": [
+        {
+          "name": "CustomerById",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.CustomerById",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Route template for a single customer resource."
+          }
+        },
+        {
+          "name": "Customers",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.Customers",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Base path for customer endpoints."
+          }
+        },
+        {
+          "name": "Health",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.Health",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Path for the health-check endpoint."
+          }
+        },
+        {
+          "name": "OrderById",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.OrderById",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Route template for a single order resource."
+          }
+        },
+        {
+          "name": "Orders",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.Orders",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Base path for order endpoints."
+          }
+        },
+        {
+          "name": "ProductById",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.ProductById",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Route template for a single product resource."
+          }
+        },
+        {
+          "name": "Products",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.Products",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Path for the product catalogue."
+          }
+        },
+        {
+          "name": "Ready",
+          "kind": "field",
+          "accessibility": "public",
+          "signature": "string ApiEndpoints.Ready",
+          "returnType": "string",
+          "isStatic": true,
+          "docs": {
+            "summary": "Path for the readiness probe endpoint."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ApiResponse",
+      "fullName": "SampleApi.ApiResponse<T>",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "isGeneric": true,
+      "genericParameters": [
+        {
+          "name": "T"
+        }
+      ],
+      "docs": {
+        "summary": "A generic envelope for API responses, providing a consistent wire format that wraps the data payload alongside success/failure status and metadata.",
+        "remarks": "All API endpoints should return  to give clients a uniform structure for deserialization. The  flag allows clients to branch on success or failure without inspecting HTTP status codes, while  provides server-side timing for debugging and cache-invalidation purposes. For error responses,  will be  and will contain a human-readable error description. For richer error bodies, consider returning as the  payload.",
+        "seeAlso": [
+          "T:SampleApi.ProductDto",
+          "T:SampleApi.ProblemDetails"
+        ]
+      },
+      "members": [
+        {
+          "name": "Fail",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "ApiResponse<T> ApiResponse<T>.Fail(string message)",
+          "returnType": "SampleApi.ApiResponse<T>",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "message",
+              "type": "string"
+            }
+          ],
+          "docs": {
+            "summary": "Creates an error response with the specified message.",
+            "returns": "A new  marked as unsuccessful.",
+            "parameters": {
+              "message": "The error message."
+            }
+          }
+        },
+        {
+          "name": "Ok",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "ApiResponse<T> ApiResponse<T>.Ok(T data, string? message = null)",
+          "returnType": "SampleApi.ApiResponse<T>",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "data",
+              "type": "T"
+            },
+            {
+              "name": "message",
+              "type": "string?",
+              "isNullable": true,
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Creates a successful response containing the specified data.",
+            "returns": "A new  marked as successful.",
+            "parameters": {
+              "data": "The data payload.",
+              "message": "An optional message."
+            }
+          }
+        },
+        {
+          "name": "Data",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "T? ApiResponse<T>.Data",
+          "returnType": "T?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the response data payload.",
+            "remarks": "Contains the requested resource on success, or  on failure."
+          }
+        },
+        {
+          "name": "Message",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ApiResponse<T>.Message",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets an optional human-readable message providing additional context about the response, such as a confirmation or an error description."
+          }
+        },
+        {
+          "name": "Success",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool ApiResponse<T>.Success",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets or sets a value indicating whether the request completed successfully.",
+            "remarks": "When ,  contains the error description and  is ."
+          }
+        },
+        {
+          "name": "Timestamp",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset ApiResponse<T>.Timestamp",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC timestamp indicating when the server generated this response. Useful for debugging latency and cache invalidation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "AuditableEntity",
+      "fullName": "SampleApi.AuditableEntity",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "isAbstract": true,
+      "docs": {
+        "summary": "Base class for entities that require audit tracking.",
+        "remarks": "All entities inheriting from  automatically receive a unique identifier and timestamp fields for creation and last modification. The  and  properties record the identity of the user who performed the respective action.",
+        "seeAlso": [
+          "T:SampleApi.SoftDeletableEntity"
+        ]
+      },
+      "members": [
+        {
+          "name": "CreatedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset AuditableEntity.CreatedAt",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when the entity was created."
+          }
+        },
+        {
+          "name": "CreatedBy",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? AuditableEntity.CreatedBy",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the identifier of the user who created the entity."
+          }
+        },
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid AuditableEntity.Id",
+          "returnType": "System.Guid",
+          "docs": {
+            "summary": "Gets or sets the unique identifier of the entity."
+          }
+        },
+        {
+          "name": "UpdatedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset AuditableEntity.UpdatedAt",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when the entity was last updated."
+          }
+        },
+        {
+          "name": "UpdatedBy",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? AuditableEntity.UpdatedBy",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the identifier of the user who last updated the entity."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ContactMethod",
+      "fullName": "SampleApi.ContactMethod",
+      "namespace": "SampleApi",
+      "kind": "enum",
+      "accessibility": "public",
+      "isSealed": true,
+      "docs": {
+        "summary": "Specifies the preferred communication channel for contacting a customer.",
+        "remarks": "This enumeration is used by the notification subsystem to select the appropriate delivery mechanism. It is stored as its integer value in the database and serialised as a string in JSON responses.",
+        "seeAlso": [
+          "P:SampleApi.Customer.PreferredContact"
+        ]
+      },
+      "enumMembers": [
+        {
+          "name": "Email",
+          "value": 0,
+          "description": "Contact via email. This is the default channel."
+        },
+        {
+          "name": "Phone",
+          "value": 1,
+          "description": "Contact via a voice phone call."
+        },
+        {
+          "name": "Sms",
+          "value": 2,
+          "description": "Contact via short message service (SMS / text message)."
+        },
+        {
+          "name": "Mail",
+          "value": 3,
+          "description": "Contact via physical postal mail."
+        }
+      ],
+      "members": []
+    },
+    {
+      "name": "Customer",
+      "fullName": "SampleApi.Customer",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Represents a customer entity in the system, serving as the primary domain model for all customer-related operations including creation, retrieval, and segmentation.",
+        "remarks": "A  is the aggregate root for customer data. Every customer is assigned a globally unique  at creation time and must have a non-empty . Customers are active by default and can be deactivated through . Tags enable flexible segmentation—for example, marking customers as \"vip\", \"wholesale\", or \"beta-tester\"—without requiring schema changes. The property controls which channel is used for outbound communications.",
+        "seeAlso": [
+          "T:SampleApi.ICustomerService",
+          "T:SampleApi.Order",
+          "T:SampleApi.ContactMethod"
+        ]
+      },
+      "members": [
+        {
+          "name": "CreatedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset Customer.CreatedAt",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when this customer record was created.",
+            "remarks": "Automatically set to  at construction. This value should not be modified after the initial persistence operation."
+          }
+        },
+        {
+          "name": "Email",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? Customer.Email",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the customer's email address, used for account verification and transactional notifications.",
+            "remarks": "When , the customer has not provided an email and cannot receive email-based communications. Validation should enforce RFC 5322 format when a value is present."
+          }
+        },
+        {
+          "name": "FullName",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Customer.FullName",
+          "returnType": "string",
+          "docs": {
+            "summary": "Gets or sets the customer's full display name.",
+            "remarks": "This property is required and must not be  or whitespace. It is used throughout the UI and in transactional emails as the primary way to address the customer."
+          }
+        },
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Customer.Id",
+          "returnType": "System.Guid",
+          "docs": {
+            "summary": "Gets or sets the globally unique identifier for this customer.",
+            "remarks": "This value is typically generated by the caller at construction time using . It serves as the primary key across all persistence layers and is immutable after creation."
+          }
+        },
+        {
+          "name": "IsActive",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool Customer.IsActive",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets or sets a value indicating whether the customer account is currently active.",
+            "remarks": "Inactive customers are excluded from search results and cannot place new orders. Use  to set this to in a controlled manner that also raises the appropriate domain events."
+          }
+        },
+        {
+          "name": "PreferredContact",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "ContactMethod Customer.PreferredContact",
+          "returnType": "SampleApi.ContactMethod",
+          "docs": {
+            "summary": "Gets or sets the customer's preferred communication channel.",
+            "remarks": "Defaults to . When sending notifications, the system should honour this preference and fall back to email only when the preferred channel is unavailable.",
+            "seeAlso": [
+              "T:SampleApi.ContactMethod"
+            ]
+          }
+        },
+        {
+          "name": "Tags",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "List<string> Customer.Tags",
+          "returnType": "System.Collections.Generic.List<string>",
+          "docs": {
+            "summary": "Gets or sets the list of free-form tags used for customer segmentation and targeted marketing campaigns.",
+            "remarks": "Tags are case-insensitive string labels. Common conventions include lowercase kebab-case (e.g., \"early-adopter\", \"high-value\"). An empty list indicates that no segmentation has been applied."
+          }
+        }
+      ]
+    },
+    {
+      "name": "DateRange",
+      "fullName": "SampleApi.DateRange",
+      "namespace": "SampleApi",
+      "kind": "struct",
+      "accessibility": "public",
+      "isSealed": true,
+      "interfaces": [
+        "System.IEquatable<SampleApi.DateRange>"
+      ],
+      "docs": {
+        "summary": "Represents an inclusive date range defined by a start and end boundary, with helpers for containment checks, overlap detection, and duration calculation.",
+        "remarks": "is a  struct that implements for efficient, allocation-free value comparisons. The constructor enforces the invariant that  must be on or before , throwing  otherwise. Common use cases include filtering orders by date, defining subscription periods, and computing business-day durations. The  and methods enable calendar-style range queries.",
+        "seeAlso": [
+          "P:SampleApi.Order.OrderDate"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "DateRange.DateRange(DateTimeOffset start, DateTimeOffset end)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "start",
+              "type": "System.DateTimeOffset"
+            },
+            {
+              "name": "end",
+              "type": "System.DateTimeOffset"
+            }
+          ],
+          "docs": {
+            "summary": "Initializes a new instance of the  struct.",
+            "parameters": {
+              "end": "The inclusive end date of the range.",
+              "start": "The inclusive start date of the range."
+            }
+          }
+        },
+        {
+          "name": "Contains",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.Contains(DateTimeOffset date)",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "date",
+              "type": "System.DateTimeOffset"
+            }
+          ],
+          "docs": {
+            "summary": "Determines whether the specified date falls within this range.",
+            "returns": "if  is within the range; otherwise, .",
+            "parameters": {
+              "date": "The date to check."
+            }
+          }
+        },
+        {
+          "name": "Equals",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.Equals(DateRange other)",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "SampleApi.DateRange"
+            }
+          ],
+          "docs": {}
+        },
+        {
+          "name": "Equals",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.Equals(object? obj)",
+          "returnType": "bool",
+          "isOverride": true,
+          "parameters": [
+            {
+              "name": "obj",
+              "type": "object?",
+              "isNullable": true
+            }
+          ],
+          "docs": {}
+        },
+        {
+          "name": "GetHashCode",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "int DateRange.GetHashCode()",
+          "returnType": "int",
+          "isOverride": true,
+          "docs": {}
+        },
+        {
+          "name": "op_Equality",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.operator ==(DateRange left, DateRange right)",
+          "returnType": "bool",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "left",
+              "type": "SampleApi.DateRange"
+            },
+            {
+              "name": "right",
+              "type": "SampleApi.DateRange"
+            }
+          ],
+          "docs": {
+            "summary": "Determines whether two  instances are equal."
+          }
+        },
+        {
+          "name": "op_Inequality",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.operator !=(DateRange left, DateRange right)",
+          "returnType": "bool",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "left",
+              "type": "SampleApi.DateRange"
+            },
+            {
+              "name": "right",
+              "type": "SampleApi.DateRange"
+            }
+          ],
+          "docs": {
+            "summary": "Determines whether two  instances are not equal."
+          }
+        },
+        {
+          "name": "Overlaps",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "bool DateRange.Overlaps(DateRange other)",
+          "returnType": "bool",
+          "parameters": [
+            {
+              "name": "other",
+              "type": "SampleApi.DateRange"
+            }
+          ],
+          "docs": {
+            "summary": "Determines whether this range overlaps with another range.",
+            "returns": "if the ranges overlap; otherwise, .",
+            "parameters": {
+              "other": "The other date range to test."
+            }
+          }
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "string DateRange.ToString()",
+          "returnType": "string",
+          "isOverride": true,
+          "docs": {
+            "summary": "Returns a human-readable representation of the date range."
+          }
+        },
+        {
+          "name": "Duration",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "TimeSpan DateRange.Duration",
+          "returnType": "System.TimeSpan",
+          "docs": {
+            "summary": "Gets the duration of time between  and ."
+          }
+        },
+        {
+          "name": "End",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset DateRange.End",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets the inclusive end date of the range."
+          }
+        },
+        {
+          "name": "Start",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset DateRange.Start",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets the inclusive start date of the range."
+          }
+        }
+      ]
+    },
+    {
+      "name": "FeatureFlags",
+      "fullName": "SampleApi.FeatureFlags",
+      "namespace": "SampleApi",
+      "kind": "enum",
+      "accessibility": "public",
+      "isSealed": true,
+      "docs": {
+        "summary": "Feature flags that can be independently enabled for the application.",
+        "remarks": "This enum uses the  to allow bitwise combination of values. Use  as a convenience mask to enable every flag at once."
+      },
+      "enumMembers": [
+        {
+          "name": "None",
+          "value": 0,
+          "description": "No features enabled."
+        },
+        {
+          "name": "BetaFeatures",
+          "value": 1,
+          "description": "Enables access to beta features."
+        },
+        {
+          "name": "DarkMode",
+          "value": 2,
+          "description": "Enables the dark mode user interface."
+        },
+        {
+          "name": "Analytics",
+          "value": 4,
+          "description": "Enables analytics and telemetry collection."
+        },
+        {
+          "name": "Notifications",
+          "value": 8,
+          "description": "Enables push notifications."
+        },
+        {
+          "name": "AllFeatures",
+          "value": 15,
+          "description": "Convenience flag that enables all features."
+        }
+      ],
+      "attributes": [
+        {
+          "name": "FlagsAttribute"
+        }
+      ],
+      "members": []
+    },
+    {
+      "name": "ICustomerService",
+      "fullName": "SampleApi.ICustomerService",
+      "namespace": "SampleApi",
+      "kind": "interface",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Defines the contract for managing customer lifecycle operations including creation, retrieval, search, update, and deactivation.",
+        "remarks": "Implementations of  are responsible for enforcing business rules such as email uniqueness, required-field validation, and the invariant that deactivated customers cannot place new orders. All methods are asynchronous and return  to support non-blocking I/O against the underlying data store. Callers should handle returns from  gracefully, as a missing customer is a normal condition rather than an error.",
+        "seeAlso": [
+          "T:SampleApi.Customer",
+          "T:SampleApi.Order"
+        ]
+      },
+      "members": [
+        {
+          "name": "CreateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer> ICustomerService.CreateAsync(Customer customer)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "customer",
+              "type": "SampleApi.Customer"
+            }
+          ],
+          "docs": {
+            "summary": "Persists a new  and returns the created entity with any server-generated values (e.g., timestamps) populated.",
+            "returns": "A  that resolves to the newly created with  set by the server.",
+            "parameters": {
+              "customer": "The customer to create. The  and properties are required."
+            }
+          }
+        },
+        {
+          "name": "DeactivateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<bool> ICustomerService.DeactivateAsync(Guid id)",
+          "returnType": "System.Threading.Tasks.Task<bool>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "id",
+              "type": "System.Guid"
+            }
+          ],
+          "docs": {
+            "summary": "Marks a customer as inactive, preventing them from placing new orders or appearing in search results.",
+            "remarks": "Deactivation is a soft operation\\u2014the customer record is retained in the data store with  set to . This method is idempotent: calling it on an already-inactive customer returns  without side effects.",
+            "returns": "if the customer was found and successfully deactivated; if no customer with the given  exists or the customer was already inactive.",
+            "parameters": {
+              "id": "The identifier of the customer to deactivate."
+            }
+          }
+        },
+        {
+          "name": "GetByIdAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer?> ICustomerService.GetByIdAsync(Guid id)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer?>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "id",
+              "type": "System.Guid"
+            }
+          ],
+          "docs": {
+            "summary": "Retrieves a single customer by its globally unique identifier.",
+            "remarks": "This method does not throw when the customer is not found. Callers should check for a  result and return an appropriate HTTP 404 or equivalent response.",
+            "returns": "The  if a record with the specified exists; otherwise, .",
+            "parameters": {
+              "id": "The  identifier of the customer to retrieve."
+            }
+          }
+        },
+        {
+          "name": "SearchAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<IReadOnlyList<Customer>> ICustomerService.SearchAsync(string query, int skip = 0, int take = 25)",
+          "returnType": "System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<SampleApi.Customer>>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "query",
+              "type": "string"
+            },
+            {
+              "name": "skip",
+              "type": "int",
+              "isOptional": true,
+              "defaultValue": "0"
+            },
+            {
+              "name": "take",
+              "type": "int",
+              "isOptional": true,
+              "defaultValue": "25"
+            }
+          ],
+          "docs": {
+            "summary": "Searches for customers whose  or matches the given query string, with support for offset-based pagination.",
+            "returns": "A read-only list of customers matching the search criteria, ordered by ascending. Returns an empty list when no matches are found.",
+            "parameters": {
+              "query": "A case-insensitive search string. The implementation performs a contains-style match against  and .",
+              "skip": "The number of matching results to skip, enabling offset-based pagination. Defaults to 0.",
+              "take": "The maximum number of results to return per page. Defaults to 25. Values above 100 may be clamped by the implementation."
+            }
+          }
+        },
+        {
+          "name": "UpdateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<Customer> ICustomerService.UpdateAsync(Customer customer)",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.Customer>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "customer",
+              "type": "SampleApi.Customer"
+            }
+          ],
+          "docs": {
+            "summary": "Replaces the stored customer record with the values from the supplied object.",
+            "returns": "The updated  as persisted, which may include server-modified fields such as an updated timestamp.",
+            "parameters": {
+              "customer": "The customer entity containing the updated values. The must match an existing record."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "IOrderNotificationService",
+      "fullName": "SampleApi.IOrderNotificationService",
+      "namespace": "SampleApi",
+      "kind": "interface",
+      "accessibility": "public",
+      "docs": {
+        "summary": "A service that publishes notifications for key order lifecycle events.",
+        "remarks": "Consumers subscribe to the events exposed by this interface to react to order state transitions. Implementations are responsible for raising events at the appropriate points in the order processing pipeline.",
+        "seeAlso": [
+          "T:SampleApi.OrderEventArgs",
+          "T:SampleApi.Order"
+        ]
+      },
+      "members": [
+        {
+          "name": "OrderCancelled",
+          "kind": "event",
+          "accessibility": "public",
+          "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderCancelled",
+          "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
+          "isAbstract": true,
+          "docs": {
+            "summary": "Occurs when an order has been cancelled."
+          }
+        },
+        {
+          "name": "OrderDelivered",
+          "kind": "event",
+          "accessibility": "public",
+          "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderDelivered",
+          "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
+          "isAbstract": true,
+          "docs": {
+            "summary": "Occurs when an order has been delivered."
+          }
+        },
+        {
+          "name": "OrderPlaced",
+          "kind": "event",
+          "accessibility": "public",
+          "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderPlaced",
+          "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
+          "isAbstract": true,
+          "docs": {
+            "summary": "Occurs when a new order has been placed."
+          }
+        },
+        {
+          "name": "OrderShipped",
+          "kind": "event",
+          "accessibility": "public",
+          "signature": "event EventHandler<OrderEventArgs> IOrderNotificationService.OrderShipped",
+          "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
+          "isAbstract": true,
+          "docs": {
+            "summary": "Occurs when an order has been shipped."
+          }
+        },
+        {
+          "name": "NotifyOrderCancelled",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "void IOrderNotificationService.NotifyOrderCancelled(Order order)",
+          "returnType": "void",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "order",
+              "type": "SampleApi.Order"
+            }
+          ],
+          "docs": {
+            "summary": "Publishes a notification that the specified order was cancelled.",
+            "parameters": {
+              "order": "The order that was cancelled."
+            }
+          }
+        },
+        {
+          "name": "NotifyOrderPlaced",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "void IOrderNotificationService.NotifyOrderPlaced(Order order)",
+          "returnType": "void",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "order",
+              "type": "SampleApi.Order"
+            }
+          ],
+          "docs": {
+            "summary": "Publishes a notification that the specified order was placed.",
+            "parameters": {
+              "order": "The order that was placed."
+            }
+          }
+        },
+        {
+          "name": "NotifyOrderShipped",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "void IOrderNotificationService.NotifyOrderShipped(Order order)",
+          "returnType": "void",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "order",
+              "type": "SampleApi.Order"
+            }
+          ],
+          "docs": {
+            "summary": "Publishes a notification that the specified order was shipped.",
+            "parameters": {
+              "order": "The order that was shipped."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "IRepository",
+      "fullName": "SampleApi.IRepository<TEntity>",
+      "namespace": "SampleApi",
+      "kind": "interface",
+      "accessibility": "public",
+      "isGeneric": true,
+      "genericParameters": [
+        {
+          "name": "TEntity",
+          "constraints": [
+            "class"
+          ]
+        }
+      ],
+      "docs": {
+        "summary": "Defines a generic repository contract for performing CRUD and query operations against a persistent store of  objects.",
+        "remarks": "abstracts the data-access layer, allowing service classes to operate against an in-memory fake, an EF Core DbContext, or a Dapper-based implementation without code changes. Implementations are responsible for: Opening and closing database connections or scoping units of work.Mapping between CLR entities and the underlying storage representation.Propagating  to all I/O calls.",
+        "seeAlso": [
+          "T:SampleApi.PagedResult`1"
+        ]
+      },
+      "members": [
+        {
+          "name": "AddAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<TEntity> IRepository<TEntity>.AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<TEntity>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "entity",
+              "type": "TEntity"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Adds a new entity to the repository.",
+            "returns": "The added entity, including any server-generated values.",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "entity": "The entity to add."
+            }
+          }
+        },
+        {
+          "name": "CountAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<int> IRepository<TEntity>.CountAsync(CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<int>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Returns the total number of entities in the repository.",
+            "returns": "The total count of entities.",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation."
+            }
+          }
+        },
+        {
+          "name": "DeleteAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<bool> IRepository<TEntity>.DeleteAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<bool>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "id",
+              "type": "System.Guid"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Removes an entity from the repository by its identifier.",
+            "returns": "if the entity was removed; otherwise, .",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "id": "The unique identifier of the entity to remove."
+            }
+          }
+        },
+        {
+          "name": "ExistsAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<bool> IRepository<TEntity>.ExistsAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<bool>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "id",
+              "type": "System.Guid"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Determines whether an entity with the specified identifier exists.",
+            "returns": "if an entity with the given identifier exists; otherwise, .",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "id": "The unique identifier to check."
+            }
+          }
+        },
+        {
+          "name": "GetAllAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<IReadOnlyList<TEntity>> IRepository<TEntity>.GetAllAsync(CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TEntity>>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Retrieves all entities in the repository.",
+            "returns": "A read-only list of all entities.",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation."
+            }
+          }
+        },
+        {
+          "name": "GetByIdAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<TEntity?> IRepository<TEntity>.GetByIdAsync(Guid id, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<TEntity?>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "id",
+              "type": "System.Guid"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Retrieves an entity by its unique identifier.",
+            "returns": "The entity if found; otherwise, .",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "id": "The unique identifier of the entity."
+            }
+          }
+        },
+        {
+          "name": "GetPagedAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<PagedResult<TEntity>> IRepository<TEntity>.GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<SampleApi.PagedResult<TEntity>>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "page",
+              "type": "int"
+            },
+            {
+              "name": "pageSize",
+              "type": "int"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Retrieves a paged subset of entities.",
+            "returns": "A  containing the requested page of entities.",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "page": "The one-based page number to retrieve.",
+              "pageSize": "The number of items per page."
+            }
+          }
+        },
+        {
+          "name": "UpdateAsync",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Task<TEntity> IRepository<TEntity>.UpdateAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))",
+          "returnType": "System.Threading.Tasks.Task<TEntity>",
+          "isAbstract": true,
+          "parameters": [
+            {
+              "name": "entity",
+              "type": "TEntity"
+            },
+            {
+              "name": "cancellationToken",
+              "type": "System.Threading.CancellationToken",
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Updates an existing entity in the repository.",
+            "returns": "The updated entity.",
+            "parameters": {
+              "cancellationToken": "A token to cancel the asynchronous operation.",
+              "entity": "The entity with updated values."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Money",
+      "fullName": "SampleApi.Money",
+      "namespace": "SampleApi",
+      "kind": "record struct",
+      "accessibility": "public",
+      "isSealed": true,
+      "interfaces": [
+        "System.IEquatable<SampleApi.Money>"
+      ],
+      "docs": {
+        "summary": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic.",
+        "remarks": "is a value object implemented as a record struct to guarantee immutability and value-based equality. Using instead of a bare  prevents subtle bugs where values in different currencies are summed or compared. The  is stored as a  to avoid the floating-point precision issues inherent to  in financial calculations.",
+        "parameters": {
+          "Amount": "The numeric value of the monetary amount.",
+          "Currency": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+        },
+        "seeAlso": [
+          "T:SampleApi.OrderItem"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "Money.Money(decimal Amount, string Currency)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "Amount",
+              "type": "decimal"
+            },
+            {
+              "name": "Currency",
+              "type": "string"
+            }
+          ],
+          "docs": {
+            "summary": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic.",
+            "remarks": "is a value object implemented as a record struct to guarantee immutability and value-based equality. Using instead of a bare  prevents subtle bugs where values in different currencies are summed or compared. The  is stored as a  to avoid the floating-point precision issues inherent to  in financial calculations.",
+            "parameters": {
+              "Amount": "The numeric value of the monetary amount.",
+              "Currency": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+            },
+            "seeAlso": [
+              "T:SampleApi.OrderItem"
+            ]
+          }
+        },
+        {
+          "name": "Eur",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Money Money.Eur(decimal amount)",
+          "returnType": "SampleApi.Money",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "amount",
+              "type": "decimal"
+            }
+          ],
+          "docs": {
+            "summary": "Creates a  value denominated in euros.",
+            "returns": "A new  instance with currency set to \"EUR\".",
+            "parameters": {
+              "amount": "The euro amount."
+            }
+          }
+        },
+        {
+          "name": "ToString",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "string Money.ToString()",
+          "returnType": "string",
+          "isOverride": true,
+          "docs": {
+            "summary": "Returns a string representation in the format \"100.00 USD\".",
+            "returns": "A formatted string of the monetary value."
+          }
+        },
+        {
+          "name": "Usd",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Money Money.Usd(decimal amount)",
+          "returnType": "SampleApi.Money",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "amount",
+              "type": "decimal"
+            }
+          ],
+          "docs": {
+            "summary": "Creates a  value denominated in US dollars.",
+            "returns": "A new  instance with currency set to \"USD\".",
+            "parameters": {
+              "amount": "The dollar amount."
+            }
+          }
+        },
+        {
+          "name": "Amount",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal Money.Amount",
+          "returnType": "decimal",
+          "docs": {
+            "summary": "The numeric value of the monetary amount."
+          }
+        },
+        {
+          "name": "Currency",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string Money.Currency",
+          "returnType": "string",
+          "docs": {
+            "summary": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "fullName": "SampleApi.Order",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Represents an order placed by a , containing one or more line items and tracking lifecycle state through .",
+        "remarks": "An  is always associated with a single customer via . The order progresses through a linear state machine: →  → → . At any point before shipping, the order can transition to . The  property is computed from the sum of each line item's quantity multiplied by its unit price. It is not persisted and is recalculated on every access.",
+        "seeAlso": [
+          "T:SampleApi.Customer",
+          "T:SampleApi.OrderItem",
+          "T:SampleApi.OrderStatus",
+          "T:SampleApi.IOrderNotificationService"
+        ]
+      },
+      "members": [
+        {
+          "name": "CustomerId",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Order.CustomerId",
+          "returnType": "System.Guid",
+          "docs": {
+            "summary": "Gets or sets the identifier of the  who placed this order.",
+            "remarks": "This is a foreign key reference. The referenced customer must exist and be active at the time the order is created."
+          }
+        },
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid Order.Id",
+          "returnType": "System.Guid",
+          "docs": {
+            "summary": "Gets or sets the globally unique identifier for this order."
+          }
+        },
+        {
+          "name": "Items",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "List<OrderItem> Order.Items",
+          "returnType": "System.Collections.Generic.List<SampleApi.OrderItem>",
+          "docs": {
+            "summary": "Gets or sets the collection of line items that make up this order.",
+            "remarks": "An order must contain at least one item to be valid. Each item captures a product name, quantity, and unit price at the time of purchase."
+          }
+        },
+        {
+          "name": "OrderDate",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset Order.OrderDate",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when the order was placed."
+          }
+        },
+        {
+          "name": "Status",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "OrderStatus Order.Status",
+          "returnType": "SampleApi.OrderStatus",
+          "docs": {
+            "summary": "Gets or sets the current lifecycle status of the order.",
+            "remarks": "Defaults to . State transitions should be performed through the order processing pipeline, which validates that each transition is legal and raises the corresponding event via ."
+          }
+        },
+        {
+          "name": "TotalPrice",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal Order.TotalPrice",
+          "returnType": "decimal",
+          "docs": {
+            "summary": "Gets the total price of the order, computed as the sum of each item's multiplied by its .",
+            "remarks": "This is a calculated property and is not stored. It reflects the current state of the  collection."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OrderEventArgs",
+      "fullName": "SampleApi.OrderEventArgs",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "baseType": "System.EventArgs",
+      "docs": {
+        "summary": "Provides data for order-related events, carrying the that triggered the event along with a UTC timestamp indicating when the event occurred.",
+        "remarks": "Initializes a new instance of the  class.",
+        "parameters": {
+          "order": "The order associated with the event."
+        },
+        "seeAlso": [
+          "T:SampleApi.IOrderNotificationService",
+          "P:SampleApi.OrderEventArgs.Order"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "OrderEventArgs.OrderEventArgs(Order order)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "order",
+              "type": "SampleApi.Order"
+            }
+          ],
+          "docs": {
+            "summary": "Provides data for order-related events, carrying the that triggered the event along with a UTC timestamp indicating when the event occurred.",
+            "remarks": "Initializes a new instance of the  class.",
+            "parameters": {
+              "order": "The order associated with the event."
+            },
+            "seeAlso": [
+              "T:SampleApi.IOrderNotificationService",
+              "P:SampleApi.OrderEventArgs.Order"
+            ]
+          }
+        },
+        {
+          "name": "Order",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Order OrderEventArgs.Order",
+          "returnType": "SampleApi.Order",
+          "docs": {
+            "summary": "Gets the order associated with this event."
+          }
+        },
+        {
+          "name": "Timestamp",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset OrderEventArgs.Timestamp",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets the UTC timestamp indicating when the event was raised."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OrderItem",
+      "fullName": "SampleApi.OrderItem",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Represents a single line item within an , capturing the product, quantity, and price at the time of purchase.",
+        "remarks": "Prices are captured at order time and do not change if the product's catalogue price is updated later. The line total can be calculated as Quantity * UnitPrice.",
+        "seeAlso": [
+          "T:SampleApi.Order"
+        ]
+      },
+      "members": [
+        {
+          "name": "ProductName",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string OrderItem.ProductName",
+          "returnType": "string",
+          "docs": {
+            "summary": "Gets or sets the display name of the product being ordered.",
+            "remarks": "This is a snapshot of the product name at order time. It is stored denormalized so that the order remains readable even if the product is renamed or removed from the catalogue."
+          }
+        },
+        {
+          "name": "Quantity",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int OrderItem.Quantity",
+          "returnType": "int",
+          "docs": {
+            "summary": "Gets or sets the number of units ordered.",
+            "remarks": "Must be a positive integer. Defaults to 1."
+          }
+        },
+        {
+          "name": "UnitPrice",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal OrderItem.UnitPrice",
+          "returnType": "decimal",
+          "docs": {
+            "summary": "Gets or sets the unit price of the product at the time the order was placed.",
+            "remarks": "Stored as a  to avoid floating-point rounding errors in financial calculations."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OrderStatus",
+      "fullName": "SampleApi.OrderStatus",
+      "namespace": "SampleApi",
+      "kind": "enum",
+      "accessibility": "public",
+      "isSealed": true,
+      "docs": {
+        "summary": "Defines the lifecycle states an  progresses through from initial placement to final fulfilment or cancellation.",
+        "remarks": "The legal transitions form a linear pipeline with an escape hatch: →  →  → . An order may be moved to at any point before .",
+        "seeAlso": [
+          "P:SampleApi.Order.Status",
+          "T:SampleApi.IOrderNotificationService"
+        ]
+      },
+      "enumMembers": [
+        {
+          "name": "Pending",
+          "value": 0,
+          "description": "The order has been created but has not yet been reviewed or confirmed."
+        },
+        {
+          "name": "Confirmed",
+          "value": 1,
+          "description": "Payment has been verified and the order is approved for fulfilment."
+        },
+        {
+          "name": "Shipped",
+          "value": 2,
+          "description": "The order has left the warehouse and is in transit to the customer."
+        },
+        {
+          "name": "Delivered",
+          "value": 3,
+          "description": "The order has been received by the customer, completing the fulfilment cycle."
+        },
+        {
+          "name": "Cancelled",
+          "value": 4,
+          "description": "The order was cancelled before shipment. Cancelled orders cannot be reinstated."
+        }
+      ],
+      "members": []
+    },
+    {
+      "name": "PagedResult",
+      "fullName": "SampleApi.PagedResult<T>",
+      "namespace": "SampleApi",
+      "kind": "record",
+      "accessibility": "public",
+      "isGeneric": true,
+      "genericParameters": [
+        {
+          "name": "T"
+        }
+      ],
+      "interfaces": [
+        "System.IEquatable<SampleApi.PagedResult<T>>"
+      ],
+      "docs": {
+        "summary": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set.",
+        "remarks": "is returned by and other paged query methods. The , , and  properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When  is zero,  returns zero to avoid division-by-zero errors.",
+        "parameters": {
+          "Items": "The read-only list of items on the current page.",
+          "Page": "The one-based page number represented by this result.",
+          "PageSize": "The maximum number of items per page.",
+          "TotalCount": "The total number of items across all pages in the underlying query."
+        },
+        "seeAlso": [
+          "T:SampleApi.IRepository`1"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "PagedResult<T>.PagedResult(IReadOnlyList<T> Items, int TotalCount, int Page, int PageSize)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "Items",
+              "type": "System.Collections.Generic.IReadOnlyList<T>"
+            },
+            {
+              "name": "TotalCount",
+              "type": "int"
+            },
+            {
+              "name": "Page",
+              "type": "int"
+            },
+            {
+              "name": "PageSize",
+              "type": "int"
+            }
+          ],
+          "docs": {
+            "summary": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set.",
+            "remarks": "is returned by and other paged query methods. The , , and  properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When  is zero,  returns zero to avoid division-by-zero errors.",
+            "parameters": {
+              "Items": "The read-only list of items on the current page.",
+              "Page": "The one-based page number represented by this result.",
+              "PageSize": "The maximum number of items per page.",
+              "TotalCount": "The total number of items across all pages in the underlying query."
+            },
+            "seeAlso": [
+              "T:SampleApi.IRepository`1"
+            ]
+          }
+        },
+        {
+          "name": "HasNextPage",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool PagedResult<T>.HasNextPage",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets a value indicating whether there is a subsequent page."
+          }
+        },
+        {
+          "name": "HasPreviousPage",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool PagedResult<T>.HasPreviousPage",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets a value indicating whether there is a preceding page."
+          }
+        },
+        {
+          "name": "Items",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "IReadOnlyList<T> PagedResult<T>.Items",
+          "returnType": "System.Collections.Generic.IReadOnlyList<T>",
+          "docs": {
+            "summary": "The read-only list of items on the current page."
+          }
+        },
+        {
+          "name": "Page",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int PagedResult<T>.Page",
+          "returnType": "int",
+          "docs": {
+            "summary": "The one-based page number represented by this result."
+          }
+        },
+        {
+          "name": "PageSize",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int PagedResult<T>.PageSize",
+          "returnType": "int",
+          "docs": {
+            "summary": "The maximum number of items per page."
+          }
+        },
+        {
+          "name": "TotalCount",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int PagedResult<T>.TotalCount",
+          "returnType": "int",
+          "docs": {
+            "summary": "The total number of items across all pages in the underlying query."
+          }
+        },
+        {
+          "name": "TotalPages",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int PagedResult<T>.TotalPages",
+          "returnType": "int",
+          "docs": {
+            "summary": "Gets the total number of pages available."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ProblemDetails",
+      "fullName": "SampleApi.ProblemDetails",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "A machine-readable error response body following the RFC 9457 (Problem Details for HTTP APIs) specification, providing a standardized structure that clients can parse without knowledge of the specific API.",
+        "remarks": "Every field in  is optional. At minimum, set and . Use  to point to a documentation page describing the error category. The dictionary allows attaching arbitrary additional context—common patterns include: A \"traceId\" for correlating with server logs.A \"errors\" array of  for 400 responses.A \"retryAfter\" value for 429 / 503 responses.",
+        "seeAlso": [
+          "T:SampleApi.ValidationError",
+          "T:SampleApi.Result`1"
+        ]
+      },
+      "members": [
+        {
+          "name": "Detail",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProblemDetails.Detail",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets a human-readable explanation specific to this occurrence of the problem."
+          }
+        },
+        {
+          "name": "Extensions",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "IDictionary<string, object?> ProblemDetails.Extensions",
+          "returnType": "System.Collections.Generic.IDictionary<string, object?>",
+          "docs": {
+            "summary": "Gets the extension members for this problem details instance.",
+            "remarks": "Use this dictionary to include additional context such as trace identifiers, validation errors, or retry-after hints."
+          }
+        },
+        {
+          "name": "Instance",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProblemDetails.Instance",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets a URI reference that identifies the specific occurrence of the problem."
+          }
+        },
+        {
+          "name": "Status",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int? ProblemDetails.Status",
+          "returnType": "int?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the HTTP status code generated by the origin server for this occurrence."
+          }
+        },
+        {
+          "name": "Title",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProblemDetails.Title",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets a short, human-readable summary of the problem type."
+          }
+        },
+        {
+          "name": "Type",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProblemDetails.Type",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets a URI reference that identifies the problem type."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ProductDto",
+      "fullName": "SampleApi.ProductDto",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "A data transfer object for product information, annotated with System.Text.Json serialization attributes to control wire format.",
+        "remarks": "demonstrates the most common JSON customization patterns supported by System.Text.Json: to map CLR property names to snake_case or camelCase JSON keys. to hide internal-only properties from serialized output. to enforce that a property must be present during deserialization. Properties marked with  will cause to throw a if the corresponding key is missing from the input JSON.",
+        "seeAlso": [
+          "T:SampleApi.ApiResponse`1"
+        ]
+      },
+      "members": [
+        {
+          "name": "AddedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset ProductDto.AddedAt",
+          "returnType": "System.DateTimeOffset",
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when the product was first added to the catalogue. Maps to the JSON key \"added_at\"."
+          }
+        },
+        {
+          "name": "Category",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProductDto.Category",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the product category used for catalogue organization. Maps to the JSON key \"category\"."
+          }
+        },
+        {
+          "name": "Description",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProductDto.Description",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the long-form product description, supporting plain text only. Maps to the JSON key \"description\".",
+            "remarks": "When , the product has no description and UIs should display a placeholder or omit the section entirely."
+          }
+        },
+        {
+          "name": "Id",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "Guid ProductDto.Id",
+          "returnType": "System.Guid",
+          "attributes": [
+            {
+              "name": "JsonRequiredAttribute"
+            }
+          ],
+          "docs": {
+            "summary": "Gets or sets the unique product identifier. This is required during deserialization and maps to the JSON key \"id\"."
+          }
+        },
+        {
+          "name": "InternalTrackingCode",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProductDto.InternalTrackingCode",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "An internal tracking code used by the warehouse management system. This property is excluded from JSON serialization via and is never exposed through the API."
+          }
+        },
+        {
+          "name": "IsAvailable",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool ProductDto.IsAvailable",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets or sets whether the product is currently available for purchase. Maps to the JSON key \"available\".",
+            "remarks": "When , the product should not appear in storefront listings but may still be visible in the admin catalogue."
+          }
+        },
+        {
+          "name": "Name",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string ProductDto.Name",
+          "returnType": "string",
+          "attributes": [
+            {
+              "name": "JsonRequiredAttribute"
+            }
+          ],
+          "docs": {
+            "summary": "Gets or sets the human-readable product name displayed in catalogues and search results. Maps to the JSON key \"name\"."
+          }
+        },
+        {
+          "name": "Price",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "decimal ProductDto.Price",
+          "returnType": "decimal",
+          "docs": {
+            "summary": "Gets or sets the unit price in the store's base currency. Maps to the JSON key \"price\".",
+            "remarks": "Prices are represented as  to preserve precision in financial calculations. Negative values are not permitted."
+          }
+        },
+        {
+          "name": "Sku",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ProductDto.Sku",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the stock keeping unit code for inventory tracking. Maps to the JSON key \"sku\".",
+            "remarks": "SKU codes follow the format XX-#### where XX is a two-letter category prefix and #### is a numeric sequence."
+          }
+        },
+        {
+          "name": "Tags",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "List<string> ProductDto.Tags",
+          "returnType": "System.Collections.Generic.List<string>",
+          "docs": {
+            "summary": "Gets or sets the list of searchable tags associated with this product. Maps to the JSON key \"tags\".",
+            "remarks": "Tags enable faceted search and filtering. They should be lowercase, hyphen-separated strings (e.g., \"usb-c\", \"wireless\")."
+          }
+        }
+      ]
+    },
+    {
+      "name": "RateLimitOptions",
+      "fullName": "SampleApi.RateLimitOptions",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "docs": {
+        "summary": "Configuration options for API rate limiting.",
+        "remarks": "Bind an instance of  from the application's configuration section (e.g., \"RateLimiting\") to control how many requests a client may make within a sliding time window."
+      },
+      "members": [
+        {
+          "name": "MaxRequests",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int RateLimitOptions.MaxRequests",
+          "returnType": "int",
+          "docs": {
+            "summary": "Gets or sets the maximum number of requests allowed within the time window."
+          }
+        },
+        {
+          "name": "RetryAfterSeconds",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int RateLimitOptions.RetryAfterSeconds",
+          "returnType": "int",
+          "docs": {
+            "summary": "Gets or sets the number of seconds a client should wait before retrying after being rate-limited."
+          }
+        },
+        {
+          "name": "WindowSeconds",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "int RateLimitOptions.WindowSeconds",
+          "returnType": "int",
+          "docs": {
+            "summary": "Gets or sets the duration of the sliding window in seconds."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Result",
+      "fullName": "SampleApi.Result<T>",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "isGeneric": true,
+      "genericParameters": [
+        {
+          "name": "T"
+        }
+      ],
+      "docs": {
+        "summary": "Encapsulates the outcome of a domain operation as either a success carrying a value of type , or a failure carrying an error message.",
+        "remarks": "implements the discriminated-result pattern: callers inspect  (or ) before accessing  or . Accessing on a failed result returns  for . Prefer the static factory methods  and  over direct construction to ensure the success/error invariants are satisfied. This type can be used as a method return value in service layers to avoid throwing exceptions for expected failure conditions.",
+        "seeAlso": [
+          "T:SampleApi.ValidationError",
+          "T:SampleApi.ProblemDetails"
+        ]
+      },
+      "members": [
+        {
+          "name": "Fail",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Result<T> Result<T>.Fail(string error)",
+          "returnType": "SampleApi.Result<T>",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "error",
+              "type": "string"
+            }
+          ],
+          "docs": {
+            "summary": "Creates a failed result with the specified error message.",
+            "returns": "A  representing a failed outcome.",
+            "parameters": {
+              "error": "A message describing the failure."
+            }
+          }
+        },
+        {
+          "name": "Ok",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "Result<T> Result<T>.Ok(T value)",
+          "returnType": "SampleApi.Result<T>",
+          "isStatic": true,
+          "parameters": [
+            {
+              "name": "value",
+              "type": "T"
+            }
+          ],
+          "docs": {
+            "summary": "Creates a successful result containing the specified value.",
+            "returns": "A  representing a successful outcome.",
+            "parameters": {
+              "value": "The success value."
+            }
+          }
+        },
+        {
+          "name": "Error",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? Result<T>.Error",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets the error message describing why the operation failed."
+          }
+        },
+        {
+          "name": "IsFailure",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool Result<T>.IsFailure",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets a value indicating whether the operation failed."
+          }
+        },
+        {
+          "name": "IsSuccess",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool Result<T>.IsSuccess",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets a value indicating whether the operation succeeded."
+          }
+        },
+        {
+          "name": "Value",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "T? Result<T>.Value",
+          "returnType": "T?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets the value produced by a successful operation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "SoftDeletableEntity",
+      "fullName": "SampleApi.SoftDeletableEntity",
+      "namespace": "SampleApi",
+      "kind": "class",
+      "accessibility": "public",
+      "isAbstract": true,
+      "baseType": "SampleApi.AuditableEntity",
+      "docs": {
+        "summary": "Base class for entities that support soft deletion in addition to audit tracking.",
+        "remarks": "Entities derived from  are never physically removed from the data store. Instead, the  flag is set to and  records the time of deletion. Query logic should filter out soft-deleted entities by default.",
+        "seeAlso": [
+          "T:SampleApi.AuditableEntity"
+        ]
+      },
+      "members": [
+        {
+          "name": "Restore",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "void SoftDeletableEntity.Restore()",
+          "returnType": "void",
+          "docs": {
+            "summary": "Restores a previously soft-deleted entity, clearing deletion metadata."
+          }
+        },
+        {
+          "name": "SoftDelete",
+          "kind": "method",
+          "accessibility": "public",
+          "signature": "void SoftDeletableEntity.SoftDelete(string? deletedBy = null)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "deletedBy",
+              "type": "string?",
+              "isNullable": true,
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Marks the entity as deleted by setting  to and recording the current UTC time and the identity of the user performing the deletion.",
+            "parameters": {
+              "deletedBy": "The identifier of the user performing the deletion."
+            }
+          }
+        },
+        {
+          "name": "DeletedAt",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "DateTimeOffset? SoftDeletableEntity.DeletedAt",
+          "returnType": "System.DateTimeOffset?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the UTC date and time when the entity was soft-deleted."
+          }
+        },
+        {
+          "name": "DeletedBy",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? SoftDeletableEntity.DeletedBy",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "Gets or sets the identifier of the user who deleted the entity."
+          }
+        },
+        {
+          "name": "IsDeleted",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "bool SoftDeletableEntity.IsDeleted",
+          "returnType": "bool",
+          "docs": {
+            "summary": "Gets or sets a value indicating whether the entity has been soft-deleted."
+          }
+        }
+      ]
+    },
+    {
+      "name": "ValidationError",
+      "fullName": "SampleApi.ValidationError",
+      "namespace": "SampleApi",
+      "kind": "record",
+      "accessibility": "public",
+      "interfaces": [
+        "System.IEquatable<SampleApi.ValidationError>"
+      ],
+      "docs": {
+        "summary": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code.",
+        "remarks": "Validation errors are typically collected during request processing and surfaced to the client as an array within a response. Use consistent error codes across the API to allow clients to build locale-aware error displays.",
+        "parameters": {
+          "Code": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context.",
+          "Field": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\").",
+          "Message": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+        },
+        "seeAlso": [
+          "T:SampleApi.ProblemDetails",
+          "T:SampleApi.Result`1"
+        ]
+      },
+      "members": [
+        {
+          "name": ".ctor",
+          "kind": "constructor",
+          "accessibility": "public",
+          "signature": "ValidationError.ValidationError(string Field, string Message, string? Code = null)",
+          "returnType": "void",
+          "parameters": [
+            {
+              "name": "Field",
+              "type": "string"
+            },
+            {
+              "name": "Message",
+              "type": "string"
+            },
+            {
+              "name": "Code",
+              "type": "string?",
+              "isNullable": true,
+              "isOptional": true
+            }
+          ],
+          "docs": {
+            "summary": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code.",
+            "remarks": "Validation errors are typically collected during request processing and surfaced to the client as an array within a response. Use consistent error codes across the API to allow clients to build locale-aware error displays.",
+            "parameters": {
+              "Code": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context.",
+              "Field": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\").",
+              "Message": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+            },
+            "seeAlso": [
+              "T:SampleApi.ProblemDetails",
+              "T:SampleApi.Result`1"
+            ]
+          }
+        },
+        {
+          "name": "Code",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string? ValidationError.Code",
+          "returnType": "string?",
+          "isReturnNullable": true,
+          "docs": {
+            "summary": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context."
+          }
+        },
+        {
+          "name": "Field",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string ValidationError.Field",
+          "returnType": "string",
+          "docs": {
+            "summary": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\")."
+          }
+        },
+        {
+          "name": "Message",
+          "kind": "property",
+          "accessibility": "public",
+          "signature": "string ValidationError.Message",
+          "returnType": "string",
+          "docs": {
+            "summary": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+          }
+        }
+      ]
+    }
+  ]
+}

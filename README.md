@@ -108,7 +108,7 @@ To emit vendor-specific copies of your schema:
 </PropertyGroup>
 ```
 
-This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.json`.
+This writes a mirror to `<VendorFolder>/apis/assets/<AssemblyName>.json`.
 
 ## Schema Format
 
