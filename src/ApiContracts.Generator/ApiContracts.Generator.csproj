@@ -19,11 +19,13 @@
     <None Include="build\ApiContracts.Generator.props" Pack="true" PackagePath="build\" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers\dotnet\cs" />
     <None Include="$(OutputPath)\ApiContracts.Abstractions.dll" Pack="true" PackagePath="analyzers\dotnet\cs" />
+    <None Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>

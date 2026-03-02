@@ -1,7 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace ApiContracts.Generator.Helpers;
 
@@ -11,349 +14,259 @@ namespace ApiContracts.Generator.Helpers;
 /// </summary>
 internal static class CanonicalSerializer
 {
+    private static readonly JsonWriterOptions s_writerOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        Indented = false,
+    };
+
     public static string SerializeForHashing(List<CanonicalType> types)
     {
-        var sb = new StringBuilder();
-        sb.Append('[');
-
-        var sortedTypes = types
-            .OrderBy(t => t.Namespace)
-            .ThenBy(t => t.Name)
-            .ToList();
-
-        for (int i = 0; i < sortedTypes.Count; i++)
+        using var stream = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(stream, s_writerOptions))
         {
-            if (i > 0) sb.Append(',');
-            SerializeType(sb, sortedTypes[i]);
+            writer.WriteStartArray();
+
+            var sortedTypes = types
+                .OrderBy(t => t.Namespace)
+                .ThenBy(t => t.Name)
+                .ToList();
+
+            foreach (var type in sortedTypes)
+            {
+                SerializeType(writer, type);
+            }
+
+            writer.WriteEndArray();
         }
 
-        sb.Append(']');
-        return sb.ToString();
+        return Encoding.UTF8.GetString(stream.ToArray());
     }
 
-    private static void SerializeType(StringBuilder sb, CanonicalType type)
+    private static void SerializeType(Utf8JsonWriter writer, CanonicalType type)
     {
-        sb.Append('{');
-        AppendProperty(sb, "accessibility", type.Accessibility);
-        sb.Append(',');
+        writer.WriteStartObject();
+        writer.WriteString("accessibility", type.Accessibility);
 
         if (type.Attributes is { Count: > 0 })
         {
-            AppendKey(sb, "attributes");
-            sb.Append('[');
-            for (int i = 0; i < type.Attributes.Count; i++)
+            writer.WriteStartArray("attributes");
+            foreach (var attr in type.Attributes)
             {
-                if (i > 0) sb.Append(',');
-                SerializeAttribute(sb, type.Attributes[i]);
+                SerializeAttribute(writer, attr);
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
         if (type.BaseType is not null)
         {
-            AppendProperty(sb, "baseType", type.BaseType);
-            sb.Append(',');
+            writer.WriteString("baseType", type.BaseType);
         }
 
         if (type.EnumMembers is { Count: > 0 })
         {
-            AppendKey(sb, "enumMembers");
-            sb.Append('[');
-            for (int i = 0; i < type.EnumMembers.Count; i++)
+            writer.WriteStartArray("enumMembers");
+            foreach (var em in type.EnumMembers)
             {
-                if (i > 0) sb.Append(',');
-                sb.Append('{');
-                AppendProperty(sb, "name", type.EnumMembers[i].Name);
-                sb.Append(',');
-                AppendKey(sb, "value");
-                sb.Append(type.EnumMembers[i].Value);
-                sb.Append('}');
+                writer.WriteStartObject();
+                writer.WriteString("name", em.Name);
+                writer.WriteNumber("value", em.Value);
+                writer.WriteEndObject();
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
-        AppendProperty(sb, "fullName", type.FullName);
-        sb.Append(',');
+        writer.WriteString("fullName", type.FullName);
 
         if (type.GenericParameters is { Count: > 0 })
         {
-            AppendKey(sb, "genericParameters");
-            sb.Append('[');
-            for (int i = 0; i < type.GenericParameters.Count; i++)
+            writer.WriteStartArray("genericParameters");
+            foreach (var gp in type.GenericParameters)
             {
-                if (i > 0) sb.Append(',');
-                sb.Append('{');
-                if (type.GenericParameters[i].Constraints.Count > 0)
+                writer.WriteStartObject();
+                if (gp.Constraints.Count > 0)
                 {
-                    AppendKey(sb, "constraints");
-                    SerializeStringArray(sb, type.GenericParameters[i].Constraints);
-                    sb.Append(',');
+                    writer.WriteStartArray("constraints");
+                    foreach (var c in gp.Constraints)
+                    {
+                        writer.WriteStringValue(c);
+                    }
+                    writer.WriteEndArray();
                 }
-                AppendProperty(sb, "name", type.GenericParameters[i].Name);
-                sb.Append('}');
+                writer.WriteString("name", gp.Name);
+                writer.WriteEndObject();
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
         if (type.Interfaces.Count > 0)
         {
-            AppendKey(sb, "interfaces");
-            SerializeStringArray(sb, type.Interfaces);
-            sb.Append(',');
+            writer.WriteStartArray("interfaces");
+            foreach (var iface in type.Interfaces)
+            {
+                writer.WriteStringValue(iface);
+            }
+            writer.WriteEndArray();
         }
 
-        AppendProperty(sb, "isAbstract", type.IsAbstract);
-        sb.Append(',');
-        AppendProperty(sb, "isGeneric", type.IsGeneric);
-        sb.Append(',');
-        AppendProperty(sb, "isSealed", type.IsSealed);
-        sb.Append(',');
-        AppendProperty(sb, "isStatic", type.IsStatic);
-        sb.Append(',');
+        writer.WriteBoolean("isAbstract", type.IsAbstract);
+        writer.WriteBoolean("isGeneric", type.IsGeneric);
+        writer.WriteBoolean("isSealed", type.IsSealed);
+        writer.WriteBoolean("isStatic", type.IsStatic);
 
-        AppendProperty(sb, "kind", type.Kind);
-        sb.Append(',');
+        writer.WriteString("kind", type.Kind);
 
-        AppendKey(sb, "members");
-        sb.Append('[');
+        writer.WriteStartArray("members");
         var sortedMembers = type.Members
             .OrderBy(m => m.Kind)
             .ThenBy(m => m.Name)
             .ThenBy(m => m.Signature)
             .ToList();
 
-        for (int i = 0; i < sortedMembers.Count; i++)
+        foreach (var member in sortedMembers)
         {
-            if (i > 0) sb.Append(',');
-            SerializeMember(sb, sortedMembers[i]);
+            SerializeMember(writer, member);
         }
-        sb.Append("],");
+        writer.WriteEndArray();
 
-        AppendProperty(sb, "name", type.Name);
-        sb.Append(',');
-        AppendProperty(sb, "namespace", type.Namespace);
+        writer.WriteString("name", type.Name);
+        writer.WriteString("namespace", type.Namespace);
 
         // Docs contribute to hash (excluding code sample content)
         if (type.Docs is not null)
         {
-            sb.Append(',');
-            AppendKey(sb, "docs");
-            SerializeDocsForHash(sb, type.Docs);
+            writer.WritePropertyName("docs");
+            SerializeDocsForHash(writer, type.Docs);
         }
 
-        sb.Append('}');
+        writer.WriteEndObject();
     }
 
-    private static void SerializeMember(StringBuilder sb, CanonicalMember member)
+    private static void SerializeMember(Utf8JsonWriter writer, CanonicalMember member)
     {
-        sb.Append('{');
-        AppendProperty(sb, "accessibility", member.Accessibility);
-        sb.Append(',');
+        writer.WriteStartObject();
+        writer.WriteString("accessibility", member.Accessibility);
 
         if (member.Attributes is { Count: > 0 })
         {
-            AppendKey(sb, "attributes");
-            sb.Append('[');
-            for (int i = 0; i < member.Attributes.Count; i++)
+            writer.WriteStartArray("attributes");
+            foreach (var attr in member.Attributes)
             {
-                if (i > 0) sb.Append(',');
-                SerializeAttribute(sb, member.Attributes[i]);
+                SerializeAttribute(writer, attr);
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
         if (member.Docs is not null)
         {
-            AppendKey(sb, "docs");
-            SerializeDocsForHash(sb, member.Docs);
-            sb.Append(',');
+            writer.WritePropertyName("docs");
+            SerializeDocsForHash(writer, member.Docs);
         }
 
         if (member.GenericParameters is { Count: > 0 })
         {
-            AppendKey(sb, "genericParameters");
-            sb.Append('[');
-            for (int i = 0; i < member.GenericParameters.Count; i++)
+            writer.WriteStartArray("genericParameters");
+            foreach (var gp in member.GenericParameters)
             {
-                if (i > 0) sb.Append(',');
-                sb.Append('{');
-                AppendProperty(sb, "name", member.GenericParameters[i].Name);
-                sb.Append('}');
+                writer.WriteStartObject();
+                writer.WriteString("name", gp.Name);
+                writer.WriteEndObject();
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
-        AppendProperty(sb, "isAbstract", member.IsAbstract);
-        sb.Append(',');
-        AppendProperty(sb, "isAsync", member.IsAsync);
-        sb.Append(',');
-        AppendProperty(sb, "isOverride", member.IsOverride);
-        sb.Append(',');
-        AppendProperty(sb, "isReturnNullable", member.IsReturnNullable);
-        sb.Append(',');
-        AppendProperty(sb, "isStatic", member.IsStatic);
-        sb.Append(',');
-        AppendProperty(sb, "isVirtual", member.IsVirtual);
-        sb.Append(',');
+        writer.WriteBoolean("isAbstract", member.IsAbstract);
+        writer.WriteBoolean("isAsync", member.IsAsync);
+        writer.WriteBoolean("isOverride", member.IsOverride);
+        writer.WriteBoolean("isReturnNullable", member.IsReturnNullable);
+        writer.WriteBoolean("isStatic", member.IsStatic);
+        writer.WriteBoolean("isVirtual", member.IsVirtual);
 
-        AppendProperty(sb, "kind", member.Kind);
-        sb.Append(',');
-        AppendProperty(sb, "name", member.Name);
-        sb.Append(',');
+        writer.WriteString("kind", member.Kind);
+        writer.WriteString("name", member.Name);
 
         if (member.Parameters is { Count: > 0 })
         {
-            AppendKey(sb, "parameters");
-            sb.Append('[');
-            for (int i = 0; i < member.Parameters.Count; i++)
+            writer.WriteStartArray("parameters");
+            foreach (var param in member.Parameters)
             {
-                if (i > 0) sb.Append(',');
-                SerializeParameter(sb, member.Parameters[i]);
+                SerializeParameter(writer, param);
             }
-            sb.Append("],");
+            writer.WriteEndArray();
         }
 
         if (member.ReturnType is not null)
         {
-            AppendProperty(sb, "returnType", member.ReturnType);
-            sb.Append(',');
+            writer.WriteString("returnType", member.ReturnType);
         }
 
-        AppendProperty(sb, "signature", member.Signature);
-        sb.Append('}');
+        writer.WriteString("signature", member.Signature);
+        writer.WriteEndObject();
     }
 
-    private static void SerializeParameter(StringBuilder sb, CanonicalParameter param)
+    private static void SerializeParameter(Utf8JsonWriter writer, CanonicalParameter param)
     {
-        sb.Append('{');
+        writer.WriteStartObject();
         if (param.DefaultValue is not null)
         {
-            AppendProperty(sb, "defaultValue", param.DefaultValue);
-            sb.Append(',');
+            writer.WriteString("defaultValue", param.DefaultValue);
         }
-        AppendProperty(sb, "isNullable", param.IsNullable);
-        sb.Append(',');
-        AppendProperty(sb, "isOptional", param.IsOptional);
-        sb.Append(',');
+        writer.WriteBoolean("isNullable", param.IsNullable);
+        writer.WriteBoolean("isOptional", param.IsOptional);
         if (param.Modifier is not null)
         {
-            AppendProperty(sb, "modifier", param.Modifier);
-            sb.Append(',');
+            writer.WriteString("modifier", param.Modifier);
         }
-        AppendProperty(sb, "name", param.Name);
-        sb.Append(',');
-        AppendProperty(sb, "type", param.Type);
-        sb.Append('}');
+        writer.WriteString("name", param.Name);
+        writer.WriteString("type", param.Type);
+        writer.WriteEndObject();
     }
 
-    private static void SerializeDocsForHash(StringBuilder sb, CanonicalDocumentation docs)
+    private static void SerializeDocsForHash(Utf8JsonWriter writer, CanonicalDocumentation docs)
     {
         // Docs contribute to hash excluding code sample content
-        sb.Append('{');
-        var first = true;
+        writer.WriteStartObject();
 
         if (docs.Parameters is { Count: > 0 })
         {
-            AppendKey(sb, "parameters");
-            sb.Append('{');
-            var pfirst = true;
+            writer.WriteStartObject("parameters");
             foreach (var kvp in docs.Parameters.OrderBy(k => k.Key))
             {
-                if (!pfirst) sb.Append(',');
-                AppendProperty(sb, kvp.Key, kvp.Value);
-                pfirst = false;
+                writer.WriteString(kvp.Key, kvp.Value);
             }
-            sb.Append('}');
-            first = false;
+            writer.WriteEndObject();
         }
         if (docs.Remarks is not null)
         {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "remarks", docs.Remarks);
-            first = false;
+            writer.WriteString("remarks", docs.Remarks);
         }
         if (docs.Returns is not null)
         {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "returns", docs.Returns);
-            first = false;
+            writer.WriteString("returns", docs.Returns);
         }
         if (docs.Summary is not null)
         {
-            if (!first) sb.Append(',');
-            AppendProperty(sb, "summary", docs.Summary);
+            writer.WriteString("summary", docs.Summary);
         }
         // Note: Examples content excluded from hash per spec
         // Note: SeeAlso excluded from hash per spec
 
-        sb.Append('}');
+        writer.WriteEndObject();
     }
 
-    private static void SerializeAttribute(StringBuilder sb, CanonicalAttribute attr)
+    private static void SerializeAttribute(Utf8JsonWriter writer, CanonicalAttribute attr)
     {
-        sb.Append('{');
+        writer.WriteStartObject();
         if (attr.Arguments is { Count: > 0 })
         {
-            AppendKey(sb, "arguments");
-            sb.Append('{');
-            var first = true;
+            writer.WriteStartObject("arguments");
             foreach (var kvp in attr.Arguments.OrderBy(k => k.Key))
             {
-                if (!first) sb.Append(',');
-                AppendProperty(sb, kvp.Key, kvp.Value);
-                first = false;
+                writer.WriteString(kvp.Key, kvp.Value);
             }
-            sb.Append("},");
+            writer.WriteEndObject();
         }
-        AppendProperty(sb, "name", attr.Name);
-        sb.Append('}');
-    }
-
-    private static void SerializeStringArray(StringBuilder sb, List<string> items)
-    {
-        sb.Append('[');
-        for (int i = 0; i < items.Count; i++)
-        {
-            if (i > 0) sb.Append(',');
-            AppendStringValue(sb, items[i]);
-        }
-        sb.Append(']');
-    }
-
-    private static void AppendProperty(StringBuilder sb, string key, string value)
-    {
-        AppendKey(sb, key);
-        AppendStringValue(sb, value);
-    }
-
-    private static void AppendProperty(StringBuilder sb, string key, bool value)
-    {
-        AppendKey(sb, key);
-        sb.Append(value ? "true" : "false");
-    }
-
-    private static void AppendKey(StringBuilder sb, string key)
-    {
-        sb.Append('"');
-        sb.Append(key);
-        sb.Append("\":");
-    }
-
-    private static void AppendStringValue(StringBuilder sb, string value)
-    {
-        sb.Append('"');
-        foreach (var c in value)
-        {
-            switch (c)
-            {
-                case '"': sb.Append("\\\""); break;
-                case '\\': sb.Append("\\\\"); break;
-                case '\n': sb.Append("\\n"); break;
-                case '\r': sb.Append("\\r"); break;
-                case '\t': sb.Append("\\t"); break;
-                default: sb.Append(c); break;
-            }
-        }
-        sb.Append('"');
+        writer.WriteString("name", attr.Name);
+        writer.WriteEndObject();
     }
 }

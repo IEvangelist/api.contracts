@@ -1,7 +1,10 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 
 namespace ApiContracts.Generator.Helpers;
 
@@ -12,6 +15,12 @@ namespace ApiContracts.Generator.Helpers;
 /// </summary>
 internal static class SchemaEmitter
 {
+    private static readonly JsonWriterOptions s_writerOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        Indented = true,
+    };
+
     public static string EmitAssemblySchema(
         string assemblyName,
         string assemblyVersion,
@@ -21,256 +30,227 @@ internal static class SchemaEmitter
         AssemblyConfig config,
         string? signatureValue = null)
     {
-        var sb = new StringBuilder();
-        sb.AppendLine("{");
-        sb.AppendLine($"  \"$schema\": \"https://ievangelist.github.io/api.contracts/schemas/api-schema.json\",");
-        sb.AppendLine($"  \"schemaVersion\": \"1.0.0\",");
-        sb.AppendLine($"  \"package\": {{");
-        sb.AppendLine($"    \"name\": \"{EscapeJson(assemblyName)}\",");
-        sb.AppendLine($"    \"version\": \"{EscapeJson(assemblyVersion)}\",");
-        sb.AppendLine($"    \"targetFramework\": \"{EscapeJson(targetFramework)}\"");
-        sb.AppendLine($"  }},");
-        sb.AppendLine($"  \"apiHash\": \"{EscapeJson(apiHash)}\",");
-
-        // Signature envelope (optional)
-        if (signatureValue is not null && config.SigningKeyId is not null)
+        using var stream = new MemoryStream();
+        using (var writer = new Utf8JsonWriter(stream, s_writerOptions))
         {
-            sb.AppendLine($"  \"signature\": {{");
-            sb.AppendLine($"    \"algorithm\": \"RSA-SHA256\",");
-            sb.AppendLine($"    \"publicKeyId\": \"{EscapeJson(config.SigningKeyId)}\",");
-            sb.AppendLine($"    \"value\": \"{EscapeJson(signatureValue)}\"");
-            sb.AppendLine($"  }},");
+            writer.WriteStartObject();
+            writer.WriteString("$schema", "https://ievangelist.github.io/api.contracts/schemas/api-schema.json");
+            writer.WriteString("schemaVersion", "1.0.0");
+
+            writer.WriteStartObject("package");
+            writer.WriteString("name", assemblyName);
+            writer.WriteString("version", assemblyVersion);
+            writer.WriteString("targetFramework", targetFramework);
+            writer.WriteEndObject();
+
+            writer.WriteString("apiHash", apiHash);
+
+            // Signature envelope (optional)
+            if (signatureValue is not null && config.SigningKeyId is not null)
+            {
+                writer.WriteStartObject("signature");
+                writer.WriteString("algorithm", "RSA-SHA256");
+                writer.WriteString("publicKeyId", config.SigningKeyId);
+                writer.WriteString("value", signatureValue);
+                writer.WriteEndObject();
+            }
+
+            // Types — deterministically sorted
+            writer.WriteStartArray("types");
+
+            var sortedTypes = types
+                .OrderBy(t => t.Namespace)
+                .ThenBy(t => t.Name)
+                .ToList();
+
+            foreach (var type in sortedTypes)
+            {
+                EmitType(writer, type);
+            }
+
+            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
 
-        // Types — deterministically sorted
-        sb.AppendLine($"  \"types\": [");
-
-        var sortedTypes = types
-            .OrderBy(t => t.Namespace)
-            .ThenBy(t => t.Name)
-            .ToList();
-
-        for (int i = 0; i < sortedTypes.Count; i++)
-        {
-            EmitType(sb, sortedTypes[i], "    ");
-            if (i < sortedTypes.Count - 1) sb.AppendLine(",");
-            else sb.AppendLine();
-        }
-
-        sb.AppendLine($"  ]");
-        sb.AppendLine("}");
-
-        return sb.ToString();
+        return Encoding.UTF8.GetString(stream.ToArray());
     }
 
-    private static void EmitType(StringBuilder sb, CanonicalType type, string indent)
+    private static void EmitType(Utf8JsonWriter writer, CanonicalType type)
     {
-        sb.AppendLine($"{indent}{{");
-        sb.AppendLine($"{indent}  \"name\": \"{EscapeJson(type.Name)}\",");
-        sb.AppendLine($"{indent}  \"fullName\": \"{EscapeJson(type.FullName)}\",");
-        sb.AppendLine($"{indent}  \"namespace\": \"{EscapeJson(type.Namespace)}\",");
-        sb.AppendLine($"{indent}  \"kind\": \"{EscapeJson(type.Kind)}\",");
-
-        // Collect remaining properties so we can avoid trailing commas
-        var parts = new List<string>();
+        writer.WriteStartObject();
+        writer.WriteString("name", type.Name);
+        writer.WriteString("fullName", type.FullName);
+        writer.WriteString("namespace", type.Namespace);
+        writer.WriteString("kind", type.Kind);
+        writer.WriteString("accessibility", type.Accessibility);
 
         // Boolean flags — only emit when true
-        if (type.IsAbstract) parts.Add($"{indent}  \"isAbstract\": true");
-        if (type.IsSealed) parts.Add($"{indent}  \"isSealed\": true");
-        if (type.IsStatic) parts.Add($"{indent}  \"isStatic\": true");
-        if (type.IsGeneric) parts.Add($"{indent}  \"isGeneric\": true");
+        if (type.IsAbstract) writer.WriteBoolean("isAbstract", true);
+        if (type.IsSealed) writer.WriteBoolean("isSealed", true);
+        if (type.IsStatic) writer.WriteBoolean("isStatic", true);
+        if (type.IsGeneric) writer.WriteBoolean("isGeneric", true);
 
         // Generic parameters
         if (type.GenericParameters is { Count: > 0 })
         {
-            var gpSb = new StringBuilder();
-            gpSb.Append($"{indent}  \"genericParameters\": [");
-            for (int i = 0; i < type.GenericParameters.Count; i++)
+            writer.WriteStartArray("genericParameters");
+            foreach (var gp in type.GenericParameters)
             {
-                var gp = type.GenericParameters[i];
-                gpSb.Append($"{{\"name\": \"{EscapeJson(gp.Name)}\"");
+                writer.WriteStartObject();
+                writer.WriteString("name", gp.Name);
                 if (gp.Constraints.Count > 0)
                 {
-                    gpSb.Append(", \"constraints\": [");
-                    gpSb.Append(string.Join(", ", gp.Constraints.Select(c => $"\"{EscapeJson(c)}\"")));
-                    gpSb.Append(']');
+                    writer.WriteStartArray("constraints");
+                    foreach (var c in gp.Constraints)
+                    {
+                        writer.WriteStringValue(c);
+                    }
+                    writer.WriteEndArray();
                 }
-                gpSb.Append('}');
-                if (i < type.GenericParameters.Count - 1) gpSb.Append(", ");
+                writer.WriteEndObject();
             }
-            gpSb.Append(']');
-            parts.Add(gpSb.ToString());
+            writer.WriteEndArray();
         }
 
         // Base type
         if (type.BaseType is not null)
         {
-            parts.Add($"{indent}  \"baseType\": \"{EscapeJson(type.BaseType)}\"");
+            writer.WriteString("baseType", type.BaseType);
         }
 
         // Interfaces
         if (type.Interfaces.Count > 0)
         {
-            var ifaces = string.Join(", ", type.Interfaces.Select(i => $"\"{EscapeJson(i)}\""));
-            parts.Add($"{indent}  \"interfaces\": [{ifaces}]");
+            writer.WriteStartArray("interfaces");
+            foreach (var iface in type.Interfaces)
+            {
+                writer.WriteStringValue(iface);
+            }
+            writer.WriteEndArray();
         }
 
         // Docs
         if (type.Docs is not null)
         {
-            parts.Add(BuildDocumentation(type.Docs, indent + "  "));
+            writer.WritePropertyName("docs");
+            EmitDocumentation(writer, type.Docs);
         }
 
         // Enum members
         if (type.EnumMembers is { Count: > 0 })
         {
-            var emSb = new StringBuilder();
-            emSb.AppendLine($"{indent}  \"enumMembers\": [");
-            for (int i = 0; i < type.EnumMembers.Count; i++)
+            writer.WriteStartArray("enumMembers");
+            foreach (var em in type.EnumMembers)
             {
-                var em = type.EnumMembers[i];
-                emSb.Append($"{indent}    {{\"name\": \"{EscapeJson(em.Name)}\", \"value\": {em.Value}");
+                writer.WriteStartObject();
+                writer.WriteString("name", em.Name);
+                writer.WriteNumber("value", em.Value);
                 if (em.Description is not null)
                 {
-                    emSb.Append($", \"description\": \"{EscapeJson(em.Description)}\"");
+                    writer.WriteString("description", em.Description);
                 }
-                emSb.Append('}');
-                if (i < type.EnumMembers.Count - 1) emSb.AppendLine(",");
-                else emSb.AppendLine();
+                writer.WriteEndObject();
             }
-            emSb.Append($"{indent}  ]");
-            parts.Add(emSb.ToString());
+            writer.WriteEndArray();
         }
 
         // Members — deterministically sorted
-        var membersSb = new StringBuilder();
-        membersSb.AppendLine($"{indent}  \"members\": [");
+        writer.WriteStartArray("members");
         var sortedMembers = type.Members
             .OrderBy(m => m.Kind)
             .ThenBy(m => m.Name)
             .ToList();
 
-        for (int i = 0; i < sortedMembers.Count; i++)
+        foreach (var member in sortedMembers)
         {
-            EmitMember(membersSb, sortedMembers[i], indent + "    ");
-            if (i < sortedMembers.Count - 1) membersSb.AppendLine(",");
-            else membersSb.AppendLine();
+            EmitMember(writer, member);
         }
-        membersSb.Append($"{indent}  ]");
-        parts.Add(membersSb.ToString());
+        writer.WriteEndArray();
 
-        // Write accessibility as last simple prop before the parts
-        sb.Append($"{indent}  \"accessibility\": \"{EscapeJson(type.Accessibility)}\"");
-
-        foreach (var part in parts)
-        {
-            sb.AppendLine(",");
-            sb.Append(part);
-        }
-
-        sb.AppendLine();
-        sb.Append($"{indent}}}");
+        writer.WriteEndObject();
     }
 
-    private static void EmitMember(StringBuilder sb, CanonicalMember member, string indent)
+    private static void EmitMember(Utf8JsonWriter writer, CanonicalMember member)
     {
-        sb.AppendLine($"{indent}{{");
-        sb.AppendLine($"{indent}  \"name\": \"{EscapeJson(member.Name)}\",");
-        sb.AppendLine($"{indent}  \"kind\": \"{EscapeJson(member.Kind)}\",");
-        sb.Append($"{indent}  \"signature\": \"{EscapeJson(member.Signature)}\"");
-
-        var parts = new List<string>();
+        writer.WriteStartObject();
+        writer.WriteString("name", member.Name);
+        writer.WriteString("kind", member.Kind);
+        writer.WriteString("signature", member.Signature);
 
         if (member.ReturnType is not null)
         {
-            parts.Add($"{indent}  \"returnType\": \"{EscapeJson(member.ReturnType)}\"");
+            writer.WriteString("returnType", member.ReturnType);
             if (member.IsReturnNullable)
             {
-                parts.Add($"{indent}  \"isReturnNullable\": true");
+                writer.WriteBoolean("isReturnNullable", true);
             }
         }
 
-        if (member.IsStatic) parts.Add($"{indent}  \"isStatic\": true");
-        if (member.IsAbstract) parts.Add($"{indent}  \"isAbstract\": true");
-        if (member.IsVirtual) parts.Add($"{indent}  \"isVirtual\": true");
-        if (member.IsOverride) parts.Add($"{indent}  \"isOverride\": true");
-        if (member.IsAsync) parts.Add($"{indent}  \"isAsync\": true");
+        if (member.IsStatic) writer.WriteBoolean("isStatic", true);
+        if (member.IsAbstract) writer.WriteBoolean("isAbstract", true);
+        if (member.IsVirtual) writer.WriteBoolean("isVirtual", true);
+        if (member.IsOverride) writer.WriteBoolean("isOverride", true);
+        if (member.IsAsync) writer.WriteBoolean("isAsync", true);
 
         // Parameters
         if (member.Parameters is { Count: > 0 })
         {
-            var pSb = new StringBuilder();
-            pSb.AppendLine($"{indent}  \"parameters\": [");
-            for (int i = 0; i < member.Parameters.Count; i++)
+            writer.WriteStartArray("parameters");
+            foreach (var p in member.Parameters)
             {
-                var p = member.Parameters[i];
-                pSb.Append($"{indent}    {{\"name\": \"{EscapeJson(p.Name)}\", \"type\": \"{EscapeJson(p.Type)}\"");
-                if (p.IsNullable) pSb.Append(", \"isNullable\": true");
+                writer.WriteStartObject();
+                writer.WriteString("name", p.Name);
+                writer.WriteString("type", p.Type);
+                if (p.IsNullable) writer.WriteBoolean("isNullable", true);
                 if (p.IsOptional)
                 {
-                    pSb.Append(", \"isOptional\": true");
-                    if (p.DefaultValue is not null) pSb.Append($", \"defaultValue\": \"{EscapeJson(p.DefaultValue)}\"");
+                    writer.WriteBoolean("isOptional", true);
+                    if (p.DefaultValue is not null) writer.WriteString("defaultValue", p.DefaultValue);
                 }
-                if (p.Modifier is not null) pSb.Append($", \"modifier\": \"{EscapeJson(p.Modifier)}\"");
-                pSb.Append('}');
-                if (i < member.Parameters.Count - 1) pSb.AppendLine(",");
-                else pSb.AppendLine();
+                if (p.Modifier is not null) writer.WriteString("modifier", p.Modifier);
+                writer.WriteEndObject();
             }
-            pSb.Append($"{indent}  ]");
-            parts.Add(pSb.ToString());
+            writer.WriteEndArray();
         }
 
         // Docs
         if (member.Docs is not null)
         {
-            parts.Add(BuildDocumentation(member.Docs, indent + "  "));
+            writer.WritePropertyName("docs");
+            EmitDocumentation(writer, member.Docs);
         }
 
-        foreach (var part in parts)
-        {
-            sb.AppendLine(",");
-            sb.Append(part);
-        }
-
-        sb.AppendLine();
-        sb.Append($"{indent}}}");
+        writer.WriteEndObject();
     }
 
-    private static string BuildDocumentation(CanonicalDocumentation docs, string indent)
+    private static void EmitDocumentation(Utf8JsonWriter writer, CanonicalDocumentation docs)
     {
-        var docParts = new List<string>();
+        writer.WriteStartObject();
 
-        if (docs.Summary is not null) docParts.Add($"\"summary\": \"{EscapeJson(docs.Summary)}\"");
-        if (docs.Remarks is not null) docParts.Add($"\"remarks\": \"{EscapeJson(docs.Remarks)}\"");
-        if (docs.Returns is not null) docParts.Add($"\"returns\": \"{EscapeJson(docs.Returns)}\"");
+        if (docs.Summary is not null) writer.WriteString("summary", docs.Summary);
+        if (docs.Remarks is not null) writer.WriteString("remarks", docs.Remarks);
+        if (docs.Returns is not null) writer.WriteString("returns", docs.Returns);
 
         if (docs.Parameters is { Count: > 0 })
         {
-            var paramParts = docs.Parameters
-                .OrderBy(p => p.Key)
-                .Select(p => $"\"{EscapeJson(p.Key)}\": \"{EscapeJson(p.Value)}\"");
-            docParts.Add($"\"parameters\": {{{string.Join(", ", paramParts)}}}");
+            writer.WriteStartObject("parameters");
+            foreach (var kvp in docs.Parameters.OrderBy(p => p.Key))
+            {
+                writer.WriteString(kvp.Key, kvp.Value);
+            }
+            writer.WriteEndObject();
         }
 
         if (docs.SeeAlso is { Count: > 0 })
         {
-            docParts.Add($"\"seeAlso\": [{string.Join(", ", docs.SeeAlso.Select(s => $"\"{EscapeJson(s)}\""))}]");
+            writer.WriteStartArray("seeAlso");
+            foreach (var s in docs.SeeAlso)
+            {
+                writer.WriteStringValue(s);
+            }
+            writer.WriteEndArray();
         }
 
-        var sb = new StringBuilder();
-        sb.AppendLine($"{indent}\"docs\": {{");
-        sb.AppendLine($"{indent}  {string.Join($",\n{indent}  ", docParts)}");
-        sb.Append($"{indent}}}");
-        return sb.ToString();
-    }
-
-    private static string EscapeJson(string value)
-    {
-        return value
-            .Replace("\\", "\\\\")
-            .Replace("\"", "\\\"")
-            .Replace("\n", "\\n")
-            .Replace("\r", "\\r")
-            .Replace("\t", "\\t");
+        writer.WriteEndObject();
     }
 }
