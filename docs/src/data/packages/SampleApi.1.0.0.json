@@ -6,7 +6,7 @@
     "version": "1.0.0.0",
     "targetFramework": "net10.0"
   },
-  "apiHash": "sha256:9ab151e9b4dc3e41962fe2c32439aa388b1a5601a640f81d814b076f025d8c6c",
+  "apiHash": "sha256:9217e64ee52a4abe11735a507ce4545a93579abe7431b51f6e0f8a5b3773ad05",
   "types": [
     {
       "name": "Address",
@@ -18,15 +18,130 @@
         "System.IEquatable<SampleApi.Address>"
       ],
       "docs": {
-        "summary": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components.",
-        "remarks": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as . The  field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Address"
+          },
+          {
+            "kind": "text",
+            "text": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Customer"
+          },
+          {
+            "kind": "text",
+            "text": ". The"
+          },
+          {
+            "kind": "paramref",
+            "value": "Country"
+          },
+          {
+            "kind": "text",
+            "text": "field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage."
+          }
+        ],
         "parameters": {
-          "City": "The city or locality name (e.g., \"Seattle\").",
-          "Country": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\").",
-          "PostalCode": "The postal or ZIP code (e.g., \"98101\").",
-          "State": "The state, province, or region (e.g., \"WA\").",
-          "Street": "The street address, including house or building number (e.g., \"123 Main St\")."
+          "City": [
+            {
+              "kind": "text",
+              "text": "The city or locality name (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"Seattle\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ],
+          "Country": [
+            {
+              "kind": "text",
+              "text": "The ISO 3166-1 alpha-2 country code (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"US\""
+            },
+            {
+              "kind": "text",
+              "text": ","
+            },
+            {
+              "kind": "code",
+              "text": "\"DE\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ],
+          "PostalCode": [
+            {
+              "kind": "text",
+              "text": "The postal or ZIP code (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"98101\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ],
+          "State": [
+            {
+              "kind": "text",
+              "text": "The state, province, or region (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"WA\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ],
+          "Street": [
+            {
+              "kind": "text",
+              "text": "The street address, including house or building number (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"123 Main St\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ]
         },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var address = new Address(\n         Street: \"One Microsoft Way\",\n         City: \"Redmond\",\n         State: \"WA\",\n         PostalCode: \"98052\",\n         Country: \"US\"\n     );",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating an address for a US location:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.Customer"
         ]
@@ -61,15 +176,130 @@
             }
           ],
           "docs": {
-            "summary": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components.",
-            "remarks": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as . The  field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Represents a physical or mailing address, decomposed into street, city, state, postal code, and country components."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Address"
+              },
+              {
+                "kind": "text",
+                "text": "is a record class providing value-based equality and immutability by default, making it suitable for use as an embedded value object within aggregate roots such as"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": ". The"
+              },
+              {
+                "kind": "paramref",
+                "value": "Country"
+              },
+              {
+                "kind": "text",
+                "text": "field uses ISO 3166-1 alpha-2 codes rather than full country names to ensure consistent, locale-independent storage."
+              }
+            ],
             "parameters": {
-              "City": "The city or locality name (e.g., \"Seattle\").",
-              "Country": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\").",
-              "PostalCode": "The postal or ZIP code (e.g., \"98101\").",
-              "State": "The state, province, or region (e.g., \"WA\").",
-              "Street": "The street address, including house or building number (e.g., \"123 Main St\")."
+              "City": [
+                {
+                  "kind": "text",
+                  "text": "The city or locality name (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"Seattle\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ],
+              "Country": [
+                {
+                  "kind": "text",
+                  "text": "The ISO 3166-1 alpha-2 country code (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"US\""
+                },
+                {
+                  "kind": "text",
+                  "text": ","
+                },
+                {
+                  "kind": "code",
+                  "text": "\"DE\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ],
+              "PostalCode": [
+                {
+                  "kind": "text",
+                  "text": "The postal or ZIP code (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"98101\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ],
+              "State": [
+                {
+                  "kind": "text",
+                  "text": "The state, province, or region (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"WA\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ],
+              "Street": [
+                {
+                  "kind": "text",
+                  "text": "The street address, including house or building number (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"123 Main St\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ]
             },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var address = new Address(\n         Street: \"One Microsoft Way\",\n         City: \"Redmond\",\n         State: \"WA\",\n         PostalCode: \"98052\",\n         Country: \"US\"\n     );",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Creating an address for a US location:"
+                  }
+                ]
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.Customer"
             ]
@@ -82,7 +312,20 @@
           "signature": "string Address.City",
           "returnType": "string",
           "docs": {
-            "summary": "The city or locality name (e.g., \"Seattle\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The city or locality name (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"Seattle\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         },
         {
@@ -92,7 +335,28 @@
           "signature": "string Address.Country",
           "returnType": "string",
           "docs": {
-            "summary": "The ISO 3166-1 alpha-2 country code (e.g., \"US\", \"DE\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The ISO 3166-1 alpha-2 country code (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"US\""
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "code",
+                "text": "\"DE\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         },
         {
@@ -102,7 +366,20 @@
           "signature": "string Address.PostalCode",
           "returnType": "string",
           "docs": {
-            "summary": "The postal or ZIP code (e.g., \"98101\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The postal or ZIP code (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"98101\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         },
         {
@@ -112,7 +389,20 @@
           "signature": "string Address.State",
           "returnType": "string",
           "docs": {
-            "summary": "The state, province, or region (e.g., \"WA\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The state, province, or region (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"WA\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         },
         {
@@ -122,7 +412,20 @@
           "signature": "string Address.Street",
           "returnType": "string",
           "docs": {
-            "summary": "The street address, including house or building number (e.g., \"123 Main St\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The street address, including house or building number (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"123 Main St\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         }
       ]
@@ -135,8 +438,18 @@
       "accessibility": "public",
       "isStatic": true,
       "docs": {
-        "summary": "Provides well-known route path constants for the sample API.",
-        "remarks": "Centralizing route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Provides well-known route path constants for the sample API."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Centralizing route paths in a static class ensures that controllers, clients, and tests reference the same values, reducing the risk of routing mismatches."
+          }
+        ]
       },
       "members": [
         {
@@ -147,7 +460,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Route template for a single customer resource."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Route template for a single customer resource."
+              }
+            ]
           }
         },
         {
@@ -158,7 +476,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Base path for customer endpoints."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Base path for customer endpoints."
+              }
+            ]
           }
         },
         {
@@ -169,7 +492,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Path for the health-check endpoint."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Path for the health-check endpoint."
+              }
+            ]
           }
         },
         {
@@ -180,7 +508,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Route template for a single order resource."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Route template for a single order resource."
+              }
+            ]
           }
         },
         {
@@ -191,7 +524,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Base path for order endpoints."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Base path for order endpoints."
+              }
+            ]
           }
         },
         {
@@ -202,7 +540,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Route template for a single product resource."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Route template for a single product resource."
+              }
+            ]
           }
         },
         {
@@ -213,7 +556,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Path for the product catalogue."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Path for the product catalogue."
+              }
+            ]
           }
         },
         {
@@ -224,7 +572,12 @@
           "returnType": "string",
           "isStatic": true,
           "docs": {
-            "summary": "Path for the readiness probe endpoint."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Path for the readiness probe endpoint."
+              }
+            ]
           }
         }
       ]
@@ -242,8 +595,112 @@
         }
       ],
       "docs": {
-        "summary": "A generic envelope for API responses, providing a consistent wire format that wraps the data payload alongside success/failure status and metadata.",
-        "remarks": "All API endpoints should return  to give clients a uniform structure for deserialization. The  flag allows clients to branch on success or failure without inspecting HTTP status codes, while  provides server-side timing for debugging and cache-invalidation purposes. For error responses,  will be  and will contain a human-readable error description. For richer error bodies, consider returning as the  payload.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "A generic envelope for API responses, providing a consistent wire format that wraps the data payload alongside success/failure status and metadata."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "All API endpoints should return"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ApiResponse`1"
+          },
+          {
+            "kind": "text",
+            "text": "to give clients a uniform structure for deserialization. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ApiResponse`1.Success"
+          },
+          {
+            "kind": "text",
+            "text": "flag allows clients to branch on success or failure without inspecting HTTP status codes, while"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ApiResponse`1.Timestamp"
+          },
+          {
+            "kind": "text",
+            "text": "provides server-side timing for debugging and cache-invalidation purposes. For error responses,"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ApiResponse`1.Data"
+          },
+          {
+            "kind": "text",
+            "text": "will be"
+          },
+          {
+            "kind": "langword",
+            "value": "null"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ApiResponse`1.Message"
+          },
+          {
+            "kind": "text",
+            "text": "will contain a human-readable error description. For richer error bodies, consider returning"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ProblemDetails"
+          },
+          {
+            "kind": "text",
+            "text": "as the"
+          },
+          {
+            "kind": "typeparamref",
+            "value": "T"
+          },
+          {
+            "kind": "text",
+            "text": "payload."
+          }
+        ],
+        "typeParameters": {
+          "T": [
+            {
+              "kind": "text",
+              "text": "The type of the data payload contained in the response."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var product = new ProductDto { Id = Guid.NewGuid(), Name = \"Widget\" };\n     var response = ApiResponse<ProductDto>.Ok(product, \"Product retrieved\");\n     // { \"data\": { ... }, \"message\": \"Product retrieved\", \"success\": true, ... }",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Returning a successful product response:"
+              }
+            ]
+          },
+          {
+            "language": "csharp",
+            "code": "var response = ApiResponse<ProductDto>.Fail(\"Product not found\");\n     // { \"data\": null, \"message\": \"Product not found\", \"success\": false, ... }",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Returning an error response:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ProductDto",
           "T:SampleApi.ProblemDetails"
@@ -264,10 +721,33 @@
             }
           ],
           "docs": {
-            "summary": "Creates an error response with the specified message.",
-            "returns": "A new  marked as unsuccessful.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates an error response with the specified message."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A new"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.ApiResponse`1"
+              },
+              {
+                "kind": "text",
+                "text": "marked as unsuccessful."
+              }
+            ],
             "parameters": {
-              "message": "The error message."
+              "message": [
+                {
+                  "kind": "text",
+                  "text": "The error message."
+                }
+              ]
             }
           }
         },
@@ -291,11 +771,39 @@
             }
           ],
           "docs": {
-            "summary": "Creates a successful response containing the specified data.",
-            "returns": "A new  marked as successful.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates a successful response containing the specified data."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A new"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.ApiResponse`1"
+              },
+              {
+                "kind": "text",
+                "text": "marked as successful."
+              }
+            ],
             "parameters": {
-              "data": "The data payload.",
-              "message": "An optional message."
+              "data": [
+                {
+                  "kind": "text",
+                  "text": "The data payload."
+                }
+              ],
+              "message": [
+                {
+                  "kind": "text",
+                  "text": "An optional message."
+                }
+              ]
             }
           }
         },
@@ -307,8 +815,26 @@
           "returnType": "T?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the response data payload.",
-            "remarks": "Contains the requested resource on success, or  on failure."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the response data payload."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Contains the requested resource on success, or"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "on failure."
+              }
+            ]
           }
         },
         {
@@ -319,7 +845,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets an optional human-readable message providing additional context about the response, such as a confirmation or an error description."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets an optional human-readable message providing additional context about the response, such as a confirmation or an error description."
+              }
+            ]
           }
         },
         {
@@ -329,8 +860,50 @@
           "signature": "bool ApiResponse<T>.Success",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets or sets a value indicating whether the request completed successfully.",
-            "remarks": "When ,  contains the error description and  is ."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a value indicating whether the request completed successfully."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "When"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.ApiResponse`1.Message"
+              },
+              {
+                "kind": "text",
+                "text": "contains the error description and"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.ApiResponse`1.Data"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -340,7 +913,12 @@
           "signature": "DateTimeOffset ApiResponse<T>.Timestamp",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC timestamp indicating when the server generated this response. Useful for debugging latency and cache invalidation."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC timestamp indicating when the server generated this response. Useful for debugging latency and cache invalidation."
+              }
+            ]
           }
         }
       ]
@@ -353,8 +931,42 @@
       "accessibility": "public",
       "isAbstract": true,
       "docs": {
-        "summary": "Base class for entities that require audit tracking.",
-        "remarks": "All entities inheriting from  automatically receive a unique identifier and timestamp fields for creation and last modification. The  and  properties record the identity of the user who performed the respective action.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Base class for entities that require audit tracking."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "All entities inheriting from"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.AuditableEntity"
+          },
+          {
+            "kind": "text",
+            "text": "automatically receive a unique identifier and timestamp fields for creation and last modification. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.AuditableEntity.CreatedBy"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.AuditableEntity.UpdatedBy"
+          },
+          {
+            "kind": "text",
+            "text": "properties record the identity of the user who performed the respective action."
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.SoftDeletableEntity"
         ]
@@ -367,7 +979,12 @@
           "signature": "DateTimeOffset AuditableEntity.CreatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC date and time when the entity was created."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when the entity was created."
+              }
+            ]
           }
         },
         {
@@ -378,7 +995,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the identifier of the user who created the entity."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the identifier of the user who created the entity."
+              }
+            ]
           }
         },
         {
@@ -388,7 +1010,12 @@
           "signature": "Guid AuditableEntity.Id",
           "returnType": "System.Guid",
           "docs": {
-            "summary": "Gets or sets the unique identifier of the entity."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the unique identifier of the entity."
+              }
+            ]
           }
         },
         {
@@ -398,7 +1025,12 @@
           "signature": "DateTimeOffset AuditableEntity.UpdatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC date and time when the entity was last updated."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when the entity was last updated."
+              }
+            ]
           }
         },
         {
@@ -409,7 +1041,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the identifier of the user who last updated the entity."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the identifier of the user who last updated the entity."
+              }
+            ]
           }
         }
       ]
@@ -422,8 +1059,18 @@
       "accessibility": "public",
       "isSealed": true,
       "docs": {
-        "summary": "Specifies the preferred communication channel for contacting a customer.",
-        "remarks": "This enumeration is used by the notification subsystem to select the appropriate delivery mechanism. It is stored as its integer value in the database and serialised as a string in JSON responses.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Specifies the preferred communication channel for contacting a customer."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "This enumeration is used by the notification subsystem to select the appropriate delivery mechanism. It is stored as its integer value in the database and serialised as a string in JSON responses."
+          }
+        ],
         "seeAlso": [
           "P:SampleApi.Customer.PreferredContact"
         ]
@@ -459,8 +1106,70 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "Represents a customer entity in the system, serving as the primary domain model for all customer-related operations including creation, retrieval, and segmentation.",
-        "remarks": "A  is the aggregate root for customer data. Every customer is assigned a globally unique  at creation time and must have a non-empty . Customers are active by default and can be deactivated through . Tags enable flexible segmentation—for example, marking customers as \"vip\", \"wholesale\", or \"beta-tester\"—without requiring schema changes. The property controls which channel is used for outbound communications.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents a customer entity in the system, serving as the primary domain model for all customer-related operations including creation, retrieval, and segmentation."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "A"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Customer"
+          },
+          {
+            "kind": "text",
+            "text": "is the aggregate root for customer data. Every customer is assigned a globally unique"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Customer.Id"
+          },
+          {
+            "kind": "text",
+            "text": "at creation time and must have a non-empty"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Customer.FullName"
+          },
+          {
+            "kind": "text",
+            "text": ". Customers are active by default and can be deactivated through"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.ICustomerService.DeactivateAsync(System.Guid)"
+          },
+          {
+            "kind": "text",
+            "text": ". Tags enable flexible segmentation—for example, marking customers as \"vip\", \"wholesale\", or \"beta-tester\"—without requiring schema changes. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Customer.PreferredContact"
+          },
+          {
+            "kind": "text",
+            "text": "property controls which channel is used for outbound communications."
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var customer = new Customer\n     {\n         Id = Guid.NewGuid(),\n         FullName = \"Jane Doe\",\n         Email = \"jane.doe@example.com\",\n         Tags = [\"vip\", \"early-adopter\"],\n         PreferredContact = ContactMethod.Email\n     };",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating a new customer with required properties:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ICustomerService",
           "T:SampleApi.Order",
@@ -475,8 +1184,26 @@
           "signature": "DateTimeOffset Customer.CreatedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC date and time when this customer record was created.",
-            "remarks": "Automatically set to  at construction. This value should not be modified after the initial persistence operation."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when this customer record was created."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Automatically set to"
+              },
+              {
+                "kind": "cref",
+                "value": "P:System.DateTimeOffset.UtcNow"
+              },
+              {
+                "kind": "text",
+                "text": "at construction. This value should not be modified after the initial persistence operation."
+              }
+            ]
           }
         },
         {
@@ -487,8 +1214,26 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the customer's email address, used for account verification and transactional notifications.",
-            "remarks": "When , the customer has not provided an email and cannot receive email-based communications. Validation should enforce RFC 5322 format when a value is present."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the customer's email address, used for account verification and transactional notifications."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "When"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": ", the customer has not provided an email and cannot receive email-based communications. Validation should enforce RFC 5322 format when a value is present."
+              }
+            ]
           }
         },
         {
@@ -498,8 +1243,26 @@
           "signature": "string Customer.FullName",
           "returnType": "string",
           "docs": {
-            "summary": "Gets or sets the customer's full display name.",
-            "remarks": "This property is required and must not be  or whitespace. It is used throughout the UI and in transactional emails as the primary way to address the customer."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the customer's full display name."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This property is required and must not be"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "or whitespace. It is used throughout the UI and in transactional emails as the primary way to address the customer."
+              }
+            ]
           }
         },
         {
@@ -509,8 +1272,26 @@
           "signature": "Guid Customer.Id",
           "returnType": "System.Guid",
           "docs": {
-            "summary": "Gets or sets the globally unique identifier for this customer.",
-            "remarks": "This value is typically generated by the caller at construction time using . It serves as the primary key across all persistence layers and is immutable after creation."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the globally unique identifier for this customer."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This value is typically generated by the caller at construction time using"
+              },
+              {
+                "kind": "cref",
+                "value": "M:System.Guid.NewGuid"
+              },
+              {
+                "kind": "text",
+                "text": ". It serves as the primary key across all persistence layers and is immutable after creation."
+              }
+            ]
           }
         },
         {
@@ -520,8 +1301,34 @@
           "signature": "bool Customer.IsActive",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets or sets a value indicating whether the customer account is currently active.",
-            "remarks": "Inactive customers are excluded from search results and cannot place new orders. Use  to set this to in a controlled manner that also raises the appropriate domain events."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a value indicating whether the customer account is currently active."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Inactive customers are excluded from search results and cannot place new orders. Use"
+              },
+              {
+                "kind": "cref",
+                "value": "M:SampleApi.ICustomerService.DeactivateAsync(System.Guid)"
+              },
+              {
+                "kind": "text",
+                "text": "to set this to"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "in a controlled manner that also raises the appropriate domain events."
+              }
+            ]
           }
         },
         {
@@ -531,8 +1338,26 @@
           "signature": "ContactMethod Customer.PreferredContact",
           "returnType": "SampleApi.ContactMethod",
           "docs": {
-            "summary": "Gets or sets the customer's preferred communication channel.",
-            "remarks": "Defaults to . When sending notifications, the system should honour this preference and fall back to email only when the preferred channel is unavailable.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the customer's preferred communication channel."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Defaults to"
+              },
+              {
+                "kind": "cref",
+                "value": "F:SampleApi.ContactMethod.Email"
+              },
+              {
+                "kind": "text",
+                "text": ". When sending notifications, the system should honour this preference and fall back to email only when the preferred channel is unavailable."
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.ContactMethod"
             ]
@@ -545,8 +1370,30 @@
           "signature": "List<string> Customer.Tags",
           "returnType": "System.Collections.Generic.List<string>",
           "docs": {
-            "summary": "Gets or sets the list of free-form tags used for customer segmentation and targeted marketing campaigns.",
-            "remarks": "Tags are case-insensitive string labels. Common conventions include lowercase kebab-case (e.g., \"early-adopter\", \"high-value\"). An empty list indicates that no segmentation has been applied."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the list of free-form tags used for customer segmentation and targeted marketing campaigns."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Tags are case-insensitive string labels. Common conventions include lowercase kebab-case (e.g., \"early-adopter\", \"high-value\"). An empty list indicates that no segmentation has been applied."
+              }
+            ],
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "customer.Tags.Add(\"loyalty-program\");",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Adding a segmentation tag to an existing customer:"
+                  }
+                ]
+              }
+            ]
           }
         }
       ]
@@ -562,8 +1409,100 @@
         "System.IEquatable<SampleApi.DateRange>"
       ],
       "docs": {
-        "summary": "Represents an inclusive date range defined by a start and end boundary, with helpers for containment checks, overlap detection, and duration calculation.",
-        "remarks": "is a  struct that implements for efficient, allocation-free value comparisons. The constructor enforces the invariant that  must be on or before , throwing  otherwise. Common use cases include filtering orders by date, defining subscription periods, and computing business-day durations. The  and methods enable calendar-style range queries.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents an inclusive date range defined by a start and end boundary, with helpers for containment checks, overlap detection, and duration calculation."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.DateRange"
+          },
+          {
+            "kind": "text",
+            "text": "is a"
+          },
+          {
+            "kind": "langword",
+            "value": "readonly"
+          },
+          {
+            "kind": "text",
+            "text": "struct that implements"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.IEquatable`1"
+          },
+          {
+            "kind": "text",
+            "text": "for efficient, allocation-free value comparisons. The constructor enforces the invariant that"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.DateRange.Start"
+          },
+          {
+            "kind": "text",
+            "text": "must be on or before"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.DateRange.End"
+          },
+          {
+            "kind": "text",
+            "text": ", throwing"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.ArgumentException"
+          },
+          {
+            "kind": "text",
+            "text": "otherwise. Common use cases include filtering orders by date, defining subscription periods, and computing business-day durations. The"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.DateRange.Contains(System.DateTimeOffset)"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.DateRange.Overlaps(SampleApi.DateRange)"
+          },
+          {
+            "kind": "text",
+            "text": "methods enable calendar-style range queries."
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var q1 = new DateRange(\n         new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),\n         new DateTimeOffset(2026, 3, 31, 23, 59, 59, TimeSpan.Zero)\n     );\n    \n     bool inRange = q1.Contains(DateTimeOffset.UtcNow);\n     Console.WriteLine($\"Q1 duration: {q1.Duration.TotalDays} days\");",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating a date range and testing containment:"
+              }
+            ]
+          },
+          {
+            "language": "csharp",
+            "code": "var feb = new DateRange(\n         new DateTimeOffset(2026, 2, 1, 0, 0, 0, TimeSpan.Zero),\n         new DateTimeOffset(2026, 2, 28, 23, 59, 59, TimeSpan.Zero)\n     );\n     bool overlaps = q1.Overlaps(feb); // true",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Checking whether two ranges overlap:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "P:SampleApi.Order.OrderDate"
         ]
@@ -586,11 +1525,61 @@
             }
           ],
           "docs": {
-            "summary": "Initializes a new instance of the  struct.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Initializes a new instance of the"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.DateRange"
+              },
+              {
+                "kind": "text",
+                "text": "struct."
+              }
+            ],
             "parameters": {
-              "end": "The inclusive end date of the range.",
-              "start": "The inclusive start date of the range."
-            }
+              "end": [
+                {
+                  "kind": "text",
+                  "text": "The inclusive end date of the range."
+                }
+              ],
+              "start": [
+                {
+                  "kind": "text",
+                  "text": "The inclusive start date of the range."
+                }
+              ]
+            },
+            "exceptions": [
+              {
+                "type": "T:System.ArgumentException",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Thrown when"
+                  },
+                  {
+                    "kind": "paramref",
+                    "value": "start"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "is after"
+                  },
+                  {
+                    "kind": "paramref",
+                    "value": "end"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -606,10 +1595,45 @@
             }
           ],
           "docs": {
-            "summary": "Determines whether the specified date falls within this range.",
-            "returns": "if  is within the range; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Determines whether the specified date falls within this range."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "if"
+              },
+              {
+                "kind": "paramref",
+                "value": "date"
+              },
+              {
+                "kind": "text",
+                "text": "is within the range; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "date": "The date to check."
+              "date": [
+                {
+                  "kind": "text",
+                  "text": "The date to check."
+                }
+              ]
             }
           }
         },
@@ -670,7 +1694,20 @@
             }
           ],
           "docs": {
-            "summary": "Determines whether two  instances are equal."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Determines whether two"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.DateRange"
+              },
+              {
+                "kind": "text",
+                "text": "instances are equal."
+              }
+            ]
           }
         },
         {
@@ -691,7 +1728,20 @@
             }
           ],
           "docs": {
-            "summary": "Determines whether two  instances are not equal."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Determines whether two"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.DateRange"
+              },
+              {
+                "kind": "text",
+                "text": "instances are not equal."
+              }
+            ]
           }
         },
         {
@@ -707,10 +1757,37 @@
             }
           ],
           "docs": {
-            "summary": "Determines whether this range overlaps with another range.",
-            "returns": "if the ranges overlap; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Determines whether this range overlaps with another range."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "if the ranges overlap; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "other": "The other date range to test."
+              "other": [
+                {
+                  "kind": "text",
+                  "text": "The other date range to test."
+                }
+              ]
             }
           }
         },
@@ -722,7 +1799,12 @@
           "returnType": "string",
           "isOverride": true,
           "docs": {
-            "summary": "Returns a human-readable representation of the date range."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Returns a human-readable representation of the date range."
+              }
+            ]
           }
         },
         {
@@ -732,7 +1814,28 @@
           "signature": "TimeSpan DateRange.Duration",
           "returnType": "System.TimeSpan",
           "docs": {
-            "summary": "Gets the duration of time between  and ."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the duration of time between"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.DateRange.Start"
+              },
+              {
+                "kind": "text",
+                "text": "and"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.DateRange.End"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -742,7 +1845,12 @@
           "signature": "DateTimeOffset DateRange.End",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets the inclusive end date of the range."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the inclusive end date of the range."
+              }
+            ]
           }
         },
         {
@@ -752,7 +1860,12 @@
           "signature": "DateTimeOffset DateRange.Start",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets the inclusive start date of the range."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the inclusive start date of the range."
+              }
+            ]
           }
         }
       ]
@@ -765,8 +1878,34 @@
       "accessibility": "public",
       "isSealed": true,
       "docs": {
-        "summary": "Feature flags that can be independently enabled for the application.",
-        "remarks": "This enum uses the  to allow bitwise combination of values. Use  as a convenience mask to enable every flag at once."
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Feature flags that can be independently enabled for the application."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "This enum uses the"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.FlagsAttribute"
+          },
+          {
+            "kind": "text",
+            "text": "to allow bitwise combination of values. Use"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.FeatureFlags.AllFeatures"
+          },
+          {
+            "kind": "text",
+            "text": "as a convenience mask to enable every flag at once."
+          }
+        ]
       },
       "enumMembers": [
         {
@@ -814,8 +1953,62 @@
       "kind": "interface",
       "accessibility": "public",
       "docs": {
-        "summary": "Defines the contract for managing customer lifecycle operations including creation, retrieval, search, update, and deactivation.",
-        "remarks": "Implementations of  are responsible for enforcing business rules such as email uniqueness, required-field validation, and the invariant that deactivated customers cannot place new orders. All methods are asynchronous and return  to support non-blocking I/O against the underlying data store. Callers should handle returns from  gracefully, as a missing customer is a normal condition rather than an error.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Defines the contract for managing customer lifecycle operations including creation, retrieval, search, update, and deactivation."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Implementations of"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ICustomerService"
+          },
+          {
+            "kind": "text",
+            "text": "are responsible for enforcing business rules such as email uniqueness, required-field validation, and the invariant that deactivated customers cannot place new orders. All methods are asynchronous and return"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Threading.Tasks.Task`1"
+          },
+          {
+            "kind": "text",
+            "text": "to support non-blocking I/O against the underlying data store. Callers should handle"
+          },
+          {
+            "kind": "langword",
+            "value": "null"
+          },
+          {
+            "kind": "text",
+            "text": "returns from"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.ICustomerService.GetByIdAsync(System.Guid)"
+          },
+          {
+            "kind": "text",
+            "text": "gracefully, as a missing customer is a normal condition rather than an error."
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "ICustomerService service = GetService();\n    \n     var customer = new Customer\n     {\n         Id = Guid.NewGuid(),\n         FullName = \"Contoso Ltd.\",\n         Email = \"info@contoso.com\"\n     };\n    \n     var created = await service.CreateAsync(customer);\n     var fetched = await service.GetByIdAsync(created.Id);",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Registering a new customer and immediately retrieving it:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.Customer",
           "T:SampleApi.Order"
@@ -836,11 +2029,80 @@
             }
           ],
           "docs": {
-            "summary": "Persists a new  and returns the created entity with any server-generated values (e.g., timestamps) populated.",
-            "returns": "A  that resolves to the newly created with  set by the server.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Persists a new"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": "and returns the created entity with any server-generated values (e.g., timestamps) populated."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Threading.Tasks.Task`1"
+              },
+              {
+                "kind": "text",
+                "text": "that resolves to the newly created"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": "with"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Customer.CreatedAt"
+              },
+              {
+                "kind": "text",
+                "text": "set by the server."
+              }
+            ],
             "parameters": {
-              "customer": "The customer to create. The  and properties are required."
-            }
+              "customer": [
+                {
+                  "kind": "text",
+                  "text": "The customer to create. The"
+                },
+                {
+                  "kind": "cref",
+                  "value": "P:SampleApi.Customer.Id"
+                },
+                {
+                  "kind": "text",
+                  "text": "and"
+                },
+                {
+                  "kind": "cref",
+                  "value": "P:SampleApi.Customer.FullName"
+                },
+                {
+                  "kind": "text",
+                  "text": "properties are required."
+                }
+              ]
+            },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var customer = new Customer\n    {\n        Id = Guid.NewGuid(),\n        FullName = \"Alice Smith\",\n        Email = \"alice@example.com\",\n        Tags = [\"premium\"]\n    };\n    var created = await service.CreateAsync(customer);\n    Console.WriteLine($\"Created {created.FullName} at {created.CreatedAt}\");"
+              }
+            ]
           }
         },
         {
@@ -857,11 +2119,75 @@
             }
           ],
           "docs": {
-            "summary": "Marks a customer as inactive, preventing them from placing new orders or appearing in search results.",
-            "remarks": "Deactivation is a soft operation\\u2014the customer record is retained in the data store with  set to . This method is idempotent: calling it on an already-inactive customer returns  without side effects.",
-            "returns": "if the customer was found and successfully deactivated; if no customer with the given  exists or the customer was already inactive.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Marks a customer as inactive, preventing them from placing new orders or appearing in search results."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Deactivation is a soft operation\\u2014the customer record is retained in the data store with"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Customer.IsActive"
+              },
+              {
+                "kind": "text",
+                "text": "set to"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": ". This method is idempotent: calling it on an already-inactive customer returns"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "without side effects."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "if the customer was found and successfully deactivated;"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "if no customer with the given"
+              },
+              {
+                "kind": "paramref",
+                "value": "id"
+              },
+              {
+                "kind": "text",
+                "text": "exists or the customer was already inactive."
+              }
+            ],
             "parameters": {
-              "id": "The identifier of the customer to deactivate."
+              "id": [
+                {
+                  "kind": "text",
+                  "text": "The identifier of the customer to deactivate."
+                }
+              ]
             }
           }
         },
@@ -879,11 +2205,71 @@
             }
           ],
           "docs": {
-            "summary": "Retrieves a single customer by its globally unique identifier.",
-            "remarks": "This method does not throw when the customer is not found. Callers should check for a  result and return an appropriate HTTP 404 or equivalent response.",
-            "returns": "The  if a record with the specified exists; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Retrieves a single customer by its globally unique identifier."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This method does not throw when the customer is not found. Callers should check for a"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "result and return an appropriate HTTP 404 or equivalent response."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": "if a record with the specified"
+              },
+              {
+                "kind": "paramref",
+                "value": "id"
+              },
+              {
+                "kind": "text",
+                "text": "exists; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "id": "The  identifier of the customer to retrieve."
+              "id": [
+                {
+                  "kind": "text",
+                  "text": "The"
+                },
+                {
+                  "kind": "cref",
+                  "value": "T:System.Guid"
+                },
+                {
+                  "kind": "text",
+                  "text": "identifier of the customer to retrieve."
+                }
+              ]
             }
           }
         },
@@ -913,13 +2299,90 @@
             }
           ],
           "docs": {
-            "summary": "Searches for customers whose  or matches the given query string, with support for offset-based pagination.",
-            "returns": "A read-only list of customers matching the search criteria, ordered by ascending. Returns an empty list when no matches are found.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Searches for customers whose"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Customer.FullName"
+              },
+              {
+                "kind": "text",
+                "text": "or"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Customer.Email"
+              },
+              {
+                "kind": "text",
+                "text": "matches the given query string, with support for offset-based pagination."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A read-only list of customers matching the search criteria, ordered by"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Customer.FullName"
+              },
+              {
+                "kind": "text",
+                "text": "ascending. Returns an empty list when no matches are found."
+              }
+            ],
             "parameters": {
-              "query": "A case-insensitive search string. The implementation performs a contains-style match against  and .",
-              "skip": "The number of matching results to skip, enabling offset-based pagination. Defaults to 0.",
-              "take": "The maximum number of results to return per page. Defaults to 25. Values above 100 may be clamped by the implementation."
-            }
+              "query": [
+                {
+                  "kind": "text",
+                  "text": "A case-insensitive search string. The implementation performs a contains-style match against"
+                },
+                {
+                  "kind": "cref",
+                  "value": "P:SampleApi.Customer.FullName"
+                },
+                {
+                  "kind": "text",
+                  "text": "and"
+                },
+                {
+                  "kind": "cref",
+                  "value": "P:SampleApi.Customer.Email"
+                },
+                {
+                  "kind": "text",
+                  "text": "."
+                }
+              ],
+              "skip": [
+                {
+                  "kind": "text",
+                  "text": "The number of matching results to skip, enabling offset-based pagination. Defaults to 0."
+                }
+              ],
+              "take": [
+                {
+                  "kind": "text",
+                  "text": "The maximum number of results to return per page. Defaults to 25. Values above 100 may be clamped by the implementation."
+                }
+              ]
+            },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var page1 = await service.SearchAsync(\"contoso\", skip: 0, take: 10);\n    var page2 = await service.SearchAsync(\"contoso\", skip: 10, take: 10);",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Paginated search for customers containing \"contoso\":"
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -936,10 +2399,49 @@
             }
           ],
           "docs": {
-            "summary": "Replaces the stored customer record with the values from the supplied object.",
-            "returns": "The updated  as persisted, which may include server-modified fields such as an updated timestamp.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Replaces the stored customer record with the values from the supplied"
+              },
+              {
+                "kind": "paramref",
+                "value": "customer"
+              },
+              {
+                "kind": "text",
+                "text": "object."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The updated"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": "as persisted, which may include server-modified fields such as an updated timestamp."
+              }
+            ],
             "parameters": {
-              "customer": "The customer entity containing the updated values. The must match an existing record."
+              "customer": [
+                {
+                  "kind": "text",
+                  "text": "The customer entity containing the updated values. The"
+                },
+                {
+                  "kind": "cref",
+                  "value": "P:SampleApi.Customer.Id"
+                },
+                {
+                  "kind": "text",
+                  "text": "must match an existing record."
+                }
+              ]
             }
           }
         }
@@ -952,8 +2454,18 @@
       "kind": "interface",
       "accessibility": "public",
       "docs": {
-        "summary": "A service that publishes notifications for key order lifecycle events.",
-        "remarks": "Consumers subscribe to the events exposed by this interface to react to order state transitions. Implementations are responsible for raising events at the appropriate points in the order processing pipeline.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "A service that publishes notifications for key order lifecycle events."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Consumers subscribe to the events exposed by this interface to react to order state transitions. Implementations are responsible for raising events at the appropriate points in the order processing pipeline."
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.OrderEventArgs",
           "T:SampleApi.Order"
@@ -968,7 +2480,12 @@
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
           "docs": {
-            "summary": "Occurs when an order has been cancelled."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Occurs when an order has been cancelled."
+              }
+            ]
           }
         },
         {
@@ -979,7 +2496,12 @@
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
           "docs": {
-            "summary": "Occurs when an order has been delivered."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Occurs when an order has been delivered."
+              }
+            ]
           }
         },
         {
@@ -990,7 +2512,12 @@
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
           "docs": {
-            "summary": "Occurs when a new order has been placed."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Occurs when a new order has been placed."
+              }
+            ]
           }
         },
         {
@@ -1001,7 +2528,12 @@
           "returnType": "System.EventHandler<SampleApi.OrderEventArgs>",
           "isAbstract": true,
           "docs": {
-            "summary": "Occurs when an order has been shipped."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Occurs when an order has been shipped."
+              }
+            ]
           }
         },
         {
@@ -1018,9 +2550,19 @@
             }
           ],
           "docs": {
-            "summary": "Publishes a notification that the specified order was cancelled.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Publishes a notification that the specified order was cancelled."
+              }
+            ],
             "parameters": {
-              "order": "The order that was cancelled."
+              "order": [
+                {
+                  "kind": "text",
+                  "text": "The order that was cancelled."
+                }
+              ]
             }
           }
         },
@@ -1038,9 +2580,19 @@
             }
           ],
           "docs": {
-            "summary": "Publishes a notification that the specified order was placed.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Publishes a notification that the specified order was placed."
+              }
+            ],
             "parameters": {
-              "order": "The order that was placed."
+              "order": [
+                {
+                  "kind": "text",
+                  "text": "The order that was placed."
+                }
+              ]
             }
           }
         },
@@ -1058,9 +2610,19 @@
             }
           ],
           "docs": {
-            "summary": "Publishes a notification that the specified order was shipped.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Publishes a notification that the specified order was shipped."
+              }
+            ],
             "parameters": {
-              "order": "The order that was shipped."
+              "order": [
+                {
+                  "kind": "text",
+                  "text": "The order that was shipped."
+                }
+              ]
             }
           }
         }
@@ -1082,8 +2644,104 @@
         }
       ],
       "docs": {
-        "summary": "Defines a generic repository contract for performing CRUD and query operations against a persistent store of  objects.",
-        "remarks": "abstracts the data-access layer, allowing service classes to operate against an in-memory fake, an EF Core DbContext, or a Dapper-based implementation without code changes. Implementations are responsible for: Opening and closing database connections or scoping units of work.Mapping between CLR entities and the underlying storage representation.Propagating  to all I/O calls.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Defines a generic repository contract for performing CRUD and query operations against a persistent store of"
+          },
+          {
+            "kind": "typeparamref",
+            "value": "TEntity"
+          },
+          {
+            "kind": "text",
+            "text": "objects."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.IRepository`1"
+          },
+          {
+            "kind": "text",
+            "text": "abstracts the data-access layer, allowing service classes to operate against an in-memory fake, an EF Core DbContext, or a Dapper-based implementation without code changes. Implementations are responsible for:"
+          },
+          {
+            "kind": "list",
+            "style": "bullet",
+            "items": [
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Opening and closing database connections or scoping units of work."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Mapping between CLR entities and the underlying storage representation."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Propagating"
+                  },
+                  {
+                    "kind": "cref",
+                    "value": "T:System.Threading.CancellationToken"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "to all I/O calls."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "typeParameters": {
+          "TEntity": [
+            {
+              "kind": "text",
+              "text": "The entity type managed by this repository. Must be a reference type so that"
+            },
+            {
+              "kind": "langword",
+              "value": "null"
+            },
+            {
+              "kind": "text",
+              "text": "can be returned from"
+            },
+            {
+              "kind": "cref",
+              "value": "M:SampleApi.IRepository`1.GetByIdAsync(System.Guid,System.Threading.CancellationToken)"
+            },
+            {
+              "kind": "text",
+              "text": "when an entity is not found."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "IRepository<Customer> repo = GetRepository();\n    \n     var page = await repo.GetPagedAsync(page: 1, pageSize: 20);\n     Console.WriteLine($\"Showing {page.Items.Count} of {page.TotalCount}\");\n    \n     while (page.HasNextPage)\n     {\n         page = await repo.GetPagedAsync(page.Page + 1, pageSize: 20);\n     }",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Using the repository to page through all customers:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.PagedResult`1"
         ]
@@ -1108,11 +2766,31 @@
             }
           ],
           "docs": {
-            "summary": "Adds a new entity to the repository.",
-            "returns": "The added entity, including any server-generated values.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Adds a new entity to the repository."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The added entity, including any server-generated values."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "entity": "The entity to add."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "entity": [
+                {
+                  "kind": "text",
+                  "text": "The entity to add."
+                }
+              ]
             }
           }
         },
@@ -1131,10 +2809,25 @@
             }
           ],
           "docs": {
-            "summary": "Returns the total number of entities in the repository.",
-            "returns": "The total count of entities.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Returns the total number of entities in the repository."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The total count of entities."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ]
             }
           }
         },
@@ -1157,11 +2850,43 @@
             }
           ],
           "docs": {
-            "summary": "Removes an entity from the repository by its identifier.",
-            "returns": "if the entity was removed; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Removes an entity from the repository by its identifier."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "if the entity was removed; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "id": "The unique identifier of the entity to remove."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "id": [
+                {
+                  "kind": "text",
+                  "text": "The unique identifier of the entity to remove."
+                }
+              ]
             }
           }
         },
@@ -1184,11 +2909,43 @@
             }
           ],
           "docs": {
-            "summary": "Determines whether an entity with the specified identifier exists.",
-            "returns": "if an entity with the given identifier exists; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Determines whether an entity with the specified identifier exists."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "if an entity with the given identifier exists; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "id": "The unique identifier to check."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "id": [
+                {
+                  "kind": "text",
+                  "text": "The unique identifier to check."
+                }
+              ]
             }
           }
         },
@@ -1207,10 +2964,25 @@
             }
           ],
           "docs": {
-            "summary": "Retrieves all entities in the repository.",
-            "returns": "A read-only list of all entities.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Retrieves all entities in the repository."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A read-only list of all entities."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ]
             }
           }
         },
@@ -1233,11 +3005,39 @@
             }
           ],
           "docs": {
-            "summary": "Retrieves an entity by its unique identifier.",
-            "returns": "The entity if found; otherwise, .",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Retrieves an entity by its unique identifier."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The entity if found; otherwise,"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "id": "The unique identifier of the entity."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "id": [
+                {
+                  "kind": "text",
+                  "text": "The unique identifier of the entity."
+                }
+              ]
             }
           }
         },
@@ -1264,12 +3064,45 @@
             }
           ],
           "docs": {
-            "summary": "Retrieves a paged subset of entities.",
-            "returns": "A  containing the requested page of entities.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Retrieves a paged subset of entities."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.PagedResult`1"
+              },
+              {
+                "kind": "text",
+                "text": "containing the requested page of entities."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "page": "The one-based page number to retrieve.",
-              "pageSize": "The number of items per page."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "page": [
+                {
+                  "kind": "text",
+                  "text": "The one-based page number to retrieve."
+                }
+              ],
+              "pageSize": [
+                {
+                  "kind": "text",
+                  "text": "The number of items per page."
+                }
+              ]
             }
           }
         },
@@ -1292,11 +3125,31 @@
             }
           ],
           "docs": {
-            "summary": "Updates an existing entity in the repository.",
-            "returns": "The updated entity.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Updates an existing entity in the repository."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "The updated entity."
+              }
+            ],
             "parameters": {
-              "cancellationToken": "A token to cancel the asynchronous operation.",
-              "entity": "The entity with updated values."
+              "cancellationToken": [
+                {
+                  "kind": "text",
+                  "text": "A token to cancel the asynchronous operation."
+                }
+              ],
+              "entity": [
+                {
+                  "kind": "text",
+                  "text": "The entity with updated values."
+                }
+              ]
             }
           }
         }
@@ -1313,12 +3166,120 @@
         "System.IEquatable<SampleApi.Money>"
       ],
       "docs": {
-        "summary": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic.",
-        "remarks": "is a value object implemented as a record struct to guarantee immutability and value-based equality. Using instead of a bare  prevents subtle bugs where values in different currencies are summed or compared. The  is stored as a  to avoid the floating-point precision issues inherent to  in financial calculations.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Money"
+          },
+          {
+            "kind": "text",
+            "text": "is a value object implemented as a"
+          },
+          {
+            "kind": "langword",
+            "value": "readonly"
+          },
+          {
+            "kind": "text",
+            "text": "record struct to guarantee immutability and value-based equality. Using"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Money"
+          },
+          {
+            "kind": "text",
+            "text": "instead of a bare"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Decimal"
+          },
+          {
+            "kind": "text",
+            "text": "prevents subtle bugs where values in different currencies are summed or compared. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Money.Amount"
+          },
+          {
+            "kind": "text",
+            "text": "is stored as a"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Decimal"
+          },
+          {
+            "kind": "text",
+            "text": "to avoid the floating-point precision issues inherent to"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Double"
+          },
+          {
+            "kind": "text",
+            "text": "in financial calculations."
+          }
+        ],
         "parameters": {
-          "Amount": "The numeric value of the monetary amount.",
-          "Currency": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+          "Amount": [
+            {
+              "kind": "text",
+              "text": "The numeric value of the monetary amount."
+            }
+          ],
+          "Currency": [
+            {
+              "kind": "text",
+              "text": "The three-letter ISO 4217 currency code (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"USD\""
+            },
+            {
+              "kind": "text",
+              "text": ","
+            },
+            {
+              "kind": "code",
+              "text": "\"EUR\""
+            },
+            {
+              "kind": "text",
+              "text": ","
+            },
+            {
+              "kind": "code",
+              "text": "\"GBP\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ]
         },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var price = Money.Usd(29.99m);\n     var shipping = Money.Eur(5.50m);\n    \n     Console.WriteLine(price);    // \"29.99 USD\"\n     Console.WriteLine(shipping); // \"5.50 EUR\"",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating and displaying monetary values:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.OrderItem"
         ]
@@ -1341,12 +3302,120 @@
             }
           ],
           "docs": {
-            "summary": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic.",
-            "remarks": "is a value object implemented as a record struct to guarantee immutability and value-based equality. Using instead of a bare  prevents subtle bugs where values in different currencies are summed or compared. The  is stored as a  to avoid the floating-point precision issues inherent to  in financial calculations.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Represents a monetary amount paired with an ISO 4217 currency code, ensuring that different currencies are never accidentally mixed in arithmetic."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "is a value object implemented as a"
+              },
+              {
+                "kind": "langword",
+                "value": "readonly"
+              },
+              {
+                "kind": "text",
+                "text": "record struct to guarantee immutability and value-based equality. Using"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "instead of a bare"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Decimal"
+              },
+              {
+                "kind": "text",
+                "text": "prevents subtle bugs where values in different currencies are summed or compared. The"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Money.Amount"
+              },
+              {
+                "kind": "text",
+                "text": "is stored as a"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Decimal"
+              },
+              {
+                "kind": "text",
+                "text": "to avoid the floating-point precision issues inherent to"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Double"
+              },
+              {
+                "kind": "text",
+                "text": "in financial calculations."
+              }
+            ],
             "parameters": {
-              "Amount": "The numeric value of the monetary amount.",
-              "Currency": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+              "Amount": [
+                {
+                  "kind": "text",
+                  "text": "The numeric value of the monetary amount."
+                }
+              ],
+              "Currency": [
+                {
+                  "kind": "text",
+                  "text": "The three-letter ISO 4217 currency code (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"USD\""
+                },
+                {
+                  "kind": "text",
+                  "text": ","
+                },
+                {
+                  "kind": "code",
+                  "text": "\"EUR\""
+                },
+                {
+                  "kind": "text",
+                  "text": ","
+                },
+                {
+                  "kind": "code",
+                  "text": "\"GBP\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ]
             },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var price = Money.Usd(29.99m);\n     var shipping = Money.Eur(5.50m);\n    \n     Console.WriteLine(price);    // \"29.99 USD\"\n     Console.WriteLine(shipping); // \"5.50 EUR\"",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Creating and displaying monetary values:"
+                  }
+                ]
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.OrderItem"
             ]
@@ -1366,10 +3435,41 @@
             }
           ],
           "docs": {
-            "summary": "Creates a  value denominated in euros.",
-            "returns": "A new  instance with currency set to \"EUR\".",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates a"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "value denominated in euros."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A new"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "instance with currency set to \"EUR\"."
+              }
+            ],
             "parameters": {
-              "amount": "The euro amount."
+              "amount": [
+                {
+                  "kind": "text",
+                  "text": "The euro amount."
+                }
+              ]
             }
           }
         },
@@ -1381,8 +3481,18 @@
           "returnType": "string",
           "isOverride": true,
           "docs": {
-            "summary": "Returns a string representation in the format \"100.00 USD\".",
-            "returns": "A formatted string of the monetary value."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Returns a string representation in the format \"100.00 USD\"."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A formatted string of the monetary value."
+              }
+            ]
           }
         },
         {
@@ -1399,10 +3509,41 @@
             }
           ],
           "docs": {
-            "summary": "Creates a  value denominated in US dollars.",
-            "returns": "A new  instance with currency set to \"USD\".",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates a"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "value denominated in US dollars."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A new"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Money"
+              },
+              {
+                "kind": "text",
+                "text": "instance with currency set to \"USD\"."
+              }
+            ],
             "parameters": {
-              "amount": "The dollar amount."
+              "amount": [
+                {
+                  "kind": "text",
+                  "text": "The dollar amount."
+                }
+              ]
             }
           }
         },
@@ -1413,7 +3554,12 @@
           "signature": "decimal Money.Amount",
           "returnType": "decimal",
           "docs": {
-            "summary": "The numeric value of the monetary amount."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The numeric value of the monetary amount."
+              }
+            ]
           }
         },
         {
@@ -1423,7 +3569,36 @@
           "signature": "string Money.Currency",
           "returnType": "string",
           "docs": {
-            "summary": "The three-letter ISO 4217 currency code (e.g., \"USD\", \"EUR\", \"GBP\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The three-letter ISO 4217 currency code (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"USD\""
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "code",
+                "text": "\"EUR\""
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "code",
+                "text": "\"GBP\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         }
       ]
@@ -1435,8 +3610,118 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "Represents an order placed by a , containing one or more line items and tracking lifecycle state through .",
-        "remarks": "An  is always associated with a single customer via . The order progresses through a linear state machine: →  → → . At any point before shipping, the order can transition to . The  property is computed from the sum of each line item's quantity multiplied by its unit price. It is not persisted and is recalculated on every access.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents an order placed by a"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Customer"
+          },
+          {
+            "kind": "text",
+            "text": ", containing one or more"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.OrderItem"
+          },
+          {
+            "kind": "text",
+            "text": "line items and tracking lifecycle state through"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.OrderStatus"
+          },
+          {
+            "kind": "text",
+            "text": "."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "An"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Order"
+          },
+          {
+            "kind": "text",
+            "text": "is always associated with a single customer via"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Order.CustomerId"
+          },
+          {
+            "kind": "text",
+            "text": ". The order progresses through a linear state machine:"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Pending"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Confirmed"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Shipped"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Delivered"
+          },
+          {
+            "kind": "text",
+            "text": ". At any point before shipping, the order can transition to"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Cancelled"
+          },
+          {
+            "kind": "text",
+            "text": ". The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Order.TotalPrice"
+          },
+          {
+            "kind": "text",
+            "text": "property is computed from the sum of each line item's quantity multiplied by its unit price. It is not persisted and is recalculated on every access."
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var order = new Order\n     {\n         Id = Guid.NewGuid(),\n         CustomerId = customer.Id,\n         Items =\n         [\n             new OrderItem { ProductName = \"Widget\", Quantity = 3, UnitPrice = 9.99m },\n             new OrderItem { ProductName = \"Gadget\", Quantity = 1, UnitPrice = 24.95m }\n         ]\n     };\n     // order.TotalPrice == 54.92m",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating an order with two line items:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.Customer",
           "T:SampleApi.OrderItem",
@@ -1452,8 +3737,26 @@
           "signature": "Guid Order.CustomerId",
           "returnType": "System.Guid",
           "docs": {
-            "summary": "Gets or sets the identifier of the  who placed this order.",
-            "remarks": "This is a foreign key reference. The referenced customer must exist and be active at the time the order is created."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the identifier of the"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Customer"
+              },
+              {
+                "kind": "text",
+                "text": "who placed this order."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This is a foreign key reference. The referenced customer must exist and be active at the time the order is created."
+              }
+            ]
           }
         },
         {
@@ -1463,7 +3766,12 @@
           "signature": "Guid Order.Id",
           "returnType": "System.Guid",
           "docs": {
-            "summary": "Gets or sets the globally unique identifier for this order."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the globally unique identifier for this order."
+              }
+            ]
           }
         },
         {
@@ -1473,8 +3781,18 @@
           "signature": "List<OrderItem> Order.Items",
           "returnType": "System.Collections.Generic.List<SampleApi.OrderItem>",
           "docs": {
-            "summary": "Gets or sets the collection of line items that make up this order.",
-            "remarks": "An order must contain at least one item to be valid. Each item captures a product name, quantity, and unit price at the time of purchase."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the collection of line items that make up this order."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "An order must contain at least one item to be valid. Each item captures a product name, quantity, and unit price at the time of purchase."
+              }
+            ]
           }
         },
         {
@@ -1484,7 +3802,12 @@
           "signature": "DateTimeOffset Order.OrderDate",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC date and time when the order was placed."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when the order was placed."
+              }
+            ]
           }
         },
         {
@@ -1494,8 +3817,34 @@
           "signature": "OrderStatus Order.Status",
           "returnType": "SampleApi.OrderStatus",
           "docs": {
-            "summary": "Gets or sets the current lifecycle status of the order.",
-            "remarks": "Defaults to . State transitions should be performed through the order processing pipeline, which validates that each transition is legal and raises the corresponding event via ."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the current lifecycle status of the order."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Defaults to"
+              },
+              {
+                "kind": "cref",
+                "value": "F:SampleApi.OrderStatus.Pending"
+              },
+              {
+                "kind": "text",
+                "text": ". State transitions should be performed through the order processing pipeline, which validates that each transition is legal and raises the corresponding event via"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.IOrderNotificationService"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -1505,8 +3854,42 @@
           "signature": "decimal Order.TotalPrice",
           "returnType": "decimal",
           "docs": {
-            "summary": "Gets the total price of the order, computed as the sum of each item's multiplied by its .",
-            "remarks": "This is a calculated property and is not stored. It reflects the current state of the  collection."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the total price of the order, computed as the sum of each item's"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.OrderItem.Quantity"
+              },
+              {
+                "kind": "text",
+                "text": "multiplied by its"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.OrderItem.UnitPrice"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This is a calculated property and is not stored. It reflects the current state of the"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.Order.Items"
+              },
+              {
+                "kind": "text",
+                "text": "collection."
+              }
+            ]
           }
         }
       ]
@@ -1519,11 +3902,69 @@
       "accessibility": "public",
       "baseType": "System.EventArgs",
       "docs": {
-        "summary": "Provides data for order-related events, carrying the that triggered the event along with a UTC timestamp indicating when the event occurred.",
-        "remarks": "Initializes a new instance of the  class.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Provides data for order-related events, carrying the"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.OrderEventArgs.Order"
+          },
+          {
+            "kind": "text",
+            "text": "that triggered the event along with a UTC timestamp indicating when the event occurred."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Initializes a new instance of the"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.OrderEventArgs"
+          },
+          {
+            "kind": "text",
+            "text": "class."
+          }
+        ],
         "parameters": {
-          "order": "The order associated with the event."
+          "order": [
+            {
+              "kind": "text",
+              "text": "The order associated with the event."
+            }
+          ]
         },
+        "exceptions": [
+          {
+            "type": "T:System.ArgumentNullException",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Thrown when"
+              },
+              {
+                "kind": "paramref",
+                "value": "order"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.IOrderNotificationService",
           "P:SampleApi.OrderEventArgs.Order"
@@ -1543,11 +3984,69 @@
             }
           ],
           "docs": {
-            "summary": "Provides data for order-related events, carrying the that triggered the event along with a UTC timestamp indicating when the event occurred.",
-            "remarks": "Initializes a new instance of the  class.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Provides data for order-related events, carrying the"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.OrderEventArgs.Order"
+              },
+              {
+                "kind": "text",
+                "text": "that triggered the event along with a UTC timestamp indicating when the event occurred."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Initializes a new instance of the"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.OrderEventArgs"
+              },
+              {
+                "kind": "text",
+                "text": "class."
+              }
+            ],
             "parameters": {
-              "order": "The order associated with the event."
+              "order": [
+                {
+                  "kind": "text",
+                  "text": "The order associated with the event."
+                }
+              ]
             },
+            "exceptions": [
+              {
+                "type": "T:System.ArgumentNullException",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Thrown when"
+                  },
+                  {
+                    "kind": "paramref",
+                    "value": "order"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "is"
+                  },
+                  {
+                    "kind": "langword",
+                    "value": "null"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ]
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.IOrderNotificationService",
               "P:SampleApi.OrderEventArgs.Order"
@@ -1561,7 +4060,12 @@
           "signature": "Order OrderEventArgs.Order",
           "returnType": "SampleApi.Order",
           "docs": {
-            "summary": "Gets the order associated with this event."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the order associated with this event."
+              }
+            ]
           }
         },
         {
@@ -1571,7 +4075,12 @@
           "signature": "DateTimeOffset OrderEventArgs.Timestamp",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets the UTC timestamp indicating when the event was raised."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the UTC timestamp indicating when the event was raised."
+              }
+            ]
           }
         }
       ]
@@ -1583,8 +4092,34 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "Represents a single line item within an , capturing the product, quantity, and price at the time of purchase.",
-        "remarks": "Prices are captured at order time and do not change if the product's catalogue price is updated later. The line total can be calculated as Quantity * UnitPrice.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents a single line item within an"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Order"
+          },
+          {
+            "kind": "text",
+            "text": ", capturing the product, quantity, and price at the time of purchase."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Prices are captured at order time and do not change if the product's catalogue price is updated later. The line total can be calculated as"
+          },
+          {
+            "kind": "code",
+            "text": "Quantity * UnitPrice"
+          },
+          {
+            "kind": "text",
+            "text": "."
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.Order"
         ]
@@ -1597,8 +4132,18 @@
           "signature": "string OrderItem.ProductName",
           "returnType": "string",
           "docs": {
-            "summary": "Gets or sets the display name of the product being ordered.",
-            "remarks": "This is a snapshot of the product name at order time. It is stored denormalized so that the order remains readable even if the product is renamed or removed from the catalogue."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the display name of the product being ordered."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "This is a snapshot of the product name at order time. It is stored denormalized so that the order remains readable even if the product is renamed or removed from the catalogue."
+              }
+            ]
           }
         },
         {
@@ -1608,8 +4153,18 @@
           "signature": "int OrderItem.Quantity",
           "returnType": "int",
           "docs": {
-            "summary": "Gets or sets the number of units ordered.",
-            "remarks": "Must be a positive integer. Defaults to 1."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the number of units ordered."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Must be a positive integer. Defaults to 1."
+              }
+            ]
           }
         },
         {
@@ -1619,8 +4174,26 @@
           "signature": "decimal OrderItem.UnitPrice",
           "returnType": "decimal",
           "docs": {
-            "summary": "Gets or sets the unit price of the product at the time the order was placed.",
-            "remarks": "Stored as a  to avoid floating-point rounding errors in financial calculations."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the unit price of the product at the time the order was placed."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Stored as a"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Decimal"
+              },
+              {
+                "kind": "text",
+                "text": "to avoid floating-point rounding errors in financial calculations."
+              }
+            ]
           }
         }
       ]
@@ -1633,8 +4206,74 @@
       "accessibility": "public",
       "isSealed": true,
       "docs": {
-        "summary": "Defines the lifecycle states an  progresses through from initial placement to final fulfilment or cancellation.",
-        "remarks": "The legal transitions form a linear pipeline with an escape hatch: →  →  → . An order may be moved to at any point before .",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Defines the lifecycle states an"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Order"
+          },
+          {
+            "kind": "text",
+            "text": "progresses through from initial placement to final fulfilment or cancellation."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "The legal transitions form a linear pipeline with an escape hatch:"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Pending"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Confirmed"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Shipped"
+          },
+          {
+            "kind": "text",
+            "text": "→"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Delivered"
+          },
+          {
+            "kind": "text",
+            "text": ". An order may be moved to"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Cancelled"
+          },
+          {
+            "kind": "text",
+            "text": "at any point before"
+          },
+          {
+            "kind": "cref",
+            "value": "F:SampleApi.OrderStatus.Shipped"
+          },
+          {
+            "kind": "text",
+            "text": "."
+          }
+        ],
         "seeAlso": [
           "P:SampleApi.Order.Status",
           "T:SampleApi.IOrderNotificationService"
@@ -1685,14 +4324,116 @@
         "System.IEquatable<SampleApi.PagedResult<T>>"
       ],
       "docs": {
-        "summary": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set.",
-        "remarks": "is returned by and other paged query methods. The , , and  properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When  is zero,  returns zero to avoid division-by-zero errors.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.PagedResult`1"
+          },
+          {
+            "kind": "text",
+            "text": "is returned by"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.IRepository`1.GetPagedAsync(System.Int32,System.Int32,System.Threading.CancellationToken)"
+          },
+          {
+            "kind": "text",
+            "text": "and other paged query methods. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.PagedResult`1.TotalPages"
+          },
+          {
+            "kind": "text",
+            "text": ","
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.PagedResult`1.HasNextPage"
+          },
+          {
+            "kind": "text",
+            "text": ", and"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.PagedResult`1.HasPreviousPage"
+          },
+          {
+            "kind": "text",
+            "text": "properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.PagedResult`1.PageSize"
+          },
+          {
+            "kind": "text",
+            "text": "is zero,"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.PagedResult`1.TotalPages"
+          },
+          {
+            "kind": "text",
+            "text": "returns zero to avoid division-by-zero errors."
+          }
+        ],
         "parameters": {
-          "Items": "The read-only list of items on the current page.",
-          "Page": "The one-based page number represented by this result.",
-          "PageSize": "The maximum number of items per page.",
-          "TotalCount": "The total number of items across all pages in the underlying query."
+          "Items": [
+            {
+              "kind": "text",
+              "text": "The read-only list of items on the current page."
+            }
+          ],
+          "Page": [
+            {
+              "kind": "text",
+              "text": "The one-based page number represented by this result."
+            }
+          ],
+          "PageSize": [
+            {
+              "kind": "text",
+              "text": "The maximum number of items per page."
+            }
+          ],
+          "TotalCount": [
+            {
+              "kind": "text",
+              "text": "The total number of items across all pages in the underlying query."
+            }
+          ]
         },
+        "typeParameters": {
+          "T": [
+            {
+              "kind": "text",
+              "text": "The type of items in the result set."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var page = await repo.GetPagedAsync(page: 2, pageSize: 10);\n    \n     Console.WriteLine($\"Page {page.Page} of {page.TotalPages}\");\n     if (page.HasPreviousPage) Console.WriteLine(\"  ← Previous\");\n     if (page.HasNextPage) Console.WriteLine(\"  Next →\");",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Building pagination links from a paged result:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.IRepository`1"
         ]
@@ -1723,14 +4464,116 @@
             }
           ],
           "docs": {
-            "summary": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set.",
-            "remarks": "is returned by and other paged query methods. The , , and  properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When  is zero,  returns zero to avoid division-by-zero errors.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Represents a single page of results from a paginated query, including the items on the current page and metadata for navigating the full result set."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.PagedResult`1"
+              },
+              {
+                "kind": "text",
+                "text": "is returned by"
+              },
+              {
+                "kind": "cref",
+                "value": "M:SampleApi.IRepository`1.GetPagedAsync(System.Int32,System.Int32,System.Threading.CancellationToken)"
+              },
+              {
+                "kind": "text",
+                "text": "and other paged query methods. The"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.PagedResult`1.TotalPages"
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.PagedResult`1.HasNextPage"
+              },
+              {
+                "kind": "text",
+                "text": ", and"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.PagedResult`1.HasPreviousPage"
+              },
+              {
+                "kind": "text",
+                "text": "properties are computed automatically to simplify building pagination controls in UIs and hypermedia links in API responses. When"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.PagedResult`1.PageSize"
+              },
+              {
+                "kind": "text",
+                "text": "is zero,"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.PagedResult`1.TotalPages"
+              },
+              {
+                "kind": "text",
+                "text": "returns zero to avoid division-by-zero errors."
+              }
+            ],
             "parameters": {
-              "Items": "The read-only list of items on the current page.",
-              "Page": "The one-based page number represented by this result.",
-              "PageSize": "The maximum number of items per page.",
-              "TotalCount": "The total number of items across all pages in the underlying query."
+              "Items": [
+                {
+                  "kind": "text",
+                  "text": "The read-only list of items on the current page."
+                }
+              ],
+              "Page": [
+                {
+                  "kind": "text",
+                  "text": "The one-based page number represented by this result."
+                }
+              ],
+              "PageSize": [
+                {
+                  "kind": "text",
+                  "text": "The maximum number of items per page."
+                }
+              ],
+              "TotalCount": [
+                {
+                  "kind": "text",
+                  "text": "The total number of items across all pages in the underlying query."
+                }
+              ]
             },
+            "typeParameters": {
+              "T": [
+                {
+                  "kind": "text",
+                  "text": "The type of items in the result set."
+                }
+              ]
+            },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var page = await repo.GetPagedAsync(page: 2, pageSize: 10);\n    \n     Console.WriteLine($\"Page {page.Page} of {page.TotalPages}\");\n     if (page.HasPreviousPage) Console.WriteLine(\"  ← Previous\");\n     if (page.HasNextPage) Console.WriteLine(\"  Next →\");",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Building pagination links from a paged result:"
+                  }
+                ]
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.IRepository`1"
             ]
@@ -1743,7 +4586,12 @@
           "signature": "bool PagedResult<T>.HasNextPage",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets a value indicating whether there is a subsequent page."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets a value indicating whether there is a subsequent page."
+              }
+            ]
           }
         },
         {
@@ -1753,7 +4601,12 @@
           "signature": "bool PagedResult<T>.HasPreviousPage",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets a value indicating whether there is a preceding page."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets a value indicating whether there is a preceding page."
+              }
+            ]
           }
         },
         {
@@ -1763,7 +4616,12 @@
           "signature": "IReadOnlyList<T> PagedResult<T>.Items",
           "returnType": "System.Collections.Generic.IReadOnlyList<T>",
           "docs": {
-            "summary": "The read-only list of items on the current page."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The read-only list of items on the current page."
+              }
+            ]
           }
         },
         {
@@ -1773,7 +4631,12 @@
           "signature": "int PagedResult<T>.Page",
           "returnType": "int",
           "docs": {
-            "summary": "The one-based page number represented by this result."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The one-based page number represented by this result."
+              }
+            ]
           }
         },
         {
@@ -1783,7 +4646,12 @@
           "signature": "int PagedResult<T>.PageSize",
           "returnType": "int",
           "docs": {
-            "summary": "The maximum number of items per page."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The maximum number of items per page."
+              }
+            ]
           }
         },
         {
@@ -1793,7 +4661,12 @@
           "signature": "int PagedResult<T>.TotalCount",
           "returnType": "int",
           "docs": {
-            "summary": "The total number of items across all pages in the underlying query."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The total number of items across all pages in the underlying query."
+              }
+            ]
           }
         },
         {
@@ -1803,7 +4676,12 @@
           "signature": "int PagedResult<T>.TotalPages",
           "returnType": "int",
           "docs": {
-            "summary": "Gets the total number of pages available."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the total number of pages available."
+              }
+            ]
           }
         }
       ]
@@ -1815,8 +4693,142 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "A machine-readable error response body following the RFC 9457 (Problem Details for HTTP APIs) specification, providing a standardized structure that clients can parse without knowledge of the specific API.",
-        "remarks": "Every field in  is optional. At minimum, set and . Use  to point to a documentation page describing the error category. The dictionary allows attaching arbitrary additional context—common patterns include: A \"traceId\" for correlating with server logs.A \"errors\" array of  for 400 responses.A \"retryAfter\" value for 429 / 503 responses.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "A machine-readable error response body following the RFC 9457 (Problem Details for HTTP APIs) specification, providing a standardized structure that clients can parse without knowledge of the specific API."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Every field in"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ProblemDetails"
+          },
+          {
+            "kind": "text",
+            "text": "is optional. At minimum, set"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ProblemDetails.Status"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ProblemDetails.Title"
+          },
+          {
+            "kind": "text",
+            "text": ". Use"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ProblemDetails.Type"
+          },
+          {
+            "kind": "text",
+            "text": "to point to a documentation page describing the error category. The"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.ProblemDetails.Extensions"
+          },
+          {
+            "kind": "text",
+            "text": "dictionary allows attaching arbitrary additional context—common patterns include:"
+          },
+          {
+            "kind": "list",
+            "style": "bullet",
+            "items": [
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "A"
+                  },
+                  {
+                    "kind": "code",
+                    "text": "\"traceId\""
+                  },
+                  {
+                    "kind": "text",
+                    "text": "for correlating with server logs."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "A"
+                  },
+                  {
+                    "kind": "code",
+                    "text": "\"errors\""
+                  },
+                  {
+                    "kind": "text",
+                    "text": "array of"
+                  },
+                  {
+                    "kind": "cref",
+                    "value": "T:SampleApi.ValidationError"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "for 400 responses."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "A"
+                  },
+                  {
+                    "kind": "code",
+                    "text": "\"retryAfter\""
+                  },
+                  {
+                    "kind": "text",
+                    "text": "value for 429 / 503 responses."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var problem = new ProblemDetails\n    {\n        Type = \"https://api.example.com/errors/not-found\",\n        Title = \"Customer Not Found\",\n        Status = 404,\n        Detail = $\"No customer with ID '{id}' exists.\",\n        Instance = $\"/api/v1/customers/{id}\"\n    };\n    problem.Extensions[\"traceId\"] = Activity.Current?.Id;",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Building a 404 problem details response:"
+              }
+            ]
+          },
+          {
+            "language": "csharp",
+            "code": "var problem = new ProblemDetails\n    {\n        Type = \"https://api.example.com/errors/validation\",\n        Title = \"Validation Failed\",\n        Status = 400,\n        Detail = \"One or more fields failed validation.\"\n    };\n    problem.Extensions[\"errors\"] = new[]\n    {\n        new ValidationError(\"email\", \"Invalid email format.\", \"INVALID_FORMAT\")\n    };",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Building a 400 validation problem details:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ValidationError",
           "T:SampleApi.Result`1"
@@ -1831,7 +4843,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets a human-readable explanation specific to this occurrence of the problem."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a human-readable explanation specific to this occurrence of the problem."
+              }
+            ]
           }
         },
         {
@@ -1841,8 +4858,18 @@
           "signature": "IDictionary<string, object?> ProblemDetails.Extensions",
           "returnType": "System.Collections.Generic.IDictionary<string, object?>",
           "docs": {
-            "summary": "Gets the extension members for this problem details instance.",
-            "remarks": "Use this dictionary to include additional context such as trace identifiers, validation errors, or retry-after hints."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the extension members for this problem details instance."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Use this dictionary to include additional context such as trace identifiers, validation errors, or retry-after hints."
+              }
+            ]
           }
         },
         {
@@ -1853,7 +4880,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets a URI reference that identifies the specific occurrence of the problem."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a URI reference that identifies the specific occurrence of the problem."
+              }
+            ]
           }
         },
         {
@@ -1864,7 +4896,12 @@
           "returnType": "int?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the HTTP status code generated by the origin server for this occurrence."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the HTTP status code generated by the origin server for this occurrence."
+              }
+            ]
           }
         },
         {
@@ -1875,7 +4912,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets a short, human-readable summary of the problem type."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a short, human-readable summary of the problem type."
+              }
+            ]
           }
         },
         {
@@ -1886,7 +4928,18 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets a URI reference that identifies the problem type."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a URI reference that identifies the problem type."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "A URI such as \"https://example.com/errors/not-found\"."
+              }
+            ]
           }
         }
       ]
@@ -1898,8 +4951,130 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "A data transfer object for product information, annotated with System.Text.Json serialization attributes to control wire format.",
-        "remarks": "demonstrates the most common JSON customization patterns supported by System.Text.Json: to map CLR property names to snake_case or camelCase JSON keys. to hide internal-only properties from serialized output. to enforce that a property must be present during deserialization. Properties marked with  will cause to throw a if the corresponding key is missing from the input JSON.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "A data transfer object for product information, annotated with"
+          },
+          {
+            "kind": "code",
+            "text": "System.Text.Json"
+          },
+          {
+            "kind": "text",
+            "text": "serialization attributes to control wire format."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ProductDto"
+          },
+          {
+            "kind": "text",
+            "text": "demonstrates the most common JSON customization patterns supported by"
+          },
+          {
+            "kind": "code",
+            "text": "System.Text.Json"
+          },
+          {
+            "kind": "text",
+            "text": ":"
+          },
+          {
+            "kind": "list",
+            "style": "bullet",
+            "items": [
+              {
+                "description": [
+                  {
+                    "kind": "cref",
+                    "value": "T:System.Text.Json.Serialization.JsonPropertyNameAttribute"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "to map CLR property names to snake_case or camelCase JSON keys."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "cref",
+                    "value": "T:System.Text.Json.Serialization.JsonIgnoreAttribute"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "to hide internal-only properties from serialized output."
+                  }
+                ]
+              },
+              {
+                "description": [
+                  {
+                    "kind": "cref",
+                    "value": "T:System.Text.Json.Serialization.JsonRequiredAttribute"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "to enforce that a property must be present during deserialization."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "text",
+            "text": "Properties marked with"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Text.Json.Serialization.JsonRequiredAttribute"
+          },
+          {
+            "kind": "text",
+            "text": "will cause"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Text.Json.JsonSerializer"
+          },
+          {
+            "kind": "text",
+            "text": "to throw a"
+          },
+          {
+            "kind": "cref",
+            "value": "T:System.Text.Json.JsonException"
+          },
+          {
+            "kind": "text",
+            "text": "if the corresponding key is missing from the input JSON."
+          }
+        ],
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var product = new ProductDto\n     {\n         Id = Guid.NewGuid(),\n         Name = \"Wireless Mouse\",\n         Description = \"Ergonomic wireless mouse with USB-C receiver\",\n         Price = 29.99m,\n         Sku = \"WM-1001\",\n         Category = \"Peripherals\",\n         Tags = [\"wireless\", \"ergonomic\", \"usb-c\"],\n         IsAvailable = true\n     };\n    \n     string json = JsonSerializer.Serialize(product);\n     // {\"id\":\"...\",\"name\":\"Wireless Mouse\",\"description\":\"...\",\"price\":29.99,...}",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Serializing a product to JSON:"
+              }
+            ]
+          },
+          {
+            "language": "csharp",
+            "code": "string json = \"\"\"\n         {\n             \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n             \"name\": \"Keyboard\",\n             \"price\": 59.99\n         }\n         \"\"\";\n     var product = JsonSerializer.Deserialize<ProductDto>(json);",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Deserializing from JSON (required properties enforced):"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ApiResponse`1"
         ]
@@ -1912,7 +5087,20 @@
           "signature": "DateTimeOffset ProductDto.AddedAt",
           "returnType": "System.DateTimeOffset",
           "docs": {
-            "summary": "Gets or sets the UTC date and time when the product was first added to the catalogue. Maps to the JSON key \"added_at\"."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when the product was first added to the catalogue. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"added_at\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -1923,7 +5111,20 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the product category used for catalogue organization. Maps to the JSON key \"category\"."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the product category used for catalogue organization. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"category\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -1934,8 +5135,34 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the long-form product description, supporting plain text only. Maps to the JSON key \"description\".",
-            "remarks": "When , the product has no description and UIs should display a placeholder or omit the section entirely."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the long-form product description, supporting plain text only. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"description\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "When"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": ", the product has no description and UIs should display a placeholder or omit the section entirely."
+              }
+            ]
           }
         },
         {
@@ -1950,7 +5177,20 @@
             }
           ],
           "docs": {
-            "summary": "Gets or sets the unique product identifier. This is required during deserialization and maps to the JSON key \"id\"."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the unique product identifier. This is required during deserialization and maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"id\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -1961,7 +5201,20 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "An internal tracking code used by the warehouse management system. This property is excluded from JSON serialization via and is never exposed through the API."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "An internal tracking code used by the warehouse management system. This property is excluded from JSON serialization via"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Text.Json.Serialization.JsonIgnoreAttribute"
+              },
+              {
+                "kind": "text",
+                "text": "and is never exposed through the API."
+              }
+            ]
           }
         },
         {
@@ -1971,8 +5224,34 @@
           "signature": "bool ProductDto.IsAvailable",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets or sets whether the product is currently available for purchase. Maps to the JSON key \"available\".",
-            "remarks": "When , the product should not appear in storefront listings but may still be visible in the admin catalogue."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets whether the product is currently available for purchase. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"available\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "When"
+              },
+              {
+                "kind": "langword",
+                "value": "false"
+              },
+              {
+                "kind": "text",
+                "text": ", the product should not appear in storefront listings but may still be visible in the admin catalogue."
+              }
+            ]
           }
         },
         {
@@ -1987,7 +5266,20 @@
             }
           ],
           "docs": {
-            "summary": "Gets or sets the human-readable product name displayed in catalogues and search results. Maps to the JSON key \"name\"."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the human-readable product name displayed in catalogues and search results. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"name\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
           }
         },
         {
@@ -1997,8 +5289,34 @@
           "signature": "decimal ProductDto.Price",
           "returnType": "decimal",
           "docs": {
-            "summary": "Gets or sets the unit price in the store's base currency. Maps to the JSON key \"price\".",
-            "remarks": "Prices are represented as  to preserve precision in financial calculations. Negative values are not permitted."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the unit price in the store's base currency. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"price\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Prices are represented as"
+              },
+              {
+                "kind": "cref",
+                "value": "T:System.Decimal"
+              },
+              {
+                "kind": "text",
+                "text": "to preserve precision in financial calculations. Negative values are not permitted."
+              }
+            ]
           }
         },
         {
@@ -2009,8 +5327,34 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the stock keeping unit code for inventory tracking. Maps to the JSON key \"sku\".",
-            "remarks": "SKU codes follow the format XX-#### where XX is a two-letter category prefix and #### is a numeric sequence."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the stock keeping unit code for inventory tracking. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"sku\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "SKU codes follow the format"
+              },
+              {
+                "kind": "code",
+                "text": "XX-####"
+              },
+              {
+                "kind": "text",
+                "text": "where XX is a two-letter category prefix and #### is a numeric sequence."
+              }
+            ]
           }
         },
         {
@@ -2020,8 +5364,26 @@
           "signature": "List<string> ProductDto.Tags",
           "returnType": "System.Collections.Generic.List<string>",
           "docs": {
-            "summary": "Gets or sets the list of searchable tags associated with this product. Maps to the JSON key \"tags\".",
-            "remarks": "Tags enable faceted search and filtering. They should be lowercase, hyphen-separated strings (e.g., \"usb-c\", \"wireless\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the list of searchable tags associated with this product. Maps to the JSON key"
+              },
+              {
+                "kind": "code",
+                "text": "\"tags\""
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Tags enable faceted search and filtering. They should be lowercase, hyphen-separated strings (e.g., \"usb-c\", \"wireless\")."
+              }
+            ]
           }
         }
       ]
@@ -2033,8 +5395,26 @@
       "kind": "class",
       "accessibility": "public",
       "docs": {
-        "summary": "Configuration options for API rate limiting.",
-        "remarks": "Bind an instance of  from the application's configuration section (e.g., \"RateLimiting\") to control how many requests a client may make within a sliding time window."
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Configuration options for API rate limiting."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Bind an instance of"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.RateLimitOptions"
+          },
+          {
+            "kind": "text",
+            "text": "from the application's configuration section (e.g., \"RateLimiting\") to control how many requests a client may make within a sliding time window."
+          }
+        ]
       },
       "members": [
         {
@@ -2044,7 +5424,18 @@
           "signature": "int RateLimitOptions.MaxRequests",
           "returnType": "int",
           "docs": {
-            "summary": "Gets or sets the maximum number of requests allowed within the time window."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the maximum number of requests allowed within the time window."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "Defaults to 100 requests."
+              }
+            ]
           }
         },
         {
@@ -2054,7 +5445,18 @@
           "signature": "int RateLimitOptions.RetryAfterSeconds",
           "returnType": "int",
           "docs": {
-            "summary": "Gets or sets the number of seconds a client should wait before retrying after being rate-limited."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the number of seconds a client should wait before retrying after being rate-limited."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "Defaults to 30 seconds."
+              }
+            ]
           }
         },
         {
@@ -2064,7 +5466,18 @@
           "signature": "int RateLimitOptions.WindowSeconds",
           "returnType": "int",
           "docs": {
-            "summary": "Gets or sets the duration of the sliding window in seconds."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the duration of the sliding window in seconds."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "Defaults to 60 seconds."
+              }
+            ]
           }
         }
       ]
@@ -2082,8 +5495,132 @@
         }
       ],
       "docs": {
-        "summary": "Encapsulates the outcome of a domain operation as either a success carrying a value of type , or a failure carrying an error message.",
-        "remarks": "implements the discriminated-result pattern: callers inspect  (or ) before accessing  or . Accessing on a failed result returns  for . Prefer the static factory methods  and  over direct construction to ensure the success/error invariants are satisfied. This type can be used as a method return value in service layers to avoid throwing exceptions for expected failure conditions.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Encapsulates the outcome of a domain operation as either a success carrying a value of type"
+          },
+          {
+            "kind": "typeparamref",
+            "value": "T"
+          },
+          {
+            "kind": "text",
+            "text": ", or a failure carrying an error message."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.Result`1"
+          },
+          {
+            "kind": "text",
+            "text": "implements the discriminated-result pattern: callers inspect"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Result`1.IsSuccess"
+          },
+          {
+            "kind": "text",
+            "text": "(or"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Result`1.IsFailure"
+          },
+          {
+            "kind": "text",
+            "text": ") before accessing"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Result`1.Value"
+          },
+          {
+            "kind": "text",
+            "text": "or"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Result`1.Error"
+          },
+          {
+            "kind": "text",
+            "text": ". Accessing"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.Result`1.Value"
+          },
+          {
+            "kind": "text",
+            "text": "on a failed result returns"
+          },
+          {
+            "kind": "langword",
+            "value": "default"
+          },
+          {
+            "kind": "text",
+            "text": "for"
+          },
+          {
+            "kind": "typeparamref",
+            "value": "T"
+          },
+          {
+            "kind": "text",
+            "text": ". Prefer the static factory methods"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.Result`1.Ok(`0)"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "M:SampleApi.Result`1.Fail(System.String)"
+          },
+          {
+            "kind": "text",
+            "text": "over direct construction to ensure the success/error invariants are satisfied. This type can be used as a method return value in service layers to avoid throwing exceptions for expected failure conditions."
+          }
+        ],
+        "typeParameters": {
+          "T": [
+            {
+              "kind": "text",
+              "text": "The type of the value returned on success."
+            }
+          ]
+        },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "Result<Customer> result = await customerService.TryFindAsync(id);\n    \n     if (result.IsSuccess)\n     {\n         Console.WriteLine($\"Found: {result.Value!.FullName}\");\n     }\n     else\n     {\n         Console.WriteLine($\"Error: {result.Error}\");\n     }",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Using Result to handle success and failure paths:"
+              }
+            ]
+          },
+          {
+            "language": "csharp",
+            "code": "public Result<Customer> Validate(Customer customer)\n     {\n         if (string.IsNullOrWhiteSpace(customer.FullName))\n             return Result<Customer>.Fail(\"Full name is required.\");\n    \n         return Result<Customer>.Ok(customer);\n     }",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Returning a Result from a service method:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ValidationError",
           "T:SampleApi.ProblemDetails"
@@ -2104,10 +5641,33 @@
             }
           ],
           "docs": {
-            "summary": "Creates a failed result with the specified error message.",
-            "returns": "A  representing a failed outcome.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates a failed result with the specified error message."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Result`1"
+              },
+              {
+                "kind": "text",
+                "text": "representing a failed outcome."
+              }
+            ],
             "parameters": {
-              "error": "A message describing the failure."
+              "error": [
+                {
+                  "kind": "text",
+                  "text": "A message describing the failure."
+                }
+              ]
             }
           }
         },
@@ -2125,10 +5685,33 @@
             }
           ],
           "docs": {
-            "summary": "Creates a successful result containing the specified value.",
-            "returns": "A  representing a successful outcome.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Creates a successful result containing the specified value."
+              }
+            ],
+            "returns": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.Result`1"
+              },
+              {
+                "kind": "text",
+                "text": "representing a successful outcome."
+              }
+            ],
             "parameters": {
-              "value": "The success value."
+              "value": [
+                {
+                  "kind": "text",
+                  "text": "The success value."
+                }
+              ]
             }
           }
         },
@@ -2140,7 +5723,26 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets the error message describing why the operation failed."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the error message describing why the operation failed."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "The error message, or"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "when the operation succeeded."
+              }
+            ]
           }
         },
         {
@@ -2150,7 +5752,12 @@
           "signature": "bool Result<T>.IsFailure",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets a value indicating whether the operation failed."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets a value indicating whether the operation failed."
+              }
+            ]
           }
         },
         {
@@ -2160,7 +5767,12 @@
           "signature": "bool Result<T>.IsSuccess",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets a value indicating whether the operation succeeded."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets a value indicating whether the operation succeeded."
+              }
+            ]
           }
         },
         {
@@ -2171,7 +5783,26 @@
           "returnType": "T?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets the value produced by a successful operation."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets the value produced by a successful operation."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "The result value, or the default of"
+              },
+              {
+                "kind": "typeparamref",
+                "value": "T"
+              },
+              {
+                "kind": "text",
+                "text": "when the operation failed."
+              }
+            ]
           }
         }
       ]
@@ -2185,8 +5816,50 @@
       "isAbstract": true,
       "baseType": "SampleApi.AuditableEntity",
       "docs": {
-        "summary": "Base class for entities that support soft deletion in addition to audit tracking.",
-        "remarks": "Entities derived from  are never physically removed from the data store. Instead, the  flag is set to and  records the time of deletion. Query logic should filter out soft-deleted entities by default.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Base class for entities that support soft deletion in addition to audit tracking."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Entities derived from"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.SoftDeletableEntity"
+          },
+          {
+            "kind": "text",
+            "text": "are never physically removed from the data store. Instead, the"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.SoftDeletableEntity.IsDeleted"
+          },
+          {
+            "kind": "text",
+            "text": "flag is set to"
+          },
+          {
+            "kind": "langword",
+            "value": "true"
+          },
+          {
+            "kind": "text",
+            "text": "and"
+          },
+          {
+            "kind": "cref",
+            "value": "P:SampleApi.SoftDeletableEntity.DeletedAt"
+          },
+          {
+            "kind": "text",
+            "text": "records the time of deletion. Query logic should filter out soft-deleted entities by default."
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.AuditableEntity"
         ]
@@ -2199,7 +5872,12 @@
           "signature": "void SoftDeletableEntity.Restore()",
           "returnType": "void",
           "docs": {
-            "summary": "Restores a previously soft-deleted entity, clearing deletion metadata."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Restores a previously soft-deleted entity, clearing deletion metadata."
+              }
+            ]
           }
         },
         {
@@ -2217,9 +5895,35 @@
             }
           ],
           "docs": {
-            "summary": "Marks the entity as deleted by setting  to and recording the current UTC time and the identity of the user performing the deletion.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Marks the entity as deleted by setting"
+              },
+              {
+                "kind": "cref",
+                "value": "P:SampleApi.SoftDeletableEntity.IsDeleted"
+              },
+              {
+                "kind": "text",
+                "text": "to"
+              },
+              {
+                "kind": "langword",
+                "value": "true"
+              },
+              {
+                "kind": "text",
+                "text": "and recording the current UTC time and the identity of the user performing the deletion."
+              }
+            ],
             "parameters": {
-              "deletedBy": "The identifier of the user performing the deletion."
+              "deletedBy": [
+                {
+                  "kind": "text",
+                  "text": "The identifier of the user performing the deletion."
+                }
+              ]
             }
           }
         },
@@ -2231,7 +5935,26 @@
           "returnType": "System.DateTimeOffset?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the UTC date and time when the entity was soft-deleted."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the UTC date and time when the entity was soft-deleted."
+              }
+            ],
+            "value": [
+              {
+                "kind": "text",
+                "text": "The deletion timestamp, or"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": "if the entity has not been deleted."
+              }
+            ]
           }
         },
         {
@@ -2242,7 +5965,12 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "Gets or sets the identifier of the user who deleted the entity."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets the identifier of the user who deleted the entity."
+              }
+            ]
           }
         },
         {
@@ -2252,7 +5980,12 @@
           "signature": "bool SoftDeletableEntity.IsDeleted",
           "returnType": "bool",
           "docs": {
-            "summary": "Gets or sets a value indicating whether the entity has been soft-deleted."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Gets or sets a value indicating whether the entity has been soft-deleted."
+              }
+            ]
           }
         }
       ]
@@ -2267,13 +6000,114 @@
         "System.IEquatable<SampleApi.ValidationError>"
       ],
       "docs": {
-        "summary": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code.",
-        "remarks": "Validation errors are typically collected during request processing and surfaced to the client as an array within a response. Use consistent error codes across the API to allow clients to build locale-aware error displays.",
+        "summary": [
+          {
+            "kind": "text",
+            "text": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code."
+          }
+        ],
+        "remarks": [
+          {
+            "kind": "text",
+            "text": "Validation errors are typically collected during request processing and surfaced to the client as an array within a"
+          },
+          {
+            "kind": "cref",
+            "value": "T:SampleApi.ProblemDetails"
+          },
+          {
+            "kind": "text",
+            "text": "response. Use consistent error codes across the API to allow clients to build locale-aware error displays."
+          }
+        ],
         "parameters": {
-          "Code": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context.",
-          "Field": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\").",
-          "Message": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+          "Code": [
+            {
+              "kind": "text",
+              "text": "An application-specific error code for programmatic handling, such as"
+            },
+            {
+              "kind": "code",
+              "text": "\"INVALID_FORMAT\""
+            },
+            {
+              "kind": "text",
+              "text": "or"
+            },
+            {
+              "kind": "code",
+              "text": "\"FIELD_REQUIRED\""
+            },
+            {
+              "kind": "text",
+              "text": ". When"
+            },
+            {
+              "kind": "langword",
+              "value": "null"
+            },
+            {
+              "kind": "text",
+              "text": ", the client should rely on the"
+            },
+            {
+              "kind": "paramref",
+              "value": "Message"
+            },
+            {
+              "kind": "text",
+              "text": "for context."
+            }
+          ],
+          "Field": [
+            {
+              "kind": "text",
+              "text": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"email\""
+            },
+            {
+              "kind": "text",
+              "text": ","
+            },
+            {
+              "kind": "code",
+              "text": "\"fullName\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ],
+          "Message": [
+            {
+              "kind": "text",
+              "text": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g.,"
+            },
+            {
+              "kind": "code",
+              "text": "\"Email address is not in a valid format.\""
+            },
+            {
+              "kind": "text",
+              "text": ")."
+            }
+          ]
         },
+        "examples": [
+          {
+            "language": "csharp",
+            "code": "var errors = new List<ValidationError>\n    {\n        new(\"email\", \"Email address is required.\", \"FIELD_REQUIRED\"),\n        new(\"fullName\", \"Full name must be between 1 and 200 characters.\", \"INVALID_LENGTH\")\n    };",
+            "description": [
+              {
+                "kind": "text",
+                "text": "Creating a list of validation errors:"
+              }
+            ]
+          }
+        ],
         "seeAlso": [
           "T:SampleApi.ProblemDetails",
           "T:SampleApi.Result`1"
@@ -2303,13 +6137,114 @@
             }
           ],
           "docs": {
-            "summary": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code.",
-            "remarks": "Validation errors are typically collected during request processing and surfaced to the client as an array within a response. Use consistent error codes across the API to allow clients to build locale-aware error displays.",
+            "summary": [
+              {
+                "kind": "text",
+                "text": "Describes a single validation error tied to a specific input field, including a human-readable message and an optional machine-readable error code."
+              }
+            ],
+            "remarks": [
+              {
+                "kind": "text",
+                "text": "Validation errors are typically collected during request processing and surfaced to the client as an array within a"
+              },
+              {
+                "kind": "cref",
+                "value": "T:SampleApi.ProblemDetails"
+              },
+              {
+                "kind": "text",
+                "text": "response. Use consistent error codes across the API to allow clients to build locale-aware error displays."
+              }
+            ],
             "parameters": {
-              "Code": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context.",
-              "Field": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\").",
-              "Message": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+              "Code": [
+                {
+                  "kind": "text",
+                  "text": "An application-specific error code for programmatic handling, such as"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"INVALID_FORMAT\""
+                },
+                {
+                  "kind": "text",
+                  "text": "or"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"FIELD_REQUIRED\""
+                },
+                {
+                  "kind": "text",
+                  "text": ". When"
+                },
+                {
+                  "kind": "langword",
+                  "value": "null"
+                },
+                {
+                  "kind": "text",
+                  "text": ", the client should rely on the"
+                },
+                {
+                  "kind": "paramref",
+                  "value": "Message"
+                },
+                {
+                  "kind": "text",
+                  "text": "for context."
+                }
+              ],
+              "Field": [
+                {
+                  "kind": "text",
+                  "text": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"email\""
+                },
+                {
+                  "kind": "text",
+                  "text": ","
+                },
+                {
+                  "kind": "code",
+                  "text": "\"fullName\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ],
+              "Message": [
+                {
+                  "kind": "text",
+                  "text": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g.,"
+                },
+                {
+                  "kind": "code",
+                  "text": "\"Email address is not in a valid format.\""
+                },
+                {
+                  "kind": "text",
+                  "text": ")."
+                }
+              ]
             },
+            "examples": [
+              {
+                "language": "csharp",
+                "code": "var errors = new List<ValidationError>\n    {\n        new(\"email\", \"Email address is required.\", \"FIELD_REQUIRED\"),\n        new(\"fullName\", \"Full name must be between 1 and 200 characters.\", \"INVALID_LENGTH\")\n    };",
+                "description": [
+                  {
+                    "kind": "text",
+                    "text": "Creating a list of validation errors:"
+                  }
+                ]
+              }
+            ],
             "seeAlso": [
               "T:SampleApi.ProblemDetails",
               "T:SampleApi.Result`1"
@@ -2324,7 +6259,44 @@
           "returnType": "string?",
           "isReturnNullable": true,
           "docs": {
-            "summary": "An application-specific error code for programmatic handling, such as \"INVALID_FORMAT\" or \"FIELD_REQUIRED\". When , the client should rely on the  for context."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "An application-specific error code for programmatic handling, such as"
+              },
+              {
+                "kind": "code",
+                "text": "\"INVALID_FORMAT\""
+              },
+              {
+                "kind": "text",
+                "text": "or"
+              },
+              {
+                "kind": "code",
+                "text": "\"FIELD_REQUIRED\""
+              },
+              {
+                "kind": "text",
+                "text": ". When"
+              },
+              {
+                "kind": "langword",
+                "value": "null"
+              },
+              {
+                "kind": "text",
+                "text": ", the client should rely on the"
+              },
+              {
+                "kind": "paramref",
+                "value": "Message"
+              },
+              {
+                "kind": "text",
+                "text": "for context."
+              }
+            ]
           }
         },
         {
@@ -2334,7 +6306,28 @@
           "signature": "string ValidationError.Field",
           "returnType": "string",
           "docs": {
-            "summary": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g., \"email\", \"fullName\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "The name of the input field that failed validation, using the same casing as the JSON property name (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"email\""
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "code",
+                "text": "\"fullName\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         },
         {
@@ -2344,7 +6337,20 @@
           "signature": "string ValidationError.Message",
           "returnType": "string",
           "docs": {
-            "summary": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g., \"Email address is not in a valid format.\")."
+            "summary": [
+              {
+                "kind": "text",
+                "text": "A human-readable, locale-sensitive message describing why the field value is invalid (e.g.,"
+              },
+              {
+                "kind": "code",
+                "text": "\"Email address is not in a valid format.\""
+              },
+              {
+                "kind": "text",
+                "text": ")."
+              }
+            ]
           }
         }
       ]

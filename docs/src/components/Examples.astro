@@ -2,18 +2,13 @@
 /**
  * Examples — renders code examples with language tabs and copy buttons.
  */
-const { examples = [] } = Astro.props;
+import { Code } from '@astrojs/starlight/components';
+import DocContent from './DocContent.astro';
+import { dedent } from '../utils/packages';
+
+const { examples = [], allTypes = [], packageName = '' } = Astro.props;
 
 if (!examples || examples.length === 0) return;
-
-const byLang = examples.reduce((acc: Record<string, any[]>, ex: any) => {
-  const lang = ex.language ?? 'csharp';
-  if (!acc[lang]) acc[lang] = [];
-  acc[lang].push(ex);
-  return acc;
-}, {} as Record<string, any[]>);
-
-const languages = Object.keys(byLang);
 
 const langLabels: Record<string, string> = {
   csharp: 'C#',
@@ -26,139 +21,52 @@ const langLabels: Record<string, string> = {
   xml: 'XML',
   bash: 'Bash',
 };
+
+/* Only show language titles when examples span multiple languages. */
+const languages = new Set(examples.map((ex: any) => ex.language ?? 'csharp'));
+const showTitle = languages.size > 1;
 ---
 
-<div class="ex-container">
-  <div class="ex-tabs" role="tablist">
-    {languages.map((lang, i) => (
-      <button
-        role="tab"
-        class={`ex-tab ${i === 0 ? 'active' : ''}`}
-        data-lang={lang}
-        aria-selected={i === 0 ? 'true' : 'false'}
-      >
-        {langLabels[lang] ?? lang}
-      </button>
-    ))}
-  </div>
-  <div class="ex-panels">
-    {languages.map((lang, i) => (
-      <div
-        class={`ex-panel ${i === 0 ? 'active' : ''}`}
-        data-lang={lang}
-        role="tabpanel"
-      >
-        {byLang[lang].map((ex: any) => (
-          <div class="ex-item">
-            {ex.description && <p class="ex-desc">{ex.description}</p>}
-            {ex.region && <span class="ex-region">#{ex.region}</span>}
-            <div class="ex-code-wrap">
-              <button class="ex-copy" data-code={ex.code} title="Copy code">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                </svg>
-              </button>
-              <pre><code class={`language-${lang}`}>{ex.code}</code></pre>
-            </div>
+<div class="ex-container not-content">
+  {examples.map((ex: any) => {
+    const lang = ex.language ?? 'csharp';
+    return (
+      <div class="ex-item">
+        {ex.description && (
+          <div class="ex-desc">
+            <DocContent content={ex.description} allTypes={allTypes} packageName={packageName} tag="p" />
           </div>
-        ))}
+        )}
+        {ex.region && <span class="ex-region">#{ex.region}</span>}
+        <Code code={dedent(ex.code)} lang={lang} {...(showTitle ? { title: langLabels[lang] ?? lang } : {})} />
       </div>
-    ))}
-  </div>
+    );
+  })}
 </div>
-
-<script>
-  document.querySelectorAll('.ex-container').forEach(container => {
-    const tabs = container.querySelectorAll('.ex-tab');
-    const panels = container.querySelectorAll('.ex-panel');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const lang = (tab as HTMLElement).dataset.lang;
-        tabs.forEach(t => {
-          t.classList.remove('active');
-          t.setAttribute('aria-selected', 'false');
-        });
-        panels.forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        tab.setAttribute('aria-selected', 'true');
-        container.querySelector(`.ex-panel[data-lang="${lang}"]`)?.classList.add('active');
-      });
-    });
-
-    container.querySelectorAll('.ex-copy').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const code = (btn as HTMLElement).dataset.code ?? '';
-        navigator.clipboard.writeText(code);
-        btn.classList.add('copied');
-        setTimeout(() => btn.classList.remove('copied'), 1500);
-      });
-    });
-  });
-</script>
 
 <style>
   .ex-container {
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.5rem;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     margin: 1rem 0;
   }
-  .ex-tabs {
+  .ex-item {
     display: flex;
-    background: var(--sl-color-gray-6);
-    border-bottom: 1px solid var(--sl-color-gray-5);
-    overflow-x: auto;
+    flex-direction: column;
+    gap: 0.35rem;
   }
-  .ex-tab {
-    padding: 0.5rem 1rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--sl-color-gray-2);
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all 0.1s;
-  }
-  .ex-tab:hover { background: var(--sl-color-gray-5); }
-  .ex-tab.active {
-    color: var(--sl-color-accent);
-    border-bottom-color: var(--sl-color-accent);
-    font-weight: 600;
-  }
-  .ex-panel { display: none; padding: 0.5rem; }
-  .ex-panel.active { display: block; }
   .ex-desc {
     font-size: 0.85rem;
     color: var(--sl-color-gray-2);
-    margin: 0.25rem 0;
+    margin: 0;
   }
+  .ex-desc :global(p) { margin: 0; }
   .ex-region {
     font-size: 0.75rem;
     background: var(--sl-color-gray-5);
     padding: 0.1rem 0.4rem;
     border-radius: 0.2rem;
+    align-self: flex-start;
   }
-  .ex-code-wrap { position: relative; }
-  .ex-copy {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: var(--sl-color-gray-5);
-    border: 1px solid var(--sl-color-gray-4);
-    border-radius: 0.25rem;
-    padding: 0.3rem;
-    cursor: pointer;
-    color: var(--sl-color-gray-2);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.1s;
-  }
-  .ex-copy:hover { background: var(--sl-color-gray-4); }
-  .ex-copy.copied { background: var(--sl-color-accent); color: white; }
-  pre { margin: 0; padding: 1rem; overflow-x: auto; }
 </style>

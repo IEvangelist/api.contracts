@@ -1,11 +1,13 @@
 ---
 /**
- * MemberCard — a rich, collapsible card for a single type member.
+ * MemberCard — a flat, open card for a single type member.
  *
- * Shows signature, summary, parameters, return info, remarks, exceptions,
- * examples, and badges with full rich doc content rendering.
+ * No collapsible UI. Shows signature (syntax-highlighted, multi-line),
+ * summary, parameters, return info, remarks, exceptions, examples,
+ * and badges — all visible at a glance.
  */
-import { typeHref, resolveTypeLink, memberKindIcons, parseSeeAlso } from '../utils/packages';
+import { Code } from '@astrojs/starlight/components';
+import { typeHref, resolveTypeLink, parseSeeAlso, formatSignature, shortTypeName } from '../utils/packages';
 import DocContent from './DocContent.astro';
 import Examples from './Examples.astro';
 
@@ -13,15 +15,13 @@ interface Props {
   member: any;
   allTypes?: any[];
   packageName?: string;
-  defaultOpen?: boolean;
 }
 
-const { member, allTypes = [], packageName = '', defaultOpen = true } = Astro.props;
+const { member, allTypes = [], packageName = '' } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const icon = memberKindIcons[member.kind] ?? '•';
-
 const badges: string[] = [];
+if (member.accessibility && member.accessibility !== 'public') badges.push(member.accessibility);
 if (member.isStatic) badges.push('static');
 if (member.isAbstract) badges.push('abstract');
 if (member.isVirtual) badges.push('virtual');
@@ -44,284 +44,381 @@ const returnLink = member.returnType
   : null;
 
 const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
+const returnShort = member.returnType ? shortTypeName(member.returnType) : member.returnType;
+
+/* Format signature for multi-line display. */
+const formattedSig = member.signature ? formatSignature(member.signature) : '';
 ---
 
-<details class="mc" open={defaultOpen}>
-  <summary class="mc-header">
-    <span class="mc-icon">{icon}</span>
-    <code class="mc-name">{displayName}</code>
-    {badges.length > 0 && (
-      <span class="mc-badges">
-        {badges.map(b => <span class="mc-badge">{b}</span>)}
-      </span>
-    )}
-    {member.returnType && (
-      <span class="mc-return-hint">
-        →
+<div class="mc not-content" id={displayName.toLowerCase().replace(/[^a-z0-9]/g, '-')}>
+  {/* ---- Header ---- */}
+  <div class="mc-header">
+    <div class="mc-title-row">
+      <code class="mc-name">{displayName}</code>
+      <a class="sl-anchor-link" href={`#${displayName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
+        <span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span>
+        <span class="sr-only" data-pagefind-ignore="">Section titled {displayName}</span>
+      </a>
+      {badges.length > 0 && (
+        <span class="mc-badges">
+          {badges.map(b => <span class="mc-badge">{b}</span>)}
+        </span>
+      )}
+    </div>
+    {member.returnType && member.returnType !== 'void' && (
+      <span class="mc-return-type">
         {returnLink ? (
-          <a href={returnLink.href} class="type-link">{member.returnType.split('.').pop()}</a>
+          <a href={returnLink.href} class="type-link">{returnShort}</a>
         ) : (
-          <code>{member.returnType.split('.').pop()}</code>
+          <code>{returnShort}</code>
         )}
       </span>
     )}
-  </summary>
-
-  <div class="mc-body">
-    {/* ---- Signature ---- */}
-    {member.signature && (
-      <pre class="mc-sig"><code>{member.signature}</code></pre>
-    )}
-
-    {/* ---- Summary ---- */}
-    {summary && (
-      <DocContent content={summary} allTypes={allTypes} packageName={packageName} tag="p" />
-    )}
-
-    {/* ---- Parameters ---- */}
-    {hasParams && (
-      <div class="mc-params">
-        <h5>Parameters</h5>
-        <dl>
-          {params.map((p: any) => {
-            const pLink = resolveTypeLink(p.type, allTypes, base, packageName);
-            return (
-              <div class="mc-param-row">
-                <dt>
-                  <code>{p.name}</code>
-                  <span class="mc-param-type">
-                    {pLink ? (
-                      <a href={pLink.href} class="type-link">{p.type.split('.').pop()}</a>
-                    ) : (
-                      <code>{p.type.split('.').pop()}</code>
-                    )}
-                  </span>
-                  {p.isOptional && <span class="mc-badge">optional</span>}
-                </dt>
-                <dd>
-                  {paramDocs[p.name] ? (
-                    <DocContent content={paramDocs[p.name]} allTypes={allTypes} packageName={packageName} tag="span" />
-                  ) : ''}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </div>
-    )}
-
-    {/* ---- Returns ---- */}
-    {hasReturns && (
-      <div class="mc-returns">
-        <h5>Returns</h5>
-        <DocContent content={member.docs.returns} allTypes={allTypes} packageName={packageName} tag="p" />
-      </div>
-    )}
-
-    {/* ---- Exceptions ---- */}
-    {hasExceptions && (
-      <div class="mc-exceptions">
-        <h5>Exceptions</h5>
-        <dl>
-          {member.docs.exceptions.map((exc: any) => {
-            const { simpleName, fullName } = parseSeeAlso(exc.type);
-            const match = allTypes.find((t: any) => t.fullName === fullName);
-            return (
-              <div class="mc-exc-row">
-                <dt>
-                  {match ? (
-                    <a href={typeHref(base, packageName, match.name)} class="type-link">{simpleName}</a>
-                  ) : (
-                    <code>{simpleName}</code>
-                  )}
-                </dt>
-                <dd>
-                  <DocContent content={exc.description} allTypes={allTypes} packageName={packageName} tag="span" />
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </div>
-    )}
-
-    {/* ---- Remarks ---- */}
-    {hasRemarks && (
-      <details class="mc-remarks">
-        <summary>Remarks</summary>
-        <DocContent content={member.docs.remarks} allTypes={allTypes} packageName={packageName} tag="div" />
-      </details>
-    )}
-
-    {/* ---- Examples ---- */}
-    {hasExamples && (
-      <details class="mc-examples">
-        <summary>Examples</summary>
-        <Examples examples={member.docs.examples} />
-      </details>
-    )}
   </div>
-</details>
+
+  {/* ---- Signature (syntax-highlighted C#) ---- */}
+  {formattedSig && (
+    <div class="mc-sig">
+      <Code code={formattedSig} lang="csharp" showLineNumbers={false} />
+    </div>
+  )}
+
+  {/* ---- Summary ---- */}
+  {summary && (
+    <div class="mc-summary">
+      <DocContent content={summary} allTypes={allTypes} packageName={packageName} tag="p" />
+    </div>
+  )}
+
+  {/* ---- Parameters ---- */}
+  {hasParams && (
+    <div class="mc-section">
+      <h5 class="mc-section-label">Parameters</h5>
+      <div class="mc-params-grid">
+        {params.map((p: any) => {
+          const pLink = resolveTypeLink(p.type, allTypes, base, packageName);
+          return (
+            <div class="mc-param">
+              <div class="mc-param-header">
+                <code class="mc-param-name">{p.name}</code>
+                <span class="mc-param-type">
+                  {pLink ? (
+                    <a href={pLink.href} class="type-link">{shortTypeName(p.type)}</a>
+                  ) : (
+                    <code>{shortTypeName(p.type)}</code>
+                  )}
+                </span>
+                {p.isOptional && <span class="mc-badge">optional</span>}
+              </div>
+              {paramDocs[p.name] && (
+                <div class="mc-param-desc">
+                  <DocContent content={paramDocs[p.name]} allTypes={allTypes} packageName={packageName} tag="span" />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  {/* ---- Returns ---- */}
+  {hasReturns && (
+    <div class="mc-section">
+      <h5 class="mc-section-label">Returns</h5>
+      <div class="mc-returns-content">
+        {member.returnType && (
+          <span class="mc-return-badge">
+            {returnLink ? (
+              <a href={returnLink.href} class="type-link">{returnShort}</a>
+            ) : (
+              <code>{returnShort}</code>
+            )}
+          </span>
+        )}
+        <DocContent content={member.docs.returns} allTypes={allTypes} packageName={packageName} tag="span" />
+      </div>
+    </div>
+  )}
+
+  {/* ---- Exceptions ---- */}
+  {hasExceptions && (
+    <div class="mc-section">
+      <h5 class="mc-section-label">Exceptions</h5>
+      <div class="mc-exceptions-grid">
+        {member.docs.exceptions.map((exc: any) => {
+          const { simpleName, fullName } = parseSeeAlso(exc.type);
+          const match = allTypes.find((t: any) => t.fullName === fullName);
+          return (
+            <div class="mc-exc">
+              <div class="mc-exc-type">
+                {match ? (
+                  <a href={typeHref(base, packageName, match.name)} class="type-link">{simpleName}</a>
+                ) : (
+                  <code>{simpleName}</code>
+                )}
+              </div>
+              <div class="mc-exc-desc">
+                <DocContent content={exc.description} allTypes={allTypes} packageName={packageName} tag="span" />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  {/* ---- Remarks ---- */}
+  {hasRemarks && (
+    <div class="mc-section">
+      <h5 class="mc-section-label">Remarks</h5>
+      <div class="mc-remarks-content">
+        <DocContent content={member.docs.remarks} allTypes={allTypes} packageName={packageName} tag="div" />
+      </div>
+    </div>
+  )}
+
+  {/* ---- Examples ---- */}
+  {hasExamples && (
+    <div class="mc-section">
+      <h5 class="mc-section-label">Examples</h5>
+      <Examples examples={member.docs.examples} allTypes={allTypes} packageName={packageName} />
+    </div>
+  )}
+</div>
 
 <style>
   .mc {
-    border: 1px solid var(--sl-color-gray-5);
+    border: 1px solid var(--sl-color-gray-6);
     border-radius: 0.5rem;
     margin-bottom: 0.75rem;
-    background: var(--sl-color-gray-7);
-    transition: box-shadow 0.15s;
+    background: var(--sl-color-gray-7, transparent);
+    overflow: hidden;
+    transition: border-color 0.15s;
+    padding-bottom: 0.75rem;
   }
   .mc:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: var(--sl-color-gray-4);
   }
+
+  /* Header */
   .mc-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 1rem;
-    cursor: pointer;
-    font-size: 0.9rem;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
     flex-wrap: wrap;
-    list-style: none;
   }
-  .mc-header::-webkit-details-marker { display: none; }
-  .mc-header::before {
-    content: '▸';
-    font-size: 0.7rem;
-    transition: transform 0.15s;
+  .mc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-width: 0;
   }
-  .mc[open] > .mc-header::before {
-    transform: rotate(90deg);
-  }
-  .mc-icon { font-size: 1rem; }
   .mc-name {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.95rem;
+    color: var(--sl-color-text);
+    background: none;
+    padding: 0;
   }
+
+  /* Anchor link — mirror Starlight heading hover behavior */
+  .mc-title-row .sl-anchor-link {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    text-decoration: none;
+    color: var(--sl-color-gray-3);
+    line-height: 1;
+  }
+  .mc-title-row:hover .sl-anchor-link,
+  .mc-title-row .sl-anchor-link:focus-visible {
+    opacity: 1;
+  }
+  .mc-title-row .sl-anchor-link:hover {
+    color: var(--sl-color-text-accent);
+  }
+
   .mc-badges {
     display: flex;
     gap: 0.25rem;
+    flex-wrap: wrap;
   }
   .mc-badge {
-    font-size: 0.7rem;
-    padding: 0.05rem 0.35rem;
-    border-radius: 0.2rem;
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.1rem 0.4rem;
+    border-radius: 2rem;
     background: var(--sl-color-gray-5);
     color: var(--sl-color-gray-1);
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
   }
-  .mc-return-hint {
-    margin-left: auto;
+  .mc-return-type {
     font-size: 0.8rem;
     color: var(--sl-color-gray-3);
+    flex-shrink: 0;
   }
-  .mc-body {
-    padding: 0 1rem 0.75rem;
+  .mc-return-type code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
   }
+
+  /* Signature — override Astro Code component styles to fit card context */
   .mc-sig {
-    margin: 0 0 0.5rem;
-    padding: 0.5rem 0.75rem;
-    background: var(--sl-color-gray-6);
-    border-radius: 0.35rem;
-    font-size: 0.82rem;
-    overflow-x: auto;
-    line-height: 1.45;
+    border-bottom: 1px solid var(--sl-color-gray-6);
   }
+  .mc-sig :global(.astro-code) {
+    margin: 0;
+    padding: 0.65rem 1rem;
+    border-radius: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+  .mc-sig :global(pre) {
+    margin: 0;
+    border-radius: 0;
+  }
+  .mc-sig :global(.ec-line .code) {
+    font-size: 0.8rem;
+  }
+  .mc-sig :global(figure.frame) {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+
+  /* Summary */
   .mc-summary {
+    padding: 0.65rem 1rem 0.75rem;
     font-size: 0.875rem;
-    margin: 0 0 0.5rem;
     color: var(--sl-color-gray-2);
-    line-height: 1.5;
+    line-height: 1.6;
   }
-  .mc-params h5,
-  .mc-returns h5 {
-    font-size: 0.75rem;
+  .mc-summary:last-child {
+    padding-bottom: 0.75rem;
+  }
+  .mc-summary :global(p) { margin: 0; }
+
+  /* Section labels */
+  .mc-section {
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .mc-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0.75rem;
+  }
+  .mc-section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--sl-color-gray-3);
-    margin: 0.5rem 0 0.25rem;
+    margin: 0.65rem 0 0.35rem;
+    padding: 0;
   }
-  .mc-param-row {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.5rem;
-    padding: 0.2rem 0;
-    align-items: baseline;
-    font-size: 0.85rem;
-  }
-  .mc-param-row dt {
+
+  /* Parameters */
+  .mc-params-grid {
     display: flex;
+    flex-direction: column;
     gap: 0.35rem;
+  }
+  .mc-param {
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.25rem;
+    background: var(--sl-color-gray-6);
+  }
+  .mc-param-header {
+    display: flex;
     align-items: center;
-    white-space: nowrap;
+    gap: 0.4rem;
+    flex-wrap: wrap;
   }
-  .mc-param-type code,
-  .mc-param-type .type-link {
+  .mc-param-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--sl-color-text);
+    background: none;
+    padding: 0;
+  }
+  .mc-param-type {
     font-size: 0.8rem;
     color: var(--sl-color-gray-3);
   }
-  .mc-param-row dd {
-    margin: 0;
+  .mc-param-type code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+  .mc-param-desc {
+    font-size: 0.82rem;
     color: var(--sl-color-gray-2);
-  }
-  .mc-returns p {
-    font-size: 0.85rem;
-    margin: 0;
-    color: var(--sl-color-gray-2);
-  }
-  .mc-remarks {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-  }
-  .mc-remarks summary {
-    cursor: pointer;
-    color: var(--sl-color-gray-3);
-    font-weight: 500;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .mc-remarks p {
-    margin: 0.25rem 0 0;
-    color: var(--sl-color-gray-2);
+    margin-top: 0.15rem;
     line-height: 1.5;
   }
-  .mc-exceptions h5 {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--sl-color-gray-3);
-    margin: 0.5rem 0 0.25rem;
+
+  /* Returns */
+  .mc-returns-content {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.5;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
   }
-  .mc-exc-row {
+  .mc-return-badge {
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .mc-return-badge code {
+    background: none;
+    padding: 0;
+  }
+
+  /* Exceptions */
+  .mc-exceptions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .mc-exc {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.5rem;
-    padding: 0.2rem 0;
+    gap: 0.75rem;
     align-items: baseline;
     font-size: 0.85rem;
+    padding: 0.25rem 0;
   }
-  .mc-exc-row dt {
+  .mc-exc-type {
     white-space: nowrap;
   }
-  .mc-exc-row dd {
-    margin: 0;
+  .mc-exc-desc {
     color: var(--sl-color-gray-2);
   }
-  .mc-examples {
-    margin-top: 0.5rem;
+
+  /* Remarks */
+  .mc-remarks-content {
     font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+    border-left: 2px solid var(--sl-color-gray-5);
+    padding-left: 0.75rem;
   }
-  .mc-examples > summary {
-    cursor: pointer;
-    color: var(--sl-color-gray-3);
-    font-weight: 500;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
+  .mc-remarks-content :global(p) { margin: 0.2rem 0; }
+
+  /* Type link */
   .type-link {
     text-decoration: none;
     color: var(--sl-color-accent);
+    font-weight: 500;
   }
   .type-link:hover { text-decoration: underline; }
 </style>

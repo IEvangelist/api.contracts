@@ -42,19 +42,39 @@ function resolveCref(cref: string): { href: string; label: string } | null {
   }
   return null;
 }
+
+/**
+ * Determine whether a space should be injected before a node at a given index
+ * to compensate for missing whitespace in XML doc extraction.
+ */
+function needsSpaceBefore(nodes: any[], idx: number): boolean {
+  if (idx === 0) return false;
+  const prev = nodes[idx - 1];
+  const node = nodes[idx];
+  // Don't add space before block elements
+  if (['para', 'list', 'note', 'codeblock'].includes(node.kind)) return false;
+  // Don't add space if text already starts with whitespace or punctuation
+  if (node.kind === 'text' && node.text && /^[\s,.:;!?)}\]]/.test(node.text)) return false;
+  // Add space if previous was an inline element (not text ending with space)
+  if (prev.kind !== 'text') return true;
+  if (prev.text && !/\s$/.test(prev.text)) return true;
+  return false;
+}
 ---
 
 {isLegacyString ? (
   <Tag>{content}</Tag>
 ) : (
   <Tag class="doc-content">
-    {(content as any[]).map((node: any) => {
+    {(content as any[]).map((node: any, idx: number) => {
+      const sp = needsSpaceBefore(content as any[], idx)
+
       switch (node.kind) {
         case 'text':
-          return <Fragment set:text={node.text} />;
+          return <>{sp && ' '}<Fragment set:text={node.text} /></>;
 
         case 'code':
-          return <code class="doc-inline-code">{node.text}</code>;
+          return <>{sp && ' '}<code class="doc-inline-code">{node.text}</code></>;
 
         case 'codeblock':
           return (
@@ -64,11 +84,11 @@ function resolveCref(cref: string): { href: string; label: string } | null {
         case 'cref': {
           const link = resolveCref(node.value ?? '');
           if (link) {
-            return <a href={link.href} class="type-link">{link.label}</a>;
+            return <>{sp && ' '}<a href={link.href} class="type-link">{link.label}</a></>;
           }
           // External or unresolved type — show short name styled
           const { simpleName } = parseSeeAlso(node.value ?? '');
-          return <code class="doc-cref">{simpleName}</code>;
+          return <>{sp && ' '}<code class="doc-cref">{simpleName}</code></>;
         }
 
         case 'href':
@@ -79,13 +99,13 @@ function resolveCref(cref: string): { href: string; label: string } | null {
           );
 
         case 'langword':
-          return <code class="doc-langword">{node.value}</code>;
+          return <>{sp && ' '}<code class="doc-langword">{node.value}</code></>;
 
         case 'paramref':
-          return <code class="doc-paramref">{node.value}</code>;
+          return <>{sp && ' '}<code class="doc-paramref">{node.value}</code></>;
 
         case 'typeparamref':
-          return <code class="doc-typeparamref">{node.value}</code>;
+          return <>{sp && ' '}<code class="doc-typeparamref">{node.value}</code></>;
 
         case 'para':
           return (
@@ -98,7 +118,7 @@ function resolveCref(cref: string): { href: string; label: string } | null {
 
         case 'note': {
           const noteType = node.value ?? 'note';
-          const noteLabels: Record<string, string> = {
+          const noteLabels = {
             note: 'Note',
             tip: 'Tip',
             caution: 'Caution',

@@ -10,6 +10,8 @@ interface Props {
   allTypes?: any[];
 }
 
+import { shortTypeName } from '../utils/packages';
+
 const { type, allTypes = [] } = Astro.props;
 
 const hasBase = !!type.baseType;
@@ -33,10 +35,6 @@ function mermaidSafe(name: string): string {
     .replace(/[^A-Za-z0-9_~]/g, '_');
 }
 
-function shortName(fullName: string): string {
-  return fullName.split('.').pop() ?? fullName;
-}
-
 let diagram = '';
 
 if (shouldRender) {
@@ -53,7 +51,7 @@ if (shouldRender) {
 
   // Base type
   if (hasBase) {
-    const baseName = mermaidSafe(shortName(type.baseType));
+    const baseName = mermaidSafe(shortTypeName(type.baseType));
     const baseTypeDef = allTypes.find((t: any) => t.fullName === type.baseType);
     const baseStereo = baseTypeDef ? stereotype(baseTypeDef) : '';
     lines.push(`    class ${baseName} {`);
@@ -65,7 +63,7 @@ if (shouldRender) {
   // Interfaces
   if (hasInterfaces) {
     for (const iface of type.interfaces) {
-      const ifaceName = mermaidSafe(shortName(iface));
+      const ifaceName = mermaidSafe(shortTypeName(iface));
       lines.push(`    class ${ifaceName} {`);
       lines.push('        <<interface>>');
       lines.push('    }');

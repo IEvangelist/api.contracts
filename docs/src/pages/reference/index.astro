@@ -8,6 +8,7 @@
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import { getCollection } from 'astro:content';
 import { nugetHref } from '../../utils/packages';
+import AnchorHeading from '../../components/AnchorHeading.astro';
 
 const packages = await getCollection('packages');
 const sorted = packages
@@ -32,7 +33,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <code>src/data/packages/</code> and the docs are generated automatically.
   </p>
 
-  <h2 id="packages">Packages</h2>
+  <AnchorHeading id="packages" text="Packages" />
 
   <table class="pkg-table">
     <thead>

@@ -7,7 +7,9 @@
  */
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import { getCollection } from 'astro:content';
-import { slugify, groupTypesByKind, kindLabels, kindIcons, typeHref, nugetHref } from '../../../utils/packages';
+import { slugify, groupTypesByKind, kindLabels, typeHref, nugetHref } from '../../../utils/packages';
+import AnchorHeading from '../../../components/AnchorHeading.astro';
+import DocContent from '../../../components/DocContent.astro';
 
 export async function getStaticPaths() {
   const packages = await getCollection('packages');
@@ -56,9 +58,7 @@ const headings = [...groups.entries()].map(([kind]) => ({
 
   {[...groups.entries()].map(([kind, types]) => (
     <section>
-      <h2 id={kind.replace(/\s+/g, '-')}>
-        <span>{kindIcons[kind] ?? ''}</span> {kindLabels[kind] ?? kind}
-      </h2>
+      <AnchorHeading id={kind.replace(/\s+/g, '-')} text={kindLabels[kind] ?? kind} />
       <table class="type-table">
         <thead>
           <tr>
@@ -81,7 +81,11 @@ const headings = [...groups.entries()].map(([kind]) => ({
                   {t.isSealed && <span class="mini-badge">sealed</span>}
                 </div>
               </td>
-              <td class="col-summary">{t.docs?.summary ?? '—'}</td>
+              <td class="col-summary">
+                {t.docs?.summary ? (
+                  <DocContent content={t.docs.summary} allTypes={pkg.types} packageName={pkg.package.name} tag="span" />
+                ) : '—'}
+              </td>
             </tr>
           ))}
         </tbody>

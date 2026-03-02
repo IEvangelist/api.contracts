@@ -1,8 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightCatppuccin from '@catppuccin/starlight';
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
-import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections';
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -62,16 +60,6 @@ export default defineConfig({
           light: { flavor: 'latte', accent: 'sapphire' },
         }),
       ],
-      expressiveCode: {
-        plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
-        defaultProps: {
-          showLineNumbers: true,
-          overridesByLang: {
-            'bash,sh,shell': { showLineNumbers: false },
-            'xml': { showLineNumbers: true },
-          },
-        },
-      },
       social: [
         {
           icon: 'github',

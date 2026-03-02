@@ -1,10 +1,13 @@
 ---
 /**
- * MemberList — renders all members of a type, grouped by kind, using
- * MemberCard for each member.
+ * MemberList — renders all members of a type, grouped by kind.
+ *
+ * Each kind group is a top-level <h2> section for clean navigation.
+ * No letter icons — uses clean headings and count badges.
  */
 import MemberCard from './MemberCard.astro';
-import { groupMembersByKind, memberKindLabels, memberKindIcons } from '../utils/packages';
+import AnchorHeading from './AnchorHeading.astro';
+import { groupMembersByKind, memberKindLabels } from '../utils/packages';
 
 interface Props {
   members: any[];
@@ -19,12 +22,10 @@ const groups = groupMembersByKind(members);
 {groups.size > 0 && (
   <div class="ml">
     {[...groups.entries()].map(([kind, items]) => (
-      <section class="ml-group" id={`members-${kind}`}>
-        <h3 class="ml-group-title">
-          <span class="ml-kind-icon">{memberKindIcons[kind] ?? '•'}</span>
-          {memberKindLabels[kind] ?? kind}
+      <section class="ml-group">
+        <AnchorHeading id={`members-${kind}`} text={memberKindLabels[kind] ?? kind}>
           <span class="ml-count">{items.length}</span>
-        </h3>
+        </AnchorHeading>
         <div class="ml-cards">
           {items.map((m: any) => (
             <MemberCard
@@ -41,31 +42,44 @@ const groups = groupMembersByKind(members);
 
 <style>
   .ml {
-    margin: 1rem 0;
+    margin: 0.5rem 0;
   }
   .ml-group {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .ml-group:last-child {
+    margin-bottom: 1rem;
   }
   .ml-group-title {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.35rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--sl-color-gray-5);
-    color: var(--sl-color-white);
+    color: var(--sl-color-text);
   }
-  .ml-kind-icon {
-    font-size: 1.15rem;
+  .ml-group :global(.anchor-heading) {
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--sl-color-gray-5);
   }
-  .ml-count {
-    font-size: 0.75rem;
-    font-weight: 400;
+  .ml-group :global(.anchor-heading h2) {
+    font-size: 1.25rem;
+  }
+  .ml-group :global(.ml-count) {
+    font-size: 0.55em;
+    font-weight: 600;
     background: var(--sl-color-gray-5);
-    padding: 0.1rem 0.4rem;
-    border-radius: 1rem;
     color: var(--sl-color-gray-2);
+    padding: 0.1em 0.5em;
+    border-radius: 2rem;
+    line-height: 1;
+    vertical-align: middle;
+    display: inline-block;
+    margin-inline-start: 0.25em;
   }
   .ml-cards {
     display: flex;
