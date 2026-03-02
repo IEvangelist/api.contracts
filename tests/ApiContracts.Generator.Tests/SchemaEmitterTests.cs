@@ -243,4 +243,259 @@ public class SchemaEmitterTests
 
         Assert.Equal(json1, json2);
     }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesMemberParameters()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Svc",
+                FullName = "TestNs.Svc",
+                Namespace = "TestNs",
+                Kind = "class",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "Execute",
+                        Kind = "method",
+                        Signature = "void Execute(string name, int count)",
+                        ReturnType = "void",
+                        Parameters =
+                        [
+                            new CanonicalParameter { Name = "name", Type = "string" },
+                            new CanonicalParameter { Name = "count", Type = "int" },
+                        ]
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"parameters\":", json);
+        Assert.Contains("\"name\": \"name\"", json);
+        Assert.Contains("\"type\": \"string\"", json);
+        Assert.Contains("\"name\": \"count\"", json);
+        Assert.Contains("\"type\": \"int\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesOptionalParameterWithDefault()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Cfg",
+                FullName = "TestNs.Cfg",
+                Namespace = "TestNs",
+                Kind = "class",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "Setup",
+                        Kind = "method",
+                        Signature = "void Setup(int retries = 3)",
+                        ReturnType = "void",
+                        Parameters =
+                        [
+                            new CanonicalParameter
+                            {
+                                Name = "retries",
+                                Type = "int",
+                                IsOptional = true,
+                                DefaultValue = "3"
+                            },
+                        ]
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"isOptional\": true", json);
+        Assert.Contains("\"defaultValue\": \"3\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesParameterModifier()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Parser",
+                FullName = "TestNs.Parser",
+                Namespace = "TestNs",
+                Kind = "class",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "TryParse",
+                        Kind = "method",
+                        Signature = "bool TryParse(string input, out int result)",
+                        ReturnType = "bool",
+                        Parameters =
+                        [
+                            new CanonicalParameter { Name = "input", Type = "string" },
+                            new CanonicalParameter { Name = "result", Type = "int", Modifier = "out" },
+                        ]
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"modifier\": \"out\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesMemberFlags()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Base",
+                FullName = "TestNs.Base",
+                Namespace = "TestNs",
+                Kind = "class",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "StaticMethod",
+                        Kind = "method",
+                        Signature = "void StaticMethod()",
+                        IsStatic = true,
+                    },
+                    new CanonicalMember
+                    {
+                        Name = "AbstractMethod",
+                        Kind = "method",
+                        Signature = "void AbstractMethod()",
+                        IsAbstract = true,
+                    },
+                    new CanonicalMember
+                    {
+                        Name = "VirtualMethod",
+                        Kind = "method",
+                        Signature = "void VirtualMethod()",
+                        IsVirtual = true,
+                    },
+                    new CanonicalMember
+                    {
+                        Name = "AsyncMethod",
+                        Kind = "method",
+                        Signature = "Task AsyncMethod()",
+                        IsAsync = true,
+                    },
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"isStatic\": true", json);
+        Assert.Contains("\"isAbstract\": true", json);
+        Assert.Contains("\"isVirtual\": true", json);
+        Assert.Contains("\"isAsync\": true", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesNullableReturnType()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Finder",
+                FullName = "TestNs.Finder",
+                Namespace = "TestNs",
+                Kind = "class",
+                Members =
+                [
+                    new CanonicalMember
+                    {
+                        Name = "Find",
+                        Kind = "method",
+                        Signature = "string? Find(int id)",
+                        ReturnType = "string",
+                        IsReturnNullable = true,
+                    }
+                ]
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"isReturnNullable\": true", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesBaseType()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Dog",
+                FullName = "TestNs.Dog",
+                Namespace = "TestNs",
+                Kind = "class",
+                BaseType = "TestNs.Animal",
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"baseType\": \"TestNs.Animal\"", json);
+    }
+
+    [Fact]
+    public void EmitAssemblySchema_IncludesSeeAlso()
+    {
+        var types = new List<CanonicalType>
+        {
+            new()
+            {
+                Name = "Ref",
+                FullName = "TestNs.Ref",
+                Namespace = "TestNs",
+                Kind = "class",
+                Docs = new CanonicalDocumentation
+                {
+                    Summary = "A reference type.",
+                    SeeAlso = ["TestNs.OtherType", "System.String"]
+                }
+            }
+        };
+
+        var config = new AssemblyConfig();
+        var json = SchemaEmitter.EmitAssemblySchema(
+            "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
+
+        Assert.Contains("\"seeAlso\":", json);
+        Assert.Contains("\"TestNs.OtherType\"", json);
+        Assert.Contains("\"System.String\"", json);
+    }
 }

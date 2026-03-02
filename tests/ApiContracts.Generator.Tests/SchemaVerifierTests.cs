@@ -67,16 +67,71 @@ public class SchemaVerifierTests
         var schema = """
         {
             "schemaVersion": "1.0.0",
+            "package": { "name": "TestLib", "version": "1.0.0", "targetFramework": "net10.0" },
             "types": [],
-            "apiHash": "sha256:abc123"
+            "apiHash": "sha256:abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abcd"
         }
         """;
 
         var result = SchemaVerifier.ValidateSchema(schema);
 
         Assert.True(result.IsValid);
-        Assert.Equal("sha256:abc123", result.ApiHash);
+        Assert.Equal("sha256:abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abcd", result.ApiHash);
         Assert.Equal("1.0.0", result.SchemaVersion);
+    }
+
+    [Fact]
+    public void ValidateSchema_InvalidHashFormat_ReturnsFailure()
+    {
+        var schema = """
+        {
+            "schemaVersion": "1.0.0",
+            "package": { "name": "TestLib", "version": "1.0.0", "targetFramework": "net10.0" },
+            "types": [],
+            "apiHash": "sha256:tooshort"
+        }
+        """;
+
+        var result = SchemaVerifier.ValidateSchema(schema);
+
+        Assert.False(result.IsValid);
+        Assert.Contains("Invalid apiHash format", result.Error);
+    }
+
+    [Fact]
+    public void ValidateSchema_MissingPackage_ReturnsFailure()
+    {
+        var schema = """
+        {
+            "schemaVersion": "1.0.0",
+            "types": [],
+            "apiHash": "sha256:abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abcd"
+        }
+        """;
+
+        var result = SchemaVerifier.ValidateSchema(schema);
+
+        Assert.False(result.IsValid);
+        Assert.Contains("package", result.Error);
+    }
+
+    [Fact]
+    public void ValidateSchema_InvalidSignatureEnvelope_ReturnsFailure()
+    {
+        var schema = """
+        {
+            "schemaVersion": "1.0.0",
+            "package": { "name": "TestLib", "version": "1.0.0", "targetFramework": "net10.0" },
+            "types": [],
+            "apiHash": "sha256:abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abcd",
+            "signature": { "algorithm": "RSA-SHA256" }
+        }
+        """;
+
+        var result = SchemaVerifier.ValidateSchema(schema);
+
+        Assert.False(result.IsValid);
+        Assert.Contains("Signature", result.Error);
     }
 
     [Fact]
@@ -97,5 +152,76 @@ public class SchemaVerifierTests
 
         Assert.False(result.IsValid);
         Assert.Contains("Invalid JSON", result.Error);
+    }
+
+    [Fact]
+    public void VerifyApiHash_MatchesCanonicalHash()
+    {
+        // Build a schema with known canonical form and compute the expected hash
+        var canonicalJson = """[{"accessibility":"public","fullName":"TestNs.A","isAbstract":false,"isGeneric":false,"isSealed":false,"isStatic":false,"kind":"class","members":[],"name":"A","namespace":"TestNs"}]""";
+        var expectedHash = SchemaVerifier.ComputeApiHash(canonicalJson);
+
+        var schema = $$"""
+        {
+            "schemaVersion": "1.0.0",
+            "package": { "name": "TestLib", "version": "1.0.0", "targetFramework": "net10.0" },
+            "apiHash": "{{expectedHash}}",
+            "types": [
+                {
+                    "name": "A",
+                    "fullName": "TestNs.A",
+                    "namespace": "TestNs",
+                    "kind": "class",
+                    "accessibility": "public",
+                    "members": []
+                }
+            ]
+        }
+        """;
+
+        var result = SchemaVerifier.VerifyApiHash(schema);
+
+        Assert.True(result.IsMatch, $"Hash mismatch: declared={result.DeclaredHash}, computed={result.ComputedHash}");
+        Assert.Equal(expectedHash, result.ComputedHash);
+    }
+
+    [Fact]
+    public void VerifyApiHash_DetectsTampering()
+    {
+        // Use a hash from a different type name
+        var wrongHash = SchemaVerifier.ComputeApiHash("""[{"name":"Original"}]""");
+
+        var schema = $$"""
+        {
+            "schemaVersion": "1.0.0",
+            "package": { "name": "TestLib", "version": "1.0.0", "targetFramework": "net10.0" },
+            "apiHash": "{{wrongHash}}",
+            "types": [
+                {
+                    "name": "Tampered",
+                    "fullName": "TestNs.Tampered",
+                    "namespace": "TestNs",
+                    "kind": "class",
+                    "accessibility": "public",
+                    "members": []
+                }
+            ]
+        }
+        """;
+
+        var result = SchemaVerifier.VerifyApiHash(schema);
+
+        Assert.False(result.IsMatch);
+        Assert.NotEqual(result.DeclaredHash, result.ComputedHash);
+    }
+
+    [Fact]
+    public void VerifyApiHash_MissingTypes_ReturnsError()
+    {
+        var schema = """{"apiHash": "sha256:abc"}""";
+        var result = SchemaVerifier.VerifyApiHash(schema);
+
+        Assert.False(result.IsMatch);
+        Assert.Contains("types", result.ErrorMessage);
     }
 }

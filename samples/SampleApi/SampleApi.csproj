@@ -17,4 +17,8 @@
                       ReferenceOutputAssembly="false" />
   </ItemGroup>
 
+  <!-- Import build props and targets (auto-imported from NuGet, manual for ProjectReference) -->
+  <Import Project="..\..\src\ApiContracts.Generator\build\ApiContracts.Generator.props" />
+  <Import Project="..\..\src\ApiContracts.Generator\build\ApiContracts.Generator.targets" />
+
 </Project>

@@ -154,6 +154,28 @@ internal static class SchemaEmitter
             writer.WriteEndArray();
         }
 
+        // Attributes
+        if (type.Attributes is { Count: > 0 })
+        {
+            writer.WriteStartArray("attributes");
+            foreach (var attr in type.Attributes)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("name", attr.Name);
+                if (attr.Arguments is { Count: > 0 })
+                {
+                    writer.WriteStartObject("arguments");
+                    foreach (var kvp in attr.Arguments.OrderBy(a => a.Key))
+                    {
+                        writer.WriteString(kvp.Key, kvp.Value);
+                    }
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
         // Members — deterministically sorted
         writer.WriteStartArray("members");
         var sortedMembers = type.Members
@@ -175,6 +197,7 @@ internal static class SchemaEmitter
         writer.WriteStartObject();
         writer.WriteString("name", member.Name);
         writer.WriteString("kind", member.Kind);
+        writer.WriteString("accessibility", member.Accessibility);
         writer.WriteString("signature", member.Signature);
 
         if (member.ReturnType is not null)
@@ -208,6 +231,28 @@ internal static class SchemaEmitter
                     if (p.DefaultValue is not null) writer.WriteString("defaultValue", p.DefaultValue);
                 }
                 if (p.Modifier is not null) writer.WriteString("modifier", p.Modifier);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        // Attributes
+        if (member.Attributes is { Count: > 0 })
+        {
+            writer.WriteStartArray("attributes");
+            foreach (var attr in member.Attributes)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("name", attr.Name);
+                if (attr.Arguments is { Count: > 0 })
+                {
+                    writer.WriteStartObject("arguments");
+                    foreach (var kvp in attr.Arguments.OrderBy(a => a.Key))
+                    {
+                        writer.WriteString(kvp.Key, kvp.Value);
+                    }
+                    writer.WriteEndObject();
+                }
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();

@@ -1,0 +1,103 @@
+<Project>
+
+  <!--
+    Extracts the API contract JSON from the source-generator output
+    and writes it as a standalone .json file in the build output.
+    Optionally copies to ai-skills/apis/reference/ and vendor locations.
+  -->
+
+  <UsingTask TaskName="_ExtractApiSchemaJson"
+             TaskFactory="RoslynCodeTaskFactory"
+             AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <SourceFile ParameterType="System.String" Required="true" />
+      <OutputFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[
+var lines = System.IO.File.ReadAllLines(SourceFile);
+var sb = new System.Text.StringBuilder();
+bool inBlock = false;
+foreach (var line in lines)
+{
+    var trimmed = line.TrimStart();
+    if (trimmed == "#if false")
+    {
+        inBlock = true;
+        continue;
+    }
+    if (trimmed == "#endif" && inBlock)
+    {
+        break;
+    }
+    if (inBlock)
+    {
+        if (sb.Length > 0) sb.AppendLine();
+        sb.Append(line);
+    }
+}
+if (sb.Length > 0)
+{
+    var dir = System.IO.Path.GetDirectoryName(OutputFile);
+    if (!string.IsNullOrEmpty(dir) && !System.IO.Directory.Exists(dir))
+        System.IO.Directory.CreateDirectory(dir);
+    System.IO.File.WriteAllText(OutputFile, sb.ToString());
+    Log.LogMessage(MessageImportance.Normal,
+        "ApiContracts: Wrote API schema to {0}", OutputFile);
+}
+]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="_ExtractApiContractSchema"
+          AfterTargets="CoreCompile"
+          Condition="'$(DesignTimeBuild)' != 'true'">
+
+    <PropertyGroup>
+      <_ApiSchemaGenDir>$(IntermediateOutputPath)generated/ApiContracts.Generator/ApiContracts.Generator.ApiSchemaGenerator/</_ApiSchemaGenDir>
+      <_ApiSchemaSourceFile>$(_ApiSchemaGenDir)$(AssemblyName).api-schema.g.cs</_ApiSchemaSourceFile>
+      <_ApiSchemaOutputFile>$(OutputPath)$(AssemblyName).api-schema.json</_ApiSchemaOutputFile>
+    </PropertyGroup>
+
+    <_ExtractApiSchemaJson
+      SourceFile="$(_ApiSchemaSourceFile)"
+      OutputFile="$(_ApiSchemaOutputFile)"
+      Condition="Exists('$(_ApiSchemaSourceFile)')" />
+
+    <!-- Copy to ai-skills standard location if enabled -->
+    <Copy SourceFiles="$(_ApiSchemaOutputFile)"
+          DestinationFolder="$(MSBuildProjectDirectory)\ai-skills\apis\reference\"
+          Condition="'$(AISchemaEmitStandard)' == 'true' AND Exists('$(_ApiSchemaOutputFile)')"
+          SkipUnchangedFiles="true" />
+
+    <!-- Copy to vendor location if enabled -->
+    <Copy SourceFiles="$(_ApiSchemaOutputFile)"
+          DestinationFolder="$(MSBuildProjectDirectory)\$(AISchemaVendorFolder)\apis\reference\"
+          Condition="'$(AISchemaEmitVendor)' == 'true' AND '$(AISchemaVendorFolder)' != '' AND Exists('$(_ApiSchemaOutputFile)')"
+          SkipUnchangedFiles="true" />
+
+  </Target>
+
+  <!--
+    Include the generated API contract JSON in NuGet packages.
+    Runs before NuGet pack so the file is included as content.
+  -->
+  <Target Name="_IncludeApiContractSchemaInPackage"
+          BeforeTargets="GenerateNuspec"
+          Condition="'$(IsPackable)' != 'false'">
+
+    <ItemGroup>
+      <Content Include="$(OutputPath)$(AssemblyName).api-schema.json"
+               Condition="Exists('$(OutputPath)$(AssemblyName).api-schema.json')"
+               Pack="true"
+               PackagePath="contentFiles\any\any\api-contracts\"
+               CopyToOutputDirectory="PreserveNewest" />
+
+      <_PackageFiles Include="$(OutputPath)$(AssemblyName).api-schema.json"
+                     Condition="Exists('$(OutputPath)$(AssemblyName).api-schema.json')"
+                     PackagePath="contentFiles\any\any\api-contracts\" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

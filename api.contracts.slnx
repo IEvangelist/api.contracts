@@ -9,5 +9,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ApiContracts.Generator.Tests/ApiContracts.Generator.Tests.csproj" />
+    <Project Path="tests/ApiContracts.PackageEmission.Tests/ApiContracts.PackageEmission.Tests.csproj" />
   </Folder>
 </Solution>

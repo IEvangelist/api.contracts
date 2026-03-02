@@ -34,6 +34,14 @@ The `apiHash` provides a deterministic fingerprint of the API surface.
 ```csharp
 using ApiContracts.Verification;
 
+// Validate schema structure and hash format
 var result = SchemaVerifier.ValidateSchema(schemaJson);
+
+// Compute a hash from canonical JSON
 var hash = SchemaVerifier.ComputeApiHash(canonicalJson);
+
+// Verify the declared apiHash matches the types in the schema
+var hashResult = SchemaVerifier.VerifyApiHash(schemaJson);
+if (!hashResult.IsMatch)
+    Console.WriteLine($"Hash mismatch: declared={hashResult.DeclaredHash}, computed={hashResult.ComputedHash}");
 ```

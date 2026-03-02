@@ -17,9 +17,14 @@
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <None Include="build\ApiContracts.Generator.props" Pack="true" PackagePath="build\" />
+    <None Include="build\ApiContracts.Generator.targets" Pack="true" PackagePath="build\" />
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers\dotnet\cs" />
     <None Include="$(OutputPath)\ApiContracts.Abstractions.dll" Pack="true" PackagePath="analyzers\dotnet\cs" />
     <None Include="$(PkgSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" Pack="true" PackagePath="analyzers\dotnet\cs" Visible="false" />
+
+    <!-- Include AI skill definition and root schema in the NuGet package -->
+    <None Include="..\..\ai-skills\apis\schema.json" Pack="true" PackagePath="contentFiles\any\any\api-contracts\" />
+    <None Include="..\..\SKILL.md" Pack="true" PackagePath="contentFiles\any\any\api-contracts\" />
   </ItemGroup>
 
   <ItemGroup>

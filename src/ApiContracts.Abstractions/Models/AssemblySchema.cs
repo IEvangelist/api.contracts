@@ -5,7 +5,7 @@ namespace ApiContracts.Models;
 
 /// <summary>
 /// Assembly-level schema snapshot. Corresponds to
-/// <c>ai-skills/apis/reference/{AssemblyName}.api-schema.json</c>.
+/// <c>{AssemblyName}.api-schema.json</c> in the NuGet package content.
 /// </summary>
 public sealed class AssemblySchema
 {

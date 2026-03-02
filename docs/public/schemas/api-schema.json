@@ -155,13 +155,20 @@
           "items": {
             "$ref": "#/$defs/member"
           }
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Shape-affecting attributes applied to this type.",
+          "items": {
+            "$ref": "#/$defs/attribute"
+          }
         }
       }
     },
     "member": {
       "type": "object",
       "description": "A public member of a type.",
-      "required": ["name", "kind", "signature"],
+      "required": ["name", "kind", "accessibility", "signature"],
       "additionalProperties": false,
       "properties": {
         "name": {
@@ -172,6 +179,11 @@
           "type": "string",
           "description": "Member kind.",
           "enum": ["constructor", "method", "property", "field", "event", "indexer"]
+        },
+        "accessibility": {
+          "type": "string",
+          "description": "Declared accessibility of the member.",
+          "enum": ["public", "protected", "internal", "protected internal", "private protected"]
         },
         "signature": {
           "type": "string",
@@ -205,6 +217,13 @@
           "description": "Method/indexer parameters.",
           "items": {
             "$ref": "#/$defs/parameter"
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "description": "Shape-affecting attributes applied to this member.",
+          "items": {
+            "$ref": "#/$defs/attribute"
           }
         },
         "docs": {
@@ -298,6 +317,25 @@
         "seeAlso": {
           "type": "array",
           "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "attribute": {
+      "type": "object",
+      "description": "A shape-affecting attribute applied to a type or member.",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Attribute type name."
+        },
+        "arguments": {
+          "type": "object",
+          "description": "Named arguments of the attribute.",
+          "additionalProperties": {
             "type": "string"
           }
         }

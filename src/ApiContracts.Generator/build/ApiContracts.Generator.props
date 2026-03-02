@@ -17,6 +17,9 @@
 
     <!-- Include internal types and members -->
     <AISchemaIncludeInternals Condition="'$(AISchemaIncludeInternals)' == ''">false</AISchemaIncludeInternals>
+
+    <!-- Write generated source files to disk so the .targets can extract the JSON -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>

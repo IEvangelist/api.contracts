@@ -116,8 +116,8 @@ This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.json`.
 
 ```json
 {
+  "$schema": "https://ievangelist.github.io/api.contracts/schemas/api-schema.json",
   "schemaVersion": "1.0.0",
-  "rootSchema": "../../schema.json",
   "package": {
     "name": "MyAssembly",
     "version": "1.0.0",
@@ -129,8 +129,7 @@ This writes a mirror to `<VendorFolder>/apis/reference/<AssemblyName>.json`.
     "algorithm": "RSA-SHA256",
     "publicKeyId": "pine-2026",
     "value": "<base64>"
-  },
-  "generatedAt": "2025-01-01T00:00:00.0000000Z"
+  }
 }
 ```
 
