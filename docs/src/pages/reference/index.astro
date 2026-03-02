@@ -1,0 +1,109 @@
+---
+/**
+ * /reference/ — API Reference landing page.
+ *
+ * Lists every package from the `packages` content collection in a table
+ * sorted alphabetically, with version, target framework, and NuGet links.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+import { nugetHref } from '../../utils/packages';
+
+const packages = await getCollection('packages');
+const sorted = packages
+  .map(p => p.data)
+  .sort((a, b) => a.package.name.localeCompare(b.package.name));
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'API Reference',
+    description: 'Browse all published API contract packages.',
+  }}
+  headings={[
+    { depth: 2, slug: 'packages', text: 'Packages' },
+  ]}
+>
+  <p>
+    This section contains the rendered API reference for every published
+    package. Drop a <code>{'Package.Version.json'}</code> file into
+    <code>src/data/packages/</code> and the docs are generated automatically.
+  </p>
+
+  <h2 id="packages">Packages</h2>
+
+  <table class="pkg-table">
+    <thead>
+      <tr>
+        <th>Package</th>
+        <th>Version</th>
+        <th>Framework</th>
+        <th>Types</th>
+        <th>NuGet</th>
+      </tr>
+    </thead>
+    <tbody>
+      {sorted.map(pkg => (
+        <tr>
+          <td>
+            <a href={`${base}/reference/${pkg.package.name}/`} class="pkg-link">
+              {pkg.package.name}
+            </a>
+          </td>
+          <td><code>{pkg.package.version}</code></td>
+          <td><code>{pkg.package.targetFramework}</code></td>
+          <td>{pkg.types.length}</td>
+          <td>
+            <a href={nugetHref(pkg.package.name)} target="_blank" rel="noopener" class="nuget-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              NuGet
+            </a>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</StarlightPage>
+
+<style>
+  .pkg-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .pkg-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sl-color-gray-2);
+  }
+  .pkg-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    vertical-align: middle;
+  }
+  .pkg-table tbody tr:hover {
+    background: var(--sl-color-gray-7);
+  }
+  .pkg-link {
+    font-weight: 600;
+    color: var(--sl-color-accent);
+    text-decoration: none;
+  }
+  .pkg-link:hover { text-decoration: underline; }
+  .nuget-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+  }
+  .nuget-link:hover { color: var(--sl-color-accent); }
+</style>

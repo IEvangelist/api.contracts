@@ -1,0 +1,247 @@
+---
+/**
+ * MemberCard — a rich, collapsible card for a single type member.
+ *
+ * Shows signature, summary, parameters, return info, remarks, and badges.
+ */
+import { typeHref, resolveTypeLink, memberKindIcons } from '../utils/packages';
+
+interface Props {
+  member: any;
+  allTypes?: any[];
+  packageName?: string;
+  defaultOpen?: boolean;
+}
+
+const { member, allTypes = [], packageName = '', defaultOpen = true } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const icon = memberKindIcons[member.kind] ?? '•';
+
+const badges: string[] = [];
+if (member.isStatic) badges.push('static');
+if (member.isAbstract) badges.push('abstract');
+if (member.isVirtual) badges.push('virtual');
+if (member.isOverride) badges.push('override');
+if (member.isAsync) badges.push('async');
+if (member.isReturnNullable) badges.push('nullable');
+
+const params: any[] = member.parameters ?? [];
+const paramDocs: Record<string, string> = member.docs?.parameters ?? {};
+const hasParams = params.length > 0;
+const hasReturns = member.docs?.returns;
+const hasRemarks = member.docs?.remarks;
+const summary = member.docs?.summary ?? '';
+
+/* Try to resolve the return type as a local link. */
+const returnLink = member.returnType
+  ? resolveTypeLink(member.returnType, allTypes, base, packageName)
+  : null;
+
+const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
+---
+
+<details class="mc" open={defaultOpen}>
+  <summary class="mc-header">
+    <span class="mc-icon">{icon}</span>
+    <code class="mc-name">{displayName}</code>
+    {badges.length > 0 && (
+      <span class="mc-badges">
+        {badges.map(b => <span class="mc-badge">{b}</span>)}
+      </span>
+    )}
+    {member.returnType && (
+      <span class="mc-return-hint">
+        →
+        {returnLink ? (
+          <a href={returnLink.href} class="type-link">{member.returnType.split('.').pop()}</a>
+        ) : (
+          <code>{member.returnType.split('.').pop()}</code>
+        )}
+      </span>
+    )}
+  </summary>
+
+  <div class="mc-body">
+    {/* ---- Signature ---- */}
+    {member.signature && (
+      <pre class="mc-sig"><code>{member.signature}</code></pre>
+    )}
+
+    {/* ---- Summary ---- */}
+    {summary && <p class="mc-summary">{summary}</p>}
+
+    {/* ---- Parameters ---- */}
+    {hasParams && (
+      <div class="mc-params">
+        <h5>Parameters</h5>
+        <dl>
+          {params.map((p: any) => {
+            const pLink = resolveTypeLink(p.type, allTypes, base, packageName);
+            return (
+              <div class="mc-param-row">
+                <dt>
+                  <code>{p.name}</code>
+                  <span class="mc-param-type">
+                    {pLink ? (
+                      <a href={pLink.href} class="type-link">{p.type.split('.').pop()}</a>
+                    ) : (
+                      <code>{p.type.split('.').pop()}</code>
+                    )}
+                  </span>
+                  {p.isOptional && <span class="mc-badge">optional</span>}
+                </dt>
+                <dd>{paramDocs[p.name] ?? ''}</dd>
+              </div>
+            );
+          })}
+        </dl>
+      </div>
+    )}
+
+    {/* ---- Returns ---- */}
+    {hasReturns && (
+      <div class="mc-returns">
+        <h5>Returns</h5>
+        <p>{member.docs.returns}</p>
+      </div>
+    )}
+
+    {/* ---- Remarks ---- */}
+    {hasRemarks && (
+      <details class="mc-remarks">
+        <summary>Remarks</summary>
+        <p>{member.docs.remarks}</p>
+      </details>
+    )}
+  </div>
+</details>
+
+<style>
+  .mc {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+    background: var(--sl-color-gray-7);
+    transition: box-shadow 0.15s;
+  }
+  .mc:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+  .mc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+    list-style: none;
+  }
+  .mc-header::-webkit-details-marker { display: none; }
+  .mc-header::before {
+    content: '▸';
+    font-size: 0.7rem;
+    transition: transform 0.15s;
+  }
+  .mc[open] > .mc-header::before {
+    transform: rotate(90deg);
+  }
+  .mc-icon { font-size: 1rem; }
+  .mc-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .mc-badges {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .mc-badge {
+    font-size: 0.7rem;
+    padding: 0.05rem 0.35rem;
+    border-radius: 0.2rem;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-gray-1);
+  }
+  .mc-return-hint {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+  }
+  .mc-body {
+    padding: 0 1rem 0.75rem;
+  }
+  .mc-sig {
+    margin: 0 0 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--sl-color-gray-6);
+    border-radius: 0.35rem;
+    font-size: 0.82rem;
+    overflow-x: auto;
+    line-height: 1.45;
+  }
+  .mc-summary {
+    font-size: 0.875rem;
+    margin: 0 0 0.5rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.5;
+  }
+  .mc-params h5,
+  .mc-returns h5 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sl-color-gray-3);
+    margin: 0.5rem 0 0.25rem;
+  }
+  .mc-param-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    align-items: baseline;
+    font-size: 0.85rem;
+  }
+  .mc-param-row dt {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .mc-param-type code,
+  .mc-param-type .type-link {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+  }
+  .mc-param-row dd {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+  .mc-returns p {
+    font-size: 0.85rem;
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+  .mc-remarks {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .mc-remarks summary {
+    cursor: pointer;
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .mc-remarks p {
+    margin: 0.25rem 0 0;
+    color: var(--sl-color-gray-2);
+    line-height: 1.5;
+  }
+  .type-link {
+    text-decoration: none;
+    color: var(--sl-color-accent);
+  }
+  .type-link:hover { text-decoration: underline; }
+</style>

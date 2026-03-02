@@ -1,0 +1,175 @@
+---
+/**
+ * /reference/[package]/ — Package landing page.
+ *
+ * Lists every type in the package, grouped by kind (classes, interfaces,
+ * enums, etc.) with meaningful ordering.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+import { slugify, groupTypesByKind, kindLabels, kindIcons, typeHref, nugetHref } from '../../../utils/packages';
+
+export async function getStaticPaths() {
+  const packages = await getCollection('packages');
+  return packages.map(pkg => ({
+    params: { package: pkg.data.package.name },
+    props: { pkg: pkg.data },
+  }));
+}
+
+const { pkg } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const groups = groupTypesByKind(pkg.types);
+
+/* Build headings for the TOC. */
+const headings = [...groups.entries()].map(([kind]) => ({
+  depth: 2 as const,
+  slug: kind.replace(/\s+/g, '-'),
+  text: kindLabels[kind] ?? kind,
+}));
+---
+
+<StarlightPage
+  frontmatter={{
+    title: pkg.package.name,
+    description: `API reference for ${pkg.package.name} v${pkg.package.version}`,
+  }}
+  headings={headings}
+>
+  <div class="pkg-meta">
+    <span class="meta-item">
+      <strong>Version</strong> <code>{pkg.package.version}</code>
+    </span>
+    <span class="meta-item">
+      <strong>Framework</strong> <code>{pkg.package.targetFramework}</code>
+    </span>
+    <span class="meta-item">
+      <strong>Types</strong> {pkg.types.length}
+    </span>
+    <span class="meta-item">
+      <strong>Hash</strong> <code class="hash">{pkg.apiHash.slice(0, 20)}…</code>
+    </span>
+    <a href={nugetHref(pkg.package.name)} target="_blank" rel="noopener" class="nuget-btn">
+      NuGet ↗
+    </a>
+  </div>
+
+  {[...groups.entries()].map(([kind, types]) => (
+    <section>
+      <h2 id={kind.replace(/\s+/g, '-')}>
+        <span>{kindIcons[kind] ?? ''}</span> {kindLabels[kind] ?? kind}
+      </h2>
+      <table class="type-table">
+        <thead>
+          <tr>
+            <th class="col-name">Type</th>
+            <th class="col-summary">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {types.map((t: any) => (
+            <tr>
+              <td class="col-name">
+                <a href={typeHref(base, pkg.package.name, t.name)} class="type-link">
+                  <code>{t.name}{t.isGeneric && t.genericParameters?.length
+                    ? `<${t.genericParameters.map((g: any) => g.name).join(', ')}>`
+                    : ''}</code>
+                </a>
+                <div class="type-meta-badges">
+                  {t.isAbstract && <span class="mini-badge">abstract</span>}
+                  {t.isStatic && <span class="mini-badge">static</span>}
+                  {t.isSealed && <span class="mini-badge">sealed</span>}
+                </div>
+              </td>
+              <td class="col-summary">{t.docs?.summary ?? '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  ))}
+</StarlightPage>
+
+<style>
+  .pkg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--sl-color-gray-7);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .meta-item strong {
+    color: var(--sl-color-gray-3);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.25rem;
+  }
+  .hash {
+    font-size: 0.75rem;
+    color: var(--sl-color-gray-3);
+  }
+  .nuget-btn {
+    margin-left: auto;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--sl-color-accent);
+    border-radius: 0.3rem;
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.8rem;
+    transition: all 0.1s;
+  }
+  .nuget-btn:hover {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+  .type-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0 1.5rem;
+    font-size: 0.875rem;
+  }
+  .type-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sl-color-gray-2);
+  }
+  .type-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    vertical-align: top;
+  }
+  .type-table tbody tr:hover {
+    background: var(--sl-color-gray-7);
+  }
+  .col-name { width: 30%; white-space: nowrap; }
+  .col-summary { width: 70%; }
+  .type-link {
+    font-weight: 500;
+    color: var(--sl-color-accent);
+    text-decoration: none;
+  }
+  .type-link:hover { text-decoration: underline; }
+  .type-meta-badges {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.15rem;
+  }
+  .mini-badge {
+    font-size: 0.65rem;
+    padding: 0.05rem 0.3rem;
+    border-radius: 0.15rem;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+  }
+</style>

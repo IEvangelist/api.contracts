@@ -1,19 +1,28 @@
 ---
 /**
- * TypeSignature component - Renders a type's signature with generics, constraints, and inheritance.
- *
- * @prop {object} type - A type object from the assembly schema
+ * TypeSignature — renders a type's declaration with kind badge, modifiers,
+ * generic parameters, base type, and implemented interfaces.
  */
-const { type } = Astro.props;
+import { typeHref } from '../utils/packages';
 
-const kindBadge = {
+interface Props {
+  type: any;
+  allTypes?: any[];
+  packageName?: string;
+}
+
+const { type, allTypes = [], packageName = '' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const kindBadge: Record<string, string> = {
   class: '🏗️ Class',
   struct: '📦 Struct',
   interface: '🔌 Interface',
   enum: '🔢 Enum',
   delegate: '🔗 Delegate',
   record: '📋 Record',
-}[type.kind] ?? type.kind;
+  'record struct': '📦 Record Struct',
+};
 
 const modifiers = [
   type.accessibility,
@@ -24,61 +33,136 @@ const modifiers = [
 
 let signature = `${modifiers} ${type.kind} ${type.name}`;
 
-if (type.isGeneric && type.genericParameters) {
+if (type.isGeneric && type.genericParameters?.length) {
   signature += `<${type.genericParameters.map((g: any) => g.name).join(', ')}>`;
 }
 
-if (type.baseType || type.interfaces?.length) {
-  const bases = [type.baseType, ...(type.interfaces ?? [])].filter(Boolean);
-  signature += ` : ${bases.join(', ')}`;
+const bases: string[] = [];
+if (type.baseType) bases.push(type.baseType);
+if (type.interfaces?.length) bases.push(...type.interfaces);
+
+if (bases.length) {
+  signature += `\n    : ${bases.join(',\n      ')}`;
 }
 ---
 
-<div class="type-signature">
-  <span class="kind-badge">{kindBadge}</span>
-  <pre><code class="language-csharp">{signature}</code></pre>
+<div class="type-sig">
+  <span class="kind-badge">{kindBadge[type.kind] ?? type.kind}</span>
+
+  <pre class="sig-block"><code>{signature}</code></pre>
+
   {type.genericParameters?.length > 0 && (
-    <div class="constraints">
-      <strong>Type Parameters:</strong>
-      <ul>
+    <div class="gp-section">
+      <h4>Type Parameters</h4>
+      <dl>
         {type.genericParameters.map((gp: any) => (
-          <li>
-            <code>{gp.name}</code>
-            {gp.constraints?.length > 0 && (
-              <span> — where {gp.name} : {gp.constraints.join(', ')}</span>
-            )}
-          </li>
+          <div class="gp-item">
+            <dt><code>{gp.name}</code></dt>
+            <dd>
+              {gp.constraints?.length > 0 && (
+                <span class="constraint">
+                  where {gp.name} : {gp.constraints.join(', ')}
+                </span>
+              )}
+            </dd>
+          </div>
         ))}
+      </dl>
+    </div>
+  )}
+
+  {bases.length > 0 && (
+    <div class="bases-section">
+      <h4>Inherits / Implements</h4>
+      <ul class="bases-list">
+        {bases.map((b: string) => {
+          const target = allTypes.find((t: any) => t.fullName === b);
+          return (
+            <li>
+              {target ? (
+                <a href={typeHref(base, packageName, target.name)} class="type-link">
+                  {b.split('.').pop()}
+                </a>
+              ) : (
+                <code>{b.split('.').pop()}</code>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </div>
   )}
 </div>
 
 <style>
-  .type-signature {
+  .type-sig {
     border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
     background: var(--sl-color-gray-7);
   }
   .kind-badge {
-    font-size: 0.875rem;
-    padding: 0.125rem 0.5rem;
-    border-radius: 0.25rem;
+    display: inline-block;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 1rem;
     background: var(--sl-color-accent);
     color: var(--sl-color-white);
+    font-weight: 600;
   }
-  .type-signature pre {
-    margin-top: 0.5rem;
-    margin-bottom: 0;
+  .sig-block {
+    margin: 0.75rem 0 0;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--sl-color-gray-6);
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
-  .constraints {
-    margin-top: 0.5rem;
+  .gp-section,
+  .bases-section {
+    margin-top: 0.75rem;
     font-size: 0.875rem;
   }
-  .constraints ul {
-    margin: 0.25rem 0;
-    padding-left: 1.5rem;
+  .gp-section h4,
+  .bases-section h4 {
+    margin: 0 0 0.25rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sl-color-gray-2);
+  }
+  .gp-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.15rem 0;
+  }
+  .constraint {
+    color: var(--sl-color-gray-2);
+    font-size: 0.85rem;
+  }
+  .bases-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .bases-list li {
+    background: var(--sl-color-gray-6);
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+  }
+  .type-link {
+    text-decoration: none;
+    color: var(--sl-color-accent);
+    font-weight: 500;
+  }
+  .type-link:hover {
+    text-decoration: underline;
   }
 </style>

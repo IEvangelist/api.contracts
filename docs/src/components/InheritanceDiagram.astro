@@ -1,0 +1,99 @@
+---
+/**
+ * InheritanceDiagram — renders a Mermaid class diagram showing the type's
+ * inheritance chain and implemented interfaces.
+ *
+ * Only renders when the type has a baseType or interfaces.
+ */
+interface Props {
+  type: any;
+  allTypes?: any[];
+}
+
+const { type, allTypes = [] } = Astro.props;
+
+const hasBase = !!type.baseType;
+const hasInterfaces = type.interfaces?.length > 0;
+const shouldRender = hasBase || hasInterfaces;
+
+function stereotype(t: any): string {
+  if (!t) return '';
+  if (t.isAbstract && t.kind === 'class') return '<<abstract>>';
+  if (t.kind === 'interface') return '<<interface>>';
+  if (t.kind === 'record' || t.kind === 'record struct') return '<<record>>';
+  if (t.kind === 'struct') return '<<struct>>';
+  if (t.kind === 'enum') return '<<enum>>';
+  return '';
+}
+
+function mermaidSafe(name: string): string {
+  // Mermaid uses ~ for generics (replaces < > which break syntax)
+  return name
+    .replace(/<([^>]+)>/g, '~$1~')
+    .replace(/[^A-Za-z0-9_~]/g, '_');
+}
+
+function shortName(fullName: string): string {
+  return fullName.split('.').pop() ?? fullName;
+}
+
+let diagram = '';
+
+if (shouldRender) {
+  const lines: string[] = ['classDiagram', '    direction TB'];
+
+  // Current type
+  const selfLabel = mermaidSafe(type.name + (type.isGeneric && type.genericParameters?.length
+    ? `<${type.genericParameters.map((g: any) => g.name).join(', ')}>`
+    : ''));
+  const selfStereo = stereotype(type);
+  lines.push(`    class ${selfLabel} {`);
+  if (selfStereo) lines.push(`        ${selfStereo}`);
+  lines.push('    }');
+
+  // Base type
+  if (hasBase) {
+    const baseName = mermaidSafe(shortName(type.baseType));
+    const baseTypeDef = allTypes.find((t: any) => t.fullName === type.baseType);
+    const baseStereo = baseTypeDef ? stereotype(baseTypeDef) : '';
+    lines.push(`    class ${baseName} {`);
+    if (baseStereo) lines.push(`        ${baseStereo}`);
+    lines.push('    }');
+    lines.push(`    ${baseName} <|-- ${selfLabel}`);
+  }
+
+  // Interfaces
+  if (hasInterfaces) {
+    for (const iface of type.interfaces) {
+      const ifaceName = mermaidSafe(shortName(iface));
+      lines.push(`    class ${ifaceName} {`);
+      lines.push('        <<interface>>');
+      lines.push('    }');
+      lines.push(`    ${ifaceName} <|.. ${selfLabel}`);
+    }
+  }
+
+  diagram = lines.join('\n');
+}
+---
+
+{shouldRender && (
+  <div class="inheritance-diagram">
+    <pre class="mermaid" set:text={diagram} />
+  </div>
+)}
+
+<style>
+  .inheritance-diagram {
+    margin: 1rem 0 1.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: var(--sl-color-gray-7);
+    overflow-x: auto;
+  }
+  .inheritance-diagram pre {
+    margin: 0;
+    background: transparent;
+  }
+</style>

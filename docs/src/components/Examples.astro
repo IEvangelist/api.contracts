@@ -1,14 +1,11 @@
 ---
 /**
- * Examples component - Renders polyglot code examples with language tabs.
- *
- * @prop {Array} examples - Array of code example objects from the assembly schema
+ * Examples — renders code examples with language tabs and copy buttons.
  */
 const { examples = [] } = Astro.props;
 
 if (!examples || examples.length === 0) return;
 
-// Group examples by language
 const byLang = examples.reduce((acc: Record<string, any[]>, ex: any) => {
   const lang = ex.language ?? 'csharp';
   if (!acc[lang]) acc[lang] = [];
@@ -17,6 +14,7 @@ const byLang = examples.reduce((acc: Record<string, any[]>, ex: any) => {
 }, {} as Record<string, any[]>);
 
 const languages = Object.keys(byLang);
+
 const langLabels: Record<string, string> = {
   csharp: 'C#',
   typescript: 'TypeScript',
@@ -30,12 +28,12 @@ const langLabels: Record<string, string> = {
 };
 ---
 
-<div class="examples-container">
-  <div class="tabs" role="tablist">
+<div class="ex-container">
+  <div class="ex-tabs" role="tablist">
     {languages.map((lang, i) => (
       <button
         role="tab"
-        class={`tab ${i === 0 ? 'active' : ''}`}
+        class={`ex-tab ${i === 0 ? 'active' : ''}`}
         data-lang={lang}
         aria-selected={i === 0 ? 'true' : 'false'}
       >
@@ -43,19 +41,24 @@ const langLabels: Record<string, string> = {
       </button>
     ))}
   </div>
-  <div class="tab-panels">
+  <div class="ex-panels">
     {languages.map((lang, i) => (
       <div
-        class={`tab-panel ${i === 0 ? 'active' : ''}`}
+        class={`ex-panel ${i === 0 ? 'active' : ''}`}
         data-lang={lang}
         role="tabpanel"
       >
         {byLang[lang].map((ex: any) => (
-          <div class="example">
-            {ex.description && <p class="example-desc">{ex.description}</p>}
-            {ex.region && <span class="region-badge">#{ex.region}</span>}
-            <div class="code-block">
-              <button class="copy-btn" data-code={ex.code} title="Copy code">📋</button>
+          <div class="ex-item">
+            {ex.description && <p class="ex-desc">{ex.description}</p>}
+            {ex.region && <span class="ex-region">#{ex.region}</span>}
+            <div class="ex-code-wrap">
+              <button class="ex-copy" data-code={ex.code} title="Copy code">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
               <pre><code class={`language-${lang}`}>{ex.code}</code></pre>
             </div>
           </div>
@@ -66,9 +69,9 @@ const langLabels: Record<string, string> = {
 </div>
 
 <script>
-  document.querySelectorAll('.examples-container').forEach(container => {
-    const tabs = container.querySelectorAll('.tab');
-    const panels = container.querySelectorAll('.tab-panel');
+  document.querySelectorAll('.ex-container').forEach(container => {
+    const tabs = container.querySelectorAll('.ex-tab');
+    const panels = container.querySelectorAll('.ex-panel');
 
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -80,95 +83,82 @@ const langLabels: Record<string, string> = {
         panels.forEach(p => p.classList.remove('active'));
         tab.classList.add('active');
         tab.setAttribute('aria-selected', 'true');
-        container.querySelector(`.tab-panel[data-lang="${lang}"]`)?.classList.add('active');
+        container.querySelector(`.ex-panel[data-lang="${lang}"]`)?.classList.add('active');
       });
     });
 
-    container.querySelectorAll('.copy-btn').forEach(btn => {
+    container.querySelectorAll('.ex-copy').forEach(btn => {
       btn.addEventListener('click', () => {
         const code = (btn as HTMLElement).dataset.code ?? '';
         navigator.clipboard.writeText(code);
-        const original = btn.textContent;
-        btn.textContent = '✅';
-        setTimeout(() => { btn.textContent = original; }, 1500);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
       });
     });
   });
 </script>
 
 <style>
-  .examples-container {
+  .ex-container {
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 0.5rem;
     overflow: hidden;
     margin: 1rem 0;
   }
-  .tabs {
+  .ex-tabs {
     display: flex;
     background: var(--sl-color-gray-6);
     border-bottom: 1px solid var(--sl-color-gray-5);
     overflow-x: auto;
   }
-  .tab {
+  .ex-tab {
     padding: 0.5rem 1rem;
     border: none;
     background: none;
     cursor: pointer;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     color: var(--sl-color-gray-2);
     border-bottom: 2px solid transparent;
     white-space: nowrap;
+    transition: all 0.1s;
   }
-  .tab:hover {
-    background: var(--sl-color-gray-5);
-  }
-  .tab.active {
+  .ex-tab:hover { background: var(--sl-color-gray-5); }
+  .ex-tab.active {
     color: var(--sl-color-accent);
     border-bottom-color: var(--sl-color-accent);
     font-weight: 600;
   }
-  .tab-panel {
-    display: none;
-    padding: 0.5rem;
-  }
-  .tab-panel.active {
-    display: block;
-  }
-  .example {
-    margin-bottom: 0.5rem;
-  }
-  .example-desc {
-    font-size: 0.875rem;
+  .ex-panel { display: none; padding: 0.5rem; }
+  .ex-panel.active { display: block; }
+  .ex-desc {
+    font-size: 0.85rem;
     color: var(--sl-color-gray-2);
     margin: 0.25rem 0;
   }
-  .region-badge {
+  .ex-region {
     font-size: 0.75rem;
     background: var(--sl-color-gray-5);
     padding: 0.1rem 0.4rem;
     border-radius: 0.2rem;
   }
-  .code-block {
-    position: relative;
-  }
-  .copy-btn {
+  .ex-code-wrap { position: relative; }
+  .ex-copy {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
     background: var(--sl-color-gray-5);
     border: 1px solid var(--sl-color-gray-4);
     border-radius: 0.25rem;
-    padding: 0.2rem 0.4rem;
+    padding: 0.3rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    color: var(--sl-color-gray-2);
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.1s;
   }
-  .copy-btn:hover {
-    background: var(--sl-color-gray-4);
-  }
-  pre {
-    margin: 0;
-    padding: 1rem;
-    overflow-x: auto;
-  }
+  .ex-copy:hover { background: var(--sl-color-gray-4); }
+  .ex-copy.copied { background: var(--sl-color-accent); color: white; }
+  pre { margin: 0; padding: 1rem; overflow-x: auto; }
 </style>

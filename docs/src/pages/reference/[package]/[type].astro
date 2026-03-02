@@ -1,0 +1,264 @@
+---
+/**
+ * /reference/[package]/[type] — Individual type detail page.
+ *
+ * Renders the full type documentation including signature, inheritance
+ * diagram, members, enum values, cross-type links, and examples.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { getCollection } from 'astro:content';
+import TypeSignature from '../../../components/TypeSignature.astro';
+import MemberList  from '../../../components/MemberList.astro';
+import InheritanceDiagram from '../../../components/InheritanceDiagram.astro';
+import EnumTable from '../../../components/EnumTable.astro';
+import Examples  from '../../../components/Examples.astro';
+import {
+  slugify,
+  typeHref,
+  parseSeeAlso,
+  memberKindLabels,
+  memberKindOrder,
+  groupMembersByKind,
+} from '../../../utils/packages';
+
+export async function getStaticPaths() {
+  const packages = await getCollection('packages');
+  const paths: any[] = [];
+  for (const pkg of packages) {
+    for (const t of pkg.data.types) {
+      paths.push({
+        params: {
+          package: pkg.data.package.name,
+          type: slugify(t.name),
+        },
+        props: {
+          pkg: pkg.data,
+          type: t,
+          allTypes: pkg.data.types,
+        },
+      });
+    }
+  }
+  return paths;
+}
+
+const { pkg, type, allTypes } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const isEnum     = type.kind === 'enum';
+const hasMembers = type.members?.length > 0;
+const hasEnumMembers = type.enumMembers?.length > 0;
+const hasBases   = !!type.baseType || type.interfaces?.length > 0;
+const hasRemarks = !!type.docs?.remarks;
+const hasSeeAlso = type.docs?.seeAlso?.length > 0;
+const hasExamples = type.docs?.examples?.length > 0;
+const hasFlags = type.attributes?.some((a: any) => a.name === 'FlagsAttribute');
+
+/* Build heading list for the right-side TOC. */
+const headings: { depth: 2 | 3; slug: string; text: string }[] = [];
+headings.push({ depth: 2, slug: 'signature', text: 'Signature' });
+if (hasBases) headings.push({ depth: 2, slug: 'inheritance', text: 'Inheritance' });
+if (hasRemarks) headings.push({ depth: 2, slug: 'remarks', text: 'Remarks' });
+if (hasEnumMembers) headings.push({ depth: 2, slug: 'enum-members', text: 'Enum Members' });
+if (hasMembers) {
+  headings.push({ depth: 2, slug: 'members', text: 'Members' });
+  const groups = groupMembersByKind(type.members);
+  for (const kind of memberKindOrder) {
+    if (groups.has(kind)) {
+      headings.push({ depth: 3, slug: `members-${kind}`, text: memberKindLabels[kind] });
+    }
+  }
+}
+if (hasExamples) headings.push({ depth: 2, slug: 'examples', text: 'Examples' });
+if (hasSeeAlso) headings.push({ depth: 2, slug: 'see-also', text: 'See Also' });
+
+/* Resolve seeAlso references. */
+const seeAlsoLinks = (type.docs?.seeAlso ?? []).map((ref: string) => {
+  const { prefix, fullName, simpleName } = parseSeeAlso(ref);
+  const target = allTypes.find((t: any) => t.fullName === fullName);
+  return {
+    label: simpleName,
+    href: target ? typeHref(base, pkg.package.name, target.name) : null,
+    prefix,
+  };
+});
+
+const displayName = type.name + (type.isGeneric && type.genericParameters?.length
+  ? `<${type.genericParameters.map((g: any) => g.name).join(', ')}>`
+  : '');
+---
+
+<StarlightPage
+  frontmatter={{
+    title: displayName,
+    description: type.docs?.summary ?? `${type.kind} ${type.name}`,
+  }}
+  headings={headings}
+>
+  {/* ---- Namespace / assembly row ---- */}
+  <div class="ns-row">
+    <span><strong>Namespace</strong> <code>{type.namespace}</code></span>
+    <span><strong>Assembly</strong> <code>{pkg.package.name}</code></span>
+    <span>
+      <a href={`${base}/reference/${pkg.package.name}/`} class="back-link">
+        ← All types
+      </a>
+    </span>
+  </div>
+
+  {/* ---- Summary ---- */}
+  {type.docs?.summary && (
+    <p class="type-summary">{type.docs.summary}</p>
+  )}
+
+  {/* ---- Signature ---- */}
+  <h2 id="signature">Signature</h2>
+  <TypeSignature type={type} allTypes={allTypes} packageName={pkg.package.name} />
+
+  {/* ---- Inheritance diagram ---- */}
+  {hasBases && (
+    <>
+      <h2 id="inheritance">Inheritance</h2>
+      <InheritanceDiagram type={type} allTypes={allTypes} />
+    </>
+  )}
+
+  {/* ---- Remarks ---- */}
+  {hasRemarks && (
+    <>
+      <h2 id="remarks">Remarks</h2>
+      <div class="remarks-block">
+        <p>{type.docs.remarks}</p>
+      </div>
+    </>
+  )}
+
+  {/* ---- Enum members ---- */}
+  {hasEnumMembers && (
+    <>
+      <h2 id="enum-members">Enum Members</h2>
+      <EnumTable enumMembers={type.enumMembers} hasFlags={hasFlags} />
+    </>
+  )}
+
+  {/* ---- Members ---- */}
+  {hasMembers && (
+    <>
+      <h2 id="members">Members</h2>
+      <MemberList
+        members={type.members}
+        allTypes={allTypes}
+        packageName={pkg.package.name}
+      />
+    </>
+  )}
+
+  {/* ---- Examples ---- */}
+  {hasExamples && (
+    <>
+      <h2 id="examples">Examples</h2>
+      <Examples examples={type.docs.examples} />
+    </>
+  )}
+
+  {/* ---- See Also ---- */}
+  {hasSeeAlso && (
+    <>
+      <h2 id="see-also">See Also</h2>
+      <ul class="see-also-list">
+        {seeAlsoLinks.map((link: any) => (
+          <li>
+            {link.href ? (
+              <a href={link.href} class="type-link">{link.label}</a>
+            ) : (
+              <code>{link.label}</code>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
+</StarlightPage>
+
+{/* ---- Mermaid initializer (only when diagram is present) ---- */}
+{hasBases && (
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    function getTheme() {
+      const isDark = document.documentElement.dataset.theme === 'dark' ||
+        document.documentElement.classList.contains('dark');
+      return isDark ? 'dark' : 'default';
+    }
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: getTheme(),
+      securityLevel: 'loose',
+    });
+  </script>
+)}
+
+<style>
+  .ns-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--sl-color-gray-7);
+    border-radius: 0.35rem;
+  }
+  .ns-row strong {
+    color: var(--sl-color-gray-3);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 0.25rem;
+  }
+  .back-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.8rem;
+  }
+  .back-link:hover { text-decoration: underline; }
+  .type-summary {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: var(--sl-color-gray-1);
+  }
+  .remarks-block {
+    border-left: 3px solid var(--sl-color-accent);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.5rem;
+    background: var(--sl-color-gray-7);
+    border-radius: 0 0.35rem 0.35rem 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+  }
+  .remarks-block p { margin: 0; }
+  .see-also-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .see-also-list li {
+    background: var(--sl-color-gray-6);
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+  }
+  .type-link {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .type-link:hover { text-decoration: underline; }
+</style>

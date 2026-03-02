@@ -1,0 +1,101 @@
+---
+/**
+ * EnumTable — renders a polished table of enum members with their
+ * names, numeric values, and descriptions.
+ */
+interface Props {
+  enumMembers: any[];
+  hasFlags?: boolean;
+}
+
+const { enumMembers = [], hasFlags = false } = Astro.props;
+---
+
+{enumMembers.length > 0 && (
+  <div class="enum-table-wrap">
+    {hasFlags && (
+      <p class="enum-flags-note">
+        <span class="flags-badge">[Flags]</span> Values can be combined with bitwise OR.
+      </p>
+    )}
+    <table class="enum-table">
+      <thead>
+        <tr>
+          <th class="col-name">Name</th>
+          <th class="col-value">Value</th>
+          <th class="col-desc">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {enumMembers.map((em: any) => (
+          <tr>
+            <td class="col-name">
+              <code>{em.name}</code>
+            </td>
+            <td class="col-value">
+              <code>{em.value}</code>
+              {hasFlags && em.value > 0 && (
+                <span class="binary-hint" title={`0b${em.value.toString(2).padStart(4, '0')}`}>
+                  {`0x${em.value.toString(16).toUpperCase()}`}
+                </span>
+              )}
+            </td>
+            <td class="col-desc">{em.description ?? '—'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+<style>
+  .enum-table-wrap {
+    margin: 1rem 0;
+  }
+  .enum-flags-note {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-2);
+    margin-bottom: 0.5rem;
+  }
+  .flags-badge {
+    font-weight: 600;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-white);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    font-size: 0.75rem;
+    margin-right: 0.25rem;
+  }
+  .enum-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .enum-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-2);
+    border-bottom: 2px solid var(--sl-color-gray-5);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .enum-table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--sl-color-gray-6);
+    vertical-align: top;
+  }
+  .enum-table tbody tr:hover {
+    background: var(--sl-color-gray-7);
+  }
+  .col-name { width: 20%; }
+  .col-value { width: 15%; white-space: nowrap; }
+  .col-desc { width: 65%; }
+  .binary-hint {
+    display: inline-block;
+    font-size: 0.7rem;
+    color: var(--sl-color-gray-3);
+    margin-left: 0.35rem;
+  }
+</style>
