@@ -14,6 +14,7 @@ x86/
 *.nupkg
 *.snupkg
 **/packages/
+!docs/src/data/packages/
 project.lock.json
 project.fragment.lock.json
 
