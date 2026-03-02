@@ -2,9 +2,12 @@
 /**
  * MemberCard — a rich, collapsible card for a single type member.
  *
- * Shows signature, summary, parameters, return info, remarks, and badges.
+ * Shows signature, summary, parameters, return info, remarks, exceptions,
+ * examples, and badges with full rich doc content rendering.
  */
-import { typeHref, resolveTypeLink, memberKindIcons } from '../utils/packages';
+import { typeHref, resolveTypeLink, memberKindIcons, parseSeeAlso } from '../utils/packages';
+import DocContent from './DocContent.astro';
+import Examples from './Examples.astro';
 
 interface Props {
   member: any;
@@ -27,11 +30,13 @@ if (member.isAsync) badges.push('async');
 if (member.isReturnNullable) badges.push('nullable');
 
 const params: any[] = member.parameters ?? [];
-const paramDocs: Record<string, string> = member.docs?.parameters ?? {};
+const paramDocs: Record<string, any> = member.docs?.parameters ?? {};
 const hasParams = params.length > 0;
 const hasReturns = member.docs?.returns;
 const hasRemarks = member.docs?.remarks;
-const summary = member.docs?.summary ?? '';
+const hasExceptions = member.docs?.exceptions?.length > 0;
+const hasExamples = member.docs?.examples?.length > 0;
+const summary = member.docs?.summary;
 
 /* Try to resolve the return type as a local link. */
 const returnLink = member.returnType
@@ -69,7 +74,9 @@ const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
     )}
 
     {/* ---- Summary ---- */}
-    {summary && <p class="mc-summary">{summary}</p>}
+    {summary && (
+      <DocContent content={summary} allTypes={allTypes} packageName={packageName} tag="p" />
+    )}
 
     {/* ---- Parameters ---- */}
     {hasParams && (
@@ -91,7 +98,11 @@ const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
                   </span>
                   {p.isOptional && <span class="mc-badge">optional</span>}
                 </dt>
-                <dd>{paramDocs[p.name] ?? ''}</dd>
+                <dd>
+                  {paramDocs[p.name] ? (
+                    <DocContent content={paramDocs[p.name]} allTypes={allTypes} packageName={packageName} tag="span" />
+                  ) : ''}
+                </dd>
               </div>
             );
           })}
@@ -103,7 +114,34 @@ const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
     {hasReturns && (
       <div class="mc-returns">
         <h5>Returns</h5>
-        <p>{member.docs.returns}</p>
+        <DocContent content={member.docs.returns} allTypes={allTypes} packageName={packageName} tag="p" />
+      </div>
+    )}
+
+    {/* ---- Exceptions ---- */}
+    {hasExceptions && (
+      <div class="mc-exceptions">
+        <h5>Exceptions</h5>
+        <dl>
+          {member.docs.exceptions.map((exc: any) => {
+            const { simpleName, fullName } = parseSeeAlso(exc.type);
+            const match = allTypes.find((t: any) => t.fullName === fullName);
+            return (
+              <div class="mc-exc-row">
+                <dt>
+                  {match ? (
+                    <a href={typeHref(base, packageName, match.name)} class="type-link">{simpleName}</a>
+                  ) : (
+                    <code>{simpleName}</code>
+                  )}
+                </dt>
+                <dd>
+                  <DocContent content={exc.description} allTypes={allTypes} packageName={packageName} tag="span" />
+                </dd>
+              </div>
+            );
+          })}
+        </dl>
       </div>
     )}
 
@@ -111,7 +149,15 @@ const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
     {hasRemarks && (
       <details class="mc-remarks">
         <summary>Remarks</summary>
-        <p>{member.docs.remarks}</p>
+        <DocContent content={member.docs.remarks} allTypes={allTypes} packageName={packageName} tag="div" />
+      </details>
+    )}
+
+    {/* ---- Examples ---- */}
+    {hasExamples && (
+      <details class="mc-examples">
+        <summary>Examples</summary>
+        <Examples examples={member.docs.examples} />
       </details>
     )}
   </div>
@@ -238,6 +284,40 @@ const displayName = member.name === '.ctor' ? 'Constructor' : member.name;
     margin: 0.25rem 0 0;
     color: var(--sl-color-gray-2);
     line-height: 1.5;
+  }
+  .mc-exceptions h5 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--sl-color-gray-3);
+    margin: 0.5rem 0 0.25rem;
+  }
+  .mc-exc-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    align-items: baseline;
+    font-size: 0.85rem;
+  }
+  .mc-exc-row dt {
+    white-space: nowrap;
+  }
+  .mc-exc-row dd {
+    margin: 0;
+    color: var(--sl-color-gray-2);
+  }
+  .mc-examples {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+  }
+  .mc-examples > summary {
+    cursor: pointer;
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .type-link {
     text-decoration: none;

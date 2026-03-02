@@ -272,18 +272,94 @@ internal static class SchemaEmitter
     {
         writer.WriteStartObject();
 
-        if (docs.Summary is not null) writer.WriteString("summary", docs.Summary);
-        if (docs.Remarks is not null) writer.WriteString("remarks", docs.Remarks);
-        if (docs.Returns is not null) writer.WriteString("returns", docs.Returns);
+        if (docs.Summary is not null)
+        {
+            writer.WritePropertyName("summary");
+            EmitDocNodes(writer, docs.Summary);
+        }
+        if (docs.Remarks is not null)
+        {
+            writer.WritePropertyName("remarks");
+            EmitDocNodes(writer, docs.Remarks);
+        }
+        if (docs.Returns is not null)
+        {
+            writer.WritePropertyName("returns");
+            EmitDocNodes(writer, docs.Returns);
+        }
+        if (docs.Value is not null)
+        {
+            writer.WritePropertyName("value");
+            EmitDocNodes(writer, docs.Value);
+        }
 
         if (docs.Parameters is { Count: > 0 })
         {
             writer.WriteStartObject("parameters");
             foreach (var kvp in docs.Parameters.OrderBy(p => p.Key))
             {
-                writer.WriteString(kvp.Key, kvp.Value);
+                writer.WritePropertyName(kvp.Key);
+                EmitDocNodes(writer, kvp.Value);
             }
             writer.WriteEndObject();
+        }
+
+        if (docs.TypeParameters is { Count: > 0 })
+        {
+            writer.WriteStartObject("typeParameters");
+            foreach (var kvp in docs.TypeParameters.OrderBy(p => p.Key))
+            {
+                writer.WritePropertyName(kvp.Key);
+                EmitDocNodes(writer, kvp.Value);
+            }
+            writer.WriteEndObject();
+        }
+
+        if (docs.Exceptions is { Count: > 0 })
+        {
+            writer.WriteStartArray("exceptions");
+            foreach (var exc in docs.Exceptions)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("type", exc.Type);
+                writer.WritePropertyName("description");
+                EmitDocNodes(writer, exc.Description);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        if (docs.Permissions is { Count: > 0 })
+        {
+            writer.WriteStartArray("permissions");
+            foreach (var perm in docs.Permissions)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("type", perm.Type);
+                writer.WritePropertyName("description");
+                EmitDocNodes(writer, perm.Description);
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
+        }
+
+        if (docs.Examples is { Count: > 0 })
+        {
+            writer.WriteStartArray("examples");
+            foreach (var ex in docs.Examples)
+            {
+                writer.WriteStartObject();
+                writer.WriteString("language", ex.Language);
+                if (ex.Region is not null) writer.WriteString("region", ex.Region);
+                writer.WriteString("code", ex.Code);
+                if (ex.Description is { Count: > 0 })
+                {
+                    writer.WritePropertyName("description");
+                    EmitDocNodes(writer, ex.Description);
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndArray();
         }
 
         if (docs.SeeAlso is { Count: > 0 })
@@ -294,6 +370,107 @@ internal static class SchemaEmitter
                 writer.WriteStringValue(s);
             }
             writer.WriteEndArray();
+        }
+
+        writer.WriteEndObject();
+    }
+
+    private static void EmitDocNodes(Utf8JsonWriter writer, List<DocNode> nodes)
+    {
+        writer.WriteStartArray();
+        foreach (var node in nodes)
+        {
+            EmitDocNode(writer, node);
+        }
+        writer.WriteEndArray();
+    }
+
+    private static void EmitDocNode(Utf8JsonWriter writer, DocNode node)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("kind", node.Kind);
+
+        switch (node.Kind)
+        {
+            case "text":
+            case "code":
+                if (node.Text is not null)
+                    writer.WriteString("text", node.Text);
+                break;
+
+            case "codeblock":
+                if (node.Text is not null)
+                    writer.WriteString("text", node.Text);
+                if (node.Language is not null)
+                    writer.WriteString("language", node.Language);
+                break;
+
+            case "cref":
+            case "langword":
+            case "paramref":
+            case "typeparamref":
+                if (node.Value is not null)
+                    writer.WriteString("value", node.Value);
+                break;
+
+            case "href":
+                if (node.Value is not null)
+                    writer.WriteString("value", node.Value);
+                if (node.Text is not null)
+                    writer.WriteString("text", node.Text);
+                break;
+
+            case "para":
+                if (node.Children is { Count: > 0 })
+                {
+                    writer.WritePropertyName("children");
+                    EmitDocNodes(writer, node.Children);
+                }
+                break;
+
+            case "note":
+                if (node.Value is not null)
+                    writer.WriteString("value", node.Value);
+                if (node.Children is { Count: > 0 })
+                {
+                    writer.WritePropertyName("children");
+                    EmitDocNodes(writer, node.Children);
+                }
+                break;
+
+            case "list":
+                if (node.Style is not null)
+                    writer.WriteString("style", node.Style);
+                if (node.Header is not null)
+                {
+                    writer.WriteStartObject("header");
+                    if (node.Header.Term is { Count: > 0 })
+                    {
+                        writer.WritePropertyName("term");
+                        EmitDocNodes(writer, node.Header.Term);
+                    }
+                    writer.WritePropertyName("description");
+                    EmitDocNodes(writer, node.Header.Description);
+                    writer.WriteEndObject();
+                }
+                if (node.Items is { Count: > 0 })
+                {
+                    writer.WriteStartArray("items");
+                    foreach (var item in node.Items)
+                    {
+                        writer.WriteStartObject();
+                        if (item.Term is { Count: > 0 })
+                        {
+                            writer.WritePropertyName("term");
+                            EmitDocNodes(writer, item.Term);
+                        }
+                        writer.WritePropertyName("description");
+                        EmitDocNodes(writer, item.Description);
+                        writer.WriteEndObject();
+                    }
+                    writer.WriteEndArray();
+                }
+                break;
         }
 
         writer.WriteEndObject();

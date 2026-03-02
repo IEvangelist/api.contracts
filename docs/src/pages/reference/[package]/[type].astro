@@ -12,6 +12,7 @@ import MemberList  from '../../../components/MemberList.astro';
 import InheritanceDiagram from '../../../components/InheritanceDiagram.astro';
 import EnumTable from '../../../components/EnumTable.astro';
 import Examples  from '../../../components/Examples.astro';
+import DocContent from '../../../components/DocContent.astro';
 import {
   slugify,
   typeHref,
@@ -45,20 +46,44 @@ export async function getStaticPaths() {
 const { pkg, type, allTypes } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
+/** Flatten doc nodes to a plain-text string (for meta description). */
+function flattenToText(nodes: any): string {
+  if (!nodes) return '';
+  if (typeof nodes === 'string') return nodes;
+  if (!Array.isArray(nodes)) return '';
+  return nodes.map((n: any) => {
+    if (typeof n === 'string') return n;
+    if (n.kind === 'text' || n.kind === 'code' || n.kind === 'codeblock') return n.text ?? '';
+    if (n.kind === 'langword') return n.value ?? '';
+    if (n.kind === 'cref') return (n.value ?? '').split('.').pop() ?? '';
+    if (n.kind === 'href') return n.text ?? n.value ?? '';
+    if (n.kind === 'paramref' || n.kind === 'typeparamref') return n.value ?? '';
+    if (n.kind === 'para' && n.children) return flattenToText(n.children);
+    return '';
+  }).join('');
+}
+
 const isEnum     = type.kind === 'enum';
 const hasMembers = type.members?.length > 0;
 const hasEnumMembers = type.enumMembers?.length > 0;
 const hasBases   = !!type.baseType || type.interfaces?.length > 0;
-const hasRemarks = !!type.docs?.remarks;
+const hasRemarks = type.docs?.remarks?.length > 0;
+const hasValue   = type.docs?.value?.length > 0;
+const hasTypeParams = type.docs?.typeParameters && Object.keys(type.docs.typeParameters).length > 0;
+const hasPermissions = type.docs?.permissions?.length > 0;
 const hasSeeAlso = type.docs?.seeAlso?.length > 0;
 const hasExamples = type.docs?.examples?.length > 0;
 const hasFlags = type.attributes?.some((a: any) => a.name === 'FlagsAttribute');
+
+const summaryText = flattenToText(type.docs?.summary) || `${type.kind} ${type.name}`;
 
 /* Build heading list for the right-side TOC. */
 const headings: { depth: 2 | 3; slug: string; text: string }[] = [];
 headings.push({ depth: 2, slug: 'signature', text: 'Signature' });
 if (hasBases) headings.push({ depth: 2, slug: 'inheritance', text: 'Inheritance' });
 if (hasRemarks) headings.push({ depth: 2, slug: 'remarks', text: 'Remarks' });
+if (hasValue) headings.push({ depth: 2, slug: 'value', text: 'Value' });
+if (hasTypeParams) headings.push({ depth: 2, slug: 'type-parameters', text: 'Type Parameters' });
 if (hasEnumMembers) headings.push({ depth: 2, slug: 'enum-members', text: 'Enum Members' });
 if (hasMembers) {
   headings.push({ depth: 2, slug: 'members', text: 'Members' });
@@ -70,15 +95,21 @@ if (hasMembers) {
   }
 }
 if (hasExamples) headings.push({ depth: 2, slug: 'examples', text: 'Examples' });
+if (hasPermissions) headings.push({ depth: 2, slug: 'permissions', text: 'Permissions' });
 if (hasSeeAlso) headings.push({ depth: 2, slug: 'see-also', text: 'See Also' });
 
-/* Resolve seeAlso references. */
+/* Resolve seeAlso references — supports both cref (T:Namespace.Type) and href (https://...). */
 const seeAlsoLinks = (type.docs?.seeAlso ?? []).map((ref: string) => {
+  // If it looks like a URL, treat as an external link
+  if (ref.startsWith('http://') || ref.startsWith('https://')) {
+    return { label: ref, href: ref, external: true, prefix: '' };
+  }
   const { prefix, fullName, simpleName } = parseSeeAlso(ref);
   const target = allTypes.find((t: any) => t.fullName === fullName);
   return {
     label: simpleName,
     href: target ? typeHref(base, pkg.package.name, target.name) : null,
+    external: false,
     prefix,
   };
 });
@@ -91,7 +122,7 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
 <StarlightPage
   frontmatter={{
     title: displayName,
-    description: type.docs?.summary ?? `${type.kind} ${type.name}`,
+    description: summaryText,
   }}
   headings={headings}
 >
@@ -108,7 +139,9 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
 
   {/* ---- Summary ---- */}
   {type.docs?.summary && (
-    <p class="type-summary">{type.docs.summary}</p>
+    <div class="type-summary">
+      <DocContent content={type.docs.summary} allTypes={allTypes} packageName={pkg.package.name} />
+    </div>
   )}
 
   {/* ---- Signature ---- */}
@@ -128,8 +161,33 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
     <>
       <h2 id="remarks">Remarks</h2>
       <div class="remarks-block">
-        <p>{type.docs.remarks}</p>
+        <DocContent content={type.docs.remarks} allTypes={allTypes} packageName={pkg.package.name} tag="div" />
       </div>
+    </>
+  )}
+
+  {/* ---- Value ---- */}
+  {hasValue && (
+    <>
+      <h2 id="value">Value</h2>
+      <div class="value-block">
+        <DocContent content={type.docs.value} allTypes={allTypes} packageName={pkg.package.name} />
+      </div>
+    </>
+  )}
+
+  {/* ---- Type Parameters ---- */}
+  {hasTypeParams && (
+    <>
+      <h2 id="type-parameters">Type Parameters</h2>
+      <dl class="type-params-list">
+        {Object.entries(type.docs.typeParameters).map(([name, desc]: [string, any]) => (
+          <>
+            <dt><code>{name}</code></dt>
+            <dd><DocContent content={desc} allTypes={allTypes} packageName={pkg.package.name} /></dd>
+          </>
+        ))}
+      </dl>
     </>
   )}
 
@@ -161,6 +219,21 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
     </>
   )}
 
+  {/* ---- Permissions ---- */}
+  {hasPermissions && (
+    <>
+      <h2 id="permissions">Permissions</h2>
+      <dl class="permissions-list">
+        {type.docs.permissions.map((perm: any) => (
+          <>
+            <dt><code>{perm.type}</code></dt>
+            <dd><DocContent content={perm.description} allTypes={allTypes} packageName={pkg.package.name} /></dd>
+          </>
+        ))}
+      </dl>
+    </>
+  )}
+
   {/* ---- See Also ---- */}
   {hasSeeAlso && (
     <>
@@ -169,7 +242,7 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
         {seeAlsoLinks.map((link: any) => (
           <li>
             {link.href ? (
-              <a href={link.href} class="type-link">{link.label}</a>
+              <a href={link.href} class="type-link" {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{link.label}</a>
             ) : (
               <code>{link.label}</code>
             )}
@@ -242,6 +315,29 @@ const displayName = type.name + (type.isGeneric && type.genericParameters?.lengt
     color: var(--sl-color-gray-2);
   }
   .remarks-block p { margin: 0; }
+  .value-block {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: var(--sl-color-gray-2);
+  }
+  .type-params-list,
+  .permissions-list {
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+  .type-params-list dt,
+  .permissions-list dt {
+    font-weight: 600;
+    margin-top: 0.75rem;
+  }
+  .type-params-list dd,
+  .permissions-list dd {
+    margin-left: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--sl-color-gray-2);
+  }
   .see-also-list {
     list-style: none;
     padding: 0;

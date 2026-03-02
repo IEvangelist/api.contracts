@@ -467,14 +467,14 @@ public static class SchemaVerifier
         writer.WritePropertyName("docs");
         writer.WriteStartObject();
 
-        // Parameters (alphabetically sorted keys)
+        // Parameters (alphabetically sorted keys) — flatten doc node arrays to strings for hash
         if (docs.TryGetProperty("parameters", out var parameters) &&
             parameters.ValueKind == JsonValueKind.Object)
         {
             var sortedParams = new SortedDictionary<string, string>(StringComparer.Ordinal);
             foreach (var prop in parameters.EnumerateObject())
             {
-                sortedParams[prop.Name] = prop.Value.GetString() ?? "";
+                sortedParams[prop.Name] = FlattenDocNodesToString(prop.Value);
             }
 
             if (sortedParams.Count > 0)
@@ -488,27 +488,117 @@ public static class SchemaVerifier
             }
         }
 
-        if (docs.TryGetProperty("remarks", out var remarks) &&
-            remarks.ValueKind == JsonValueKind.String)
+        if (docs.TryGetProperty("remarks", out var remarks))
         {
-            writer.WriteString("remarks", remarks.GetString());
+            writer.WriteString("remarks", FlattenDocNodesToString(remarks));
         }
 
-        if (docs.TryGetProperty("returns", out var returns) &&
-            returns.ValueKind == JsonValueKind.String)
+        if (docs.TryGetProperty("returns", out var returns))
         {
-            writer.WriteString("returns", returns.GetString());
+            writer.WriteString("returns", FlattenDocNodesToString(returns));
         }
 
-        if (docs.TryGetProperty("summary", out var summary) &&
-            summary.ValueKind == JsonValueKind.String)
+        if (docs.TryGetProperty("summary", out var summary))
         {
-            writer.WriteString("summary", summary.GetString());
+            writer.WriteString("summary", FlattenDocNodesToString(summary));
         }
 
-        // examples and seeAlso are excluded from hash per spec
+        // examples, seeAlso, exceptions, typeParameters, value excluded from hash per spec
 
         writer.WriteEndObject();
+    }
+
+    /// <summary>
+    /// Flattens a doc content field to a plain string.
+    /// Handles both the legacy string format and the new rich doc node array format.
+    /// </summary>
+    private static string FlattenDocNodesToString(JsonElement element)
+    {
+        if (element.ValueKind == JsonValueKind.String)
+        {
+            return element.GetString() ?? "";
+        }
+
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            var sb = new System.Text.StringBuilder();
+            foreach (var node in element.EnumerateArray())
+            {
+                FlattenDocNode(node, sb);
+            }
+            return sb.ToString().Trim();
+        }
+
+        return "";
+    }
+
+    private static void FlattenDocNode(JsonElement node, System.Text.StringBuilder sb)
+    {
+        if (node.ValueKind != JsonValueKind.Object) return;
+
+        var kind = node.TryGetProperty("kind", out var k) ? k.GetString() ?? "" : "";
+
+        switch (kind)
+        {
+            case "text":
+            case "code":
+            case "codeblock":
+                if (node.TryGetProperty("text", out var text))
+                    sb.Append(text.GetString());
+                break;
+
+            case "cref":
+                if (node.TryGetProperty("value", out var cref))
+                {
+                    var val = cref.GetString() ?? "";
+                    var dot = val.LastIndexOf('.');
+                    sb.Append(dot >= 0 ? val.Substring(dot + 1) : val);
+                }
+                break;
+
+            case "href":
+                if (node.TryGetProperty("text", out var hrefText))
+                    sb.Append(hrefText.GetString());
+                else if (node.TryGetProperty("value", out var hrefVal))
+                    sb.Append(hrefVal.GetString());
+                break;
+
+            case "langword":
+            case "paramref":
+            case "typeparamref":
+                if (node.TryGetProperty("value", out var v))
+                    sb.Append(v.GetString());
+                break;
+
+            case "para":
+            case "note":
+                sb.Append(' ');
+                if (node.TryGetProperty("children", out var children) &&
+                    children.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var child in children.EnumerateArray())
+                        FlattenDocNode(child, sb);
+                }
+                sb.Append(' ');
+                break;
+
+            case "list":
+                if (node.TryGetProperty("items", out var items) &&
+                    items.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var item in items.EnumerateArray())
+                    {
+                        sb.Append(' ');
+                        if (item.TryGetProperty("description", out var desc) &&
+                            desc.ValueKind == JsonValueKind.Array)
+                        {
+                            foreach (var d in desc.EnumerateArray())
+                                FlattenDocNode(d, sb);
+                        }
+                    }
+                }
+                break;
+        }
     }
 
     private static void WriteCanonicalAttributes(Utf8JsonWriter writer, JsonElement element)

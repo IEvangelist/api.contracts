@@ -1,0 +1,298 @@
+---
+/**
+ * DocContent — renders rich structured documentation nodes.
+ *
+ * Accepts an array of doc nodes (the new rich format) and renders them
+ * with proper links for cref, styled keywords for langword, inline code
+ * for <c>, parameter references for paramref/typeparamref, paragraphs,
+ * and lists.
+ *
+ * Also accepts a plain string for backward compatibility.
+ */
+import { resolveTypeLink, parseSeeAlso, typeHref } from '../utils/packages';
+
+interface Props {
+  content: any;            // DocNode[] | string | undefined
+  allTypes?: any[];
+  packageName?: string;
+  tag?: string;            // wrapper element: 'p', 'span', 'div', etc.
+}
+
+const { content, allTypes = [], packageName = '', tag = 'span' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+if (!content) return;
+
+// Backward compatibility: if content is a plain string, render it directly
+const isLegacyString = typeof content === 'string';
+const Tag = tag as any;
+
+/**
+ * Resolve a cref doc-ID to a link within the current package.
+ * Returns { href, label } or null.
+ */
+function resolveCref(cref: string): { href: string; label: string } | null {
+  const { fullName, simpleName } = parseSeeAlso(cref);
+  const match = allTypes.find((t: any) => t.fullName === fullName);
+  if (match) {
+    return {
+      href: typeHref(base, packageName, match.name),
+      label: simpleName,
+    };
+  }
+  return null;
+}
+---
+
+{isLegacyString ? (
+  <Tag>{content}</Tag>
+) : (
+  <Tag class="doc-content">
+    {(content as any[]).map((node: any) => {
+      switch (node.kind) {
+        case 'text':
+          return <Fragment set:text={node.text} />;
+
+        case 'code':
+          return <code class="doc-inline-code">{node.text}</code>;
+
+        case 'codeblock':
+          return (
+            <pre class="doc-codeblock"><code class={node.language ? `language-${node.language}` : ''}>{node.text}</code></pre>
+          );
+
+        case 'cref': {
+          const link = resolveCref(node.value ?? '');
+          if (link) {
+            return <a href={link.href} class="type-link">{link.label}</a>;
+          }
+          // External or unresolved type — show short name styled
+          const { simpleName } = parseSeeAlso(node.value ?? '');
+          return <code class="doc-cref">{simpleName}</code>;
+        }
+
+        case 'href':
+          return (
+            <a href={node.value} class="doc-href" target="_blank" rel="noopener noreferrer">
+              {node.text ?? node.value}
+            </a>
+          );
+
+        case 'langword':
+          return <code class="doc-langword">{node.value}</code>;
+
+        case 'paramref':
+          return <code class="doc-paramref">{node.value}</code>;
+
+        case 'typeparamref':
+          return <code class="doc-typeparamref">{node.value}</code>;
+
+        case 'para':
+          return (
+            <p class="doc-para">
+              {node.children && (
+                <Astro.self content={node.children} allTypes={allTypes} packageName={packageName} tag="span" />
+              )}
+            </p>
+          );
+
+        case 'note': {
+          const noteType = node.value ?? 'note';
+          const noteLabels: Record<string, string> = {
+            note: 'Note',
+            tip: 'Tip',
+            caution: 'Caution',
+            warning: 'Warning',
+            important: 'Important',
+          };
+          return (
+            <aside class={`doc-note doc-note-${noteType}`}>
+              <strong class="doc-note-label">{noteLabels[noteType] ?? noteType}</strong>
+              {node.children && (
+                <Astro.self content={node.children} allTypes={allTypes} packageName={packageName} tag="div" />
+              )}
+            </aside>
+          );
+        }
+
+        case 'list': {
+          const isTable = node.style === 'table';
+          if (isTable) {
+            return (
+              <table class="doc-table">
+                {node.header && (
+                  <thead>
+                    <tr>
+                      <th>
+                        {node.header.term && (
+                          <Astro.self content={node.header.term} allTypes={allTypes} packageName={packageName} tag="span" />
+                        )}
+                      </th>
+                      <th>
+                        <Astro.self content={node.header.description} allTypes={allTypes} packageName={packageName} tag="span" />
+                      </th>
+                    </tr>
+                  </thead>
+                )}
+                <tbody>
+                  {(node.items ?? []).map((item: any) => (
+                    <tr>
+                      <td>
+                        {item.term && (
+                          <Astro.self content={item.term} allTypes={allTypes} packageName={packageName} tag="span" />
+                        )}
+                      </td>
+                      <td>
+                        <Astro.self content={item.description} allTypes={allTypes} packageName={packageName} tag="span" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            );
+          }
+          const listTag = node.style === 'number' ? 'ol' : 'ul';
+          const ListTag = listTag as any;
+          return (
+            <ListTag class="doc-list">
+              {(node.items ?? []).map((item: any) => (
+                <li>
+                  {item.term && (
+                    <>
+                      <strong>
+                        <Astro.self content={item.term} allTypes={allTypes} packageName={packageName} tag="span" />
+                      </strong>
+                      {' — '}
+                    </>
+                  )}
+                  <Astro.self content={item.description} allTypes={allTypes} packageName={packageName} tag="span" />
+                </li>
+              ))}
+            </ListTag>
+          );
+        }
+
+        default:
+          return <Fragment set:text={node.text ?? node.value ?? ''} />;
+      }
+    })}
+  </Tag>
+)}
+
+<style>
+  .doc-content {
+    line-height: 1.5;
+  }
+  .doc-inline-code {
+    font-size: 0.88em;
+    padding: 0.1em 0.3em;
+    border-radius: 0.2rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-text-accent);
+  }
+  .doc-codeblock {
+    margin: 0.75em 0;
+    padding: 0.75rem 1rem;
+    background: var(--sl-color-gray-6);
+    border-radius: 0.35rem;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    line-height: 1.45;
+  }
+  .doc-langword {
+    font-size: 0.88em;
+    padding: 0.1em 0.3em;
+    border-radius: 0.2rem;
+    background: var(--sl-color-gray-6);
+    color: var(--sl-color-accent);
+    font-weight: 600;
+  }
+  .doc-cref {
+    font-size: 0.88em;
+    color: var(--sl-color-gray-2);
+  }
+  .doc-href {
+    text-decoration: none;
+    color: var(--sl-color-accent);
+  }
+  .doc-href:hover {
+    text-decoration: underline;
+  }
+  .doc-paramref,
+  .doc-typeparamref {
+    font-size: 0.88em;
+    padding: 0.05em 0.25em;
+    border-radius: 0.15rem;
+    background: var(--sl-color-gray-6);
+    font-style: italic;
+  }
+  .doc-para {
+    margin: 0.5em 0;
+  }
+  .doc-list {
+    margin: 0.5em 0 0.5em 1.5em;
+    font-size: 0.95em;
+  }
+  .doc-list li {
+    margin-bottom: 0.25em;
+  }
+  .doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5em 0;
+    font-size: 0.9em;
+  }
+  .doc-table th,
+  .doc-table td {
+    border: 1px solid var(--sl-color-gray-5);
+    padding: 0.4em 0.75em;
+    text-align: left;
+  }
+  .doc-table th {
+    background: var(--sl-color-gray-6);
+    font-weight: 600;
+  }
+  .doc-note {
+    margin: 0.75em 0;
+    padding: 0.6rem 1rem;
+    border-left: 3px solid var(--sl-color-accent);
+    background: var(--sl-color-gray-6);
+    border-radius: 0 0.25rem 0.25rem 0;
+    font-size: 0.9em;
+  }
+  .doc-note-label {
+    display: block;
+    font-size: 0.8em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.25em;
+    color: var(--sl-color-accent);
+  }
+  .doc-note-caution,
+  .doc-note-warning {
+    border-left-color: var(--sl-color-orange);
+  }
+  .doc-note-caution .doc-note-label,
+  .doc-note-warning .doc-note-label {
+    color: var(--sl-color-orange);
+  }
+  .doc-note-important {
+    border-left-color: var(--sl-color-red);
+  }
+  .doc-note-important .doc-note-label {
+    color: var(--sl-color-red);
+  }
+  .doc-note-tip {
+    border-left-color: var(--sl-color-green);
+  }
+  .doc-note-tip .doc-note-label {
+    color: var(--sl-color-green);
+  }
+  .type-link {
+    text-decoration: none;
+    color: var(--sl-color-accent);
+  }
+  .type-link:hover {
+    text-decoration: underline;
+  }
+</style>

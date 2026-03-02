@@ -367,8 +367,18 @@ public class SourceGeneratorDriverTests
         var customer = types.EnumerateArray().First(t => t.GetProperty("name").GetString() == "Customer");
 
         var docs = customer.GetProperty("docs");
-        Assert.Equal("A customer entity.", docs.GetProperty("summary").GetString());
-        Assert.Equal("Used for billing.", docs.GetProperty("remarks").GetString());
+        // summary and remarks are now arrays of doc nodes
+        var summaryArr = docs.GetProperty("summary");
+        Assert.Equal(JsonValueKind.Array, summaryArr.ValueKind);
+        var firstSummaryNode = summaryArr.EnumerateArray().First();
+        Assert.Equal("text", firstSummaryNode.GetProperty("kind").GetString());
+        Assert.Equal("A customer entity.", firstSummaryNode.GetProperty("text").GetString());
+
+        var remarksArr = docs.GetProperty("remarks");
+        Assert.Equal(JsonValueKind.Array, remarksArr.ValueKind);
+        var firstRemarksNode = remarksArr.EnumerateArray().First();
+        Assert.Equal("text", firstRemarksNode.GetProperty("kind").GetString());
+        Assert.Equal("Used for billing.", firstRemarksNode.GetProperty("text").GetString());
     }
 
     [Fact]

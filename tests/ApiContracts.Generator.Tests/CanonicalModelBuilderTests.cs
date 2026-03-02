@@ -139,8 +139,8 @@ public class CanonicalModelBuilderTests
 
         var doc = Assert.Single(result);
         Assert.NotNull(doc.Docs);
-        Assert.Equal("A documented class.", doc.Docs!.Summary);
-        Assert.Equal("Some extra remarks.", doc.Docs.Remarks);
+        Assert.Equal("A documented class.", CanonicalModelBuilder.FlattenDocNodesToText(doc.Docs!.Summary));
+        Assert.Equal("Some extra remarks.", CanonicalModelBuilder.FlattenDocNodesToText(doc.Docs.Remarks));
     }
 
     [Fact]
@@ -671,11 +671,11 @@ public class CanonicalModelBuilderTests
         var calc = Assert.Single(result);
         var method = calc.Members.First(m => m.Name == "Add");
         Assert.NotNull(method.Docs);
-        Assert.Equal("Adds two numbers.", method.Docs!.Summary);
-        Assert.Equal("The sum.", method.Docs.Returns);
+        Assert.Equal("Adds two numbers.", CanonicalModelBuilder.FlattenDocNodesToText(method.Docs!.Summary));
+        Assert.Equal("The sum.", CanonicalModelBuilder.FlattenDocNodesToText(method.Docs.Returns));
         Assert.NotNull(method.Docs.Parameters);
-        Assert.Equal("First number.", method.Docs.Parameters!["a"]);
-        Assert.Equal("Second number.", method.Docs.Parameters["b"]);
+        Assert.Equal("First number.", CanonicalModelBuilder.FlattenDocNodesToText(method.Docs.Parameters!["a"]));
+        Assert.Equal("Second number.", CanonicalModelBuilder.FlattenDocNodesToText(method.Docs.Parameters["b"]));
     }
 
     [Fact]

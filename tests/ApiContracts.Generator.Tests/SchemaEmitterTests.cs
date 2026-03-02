@@ -132,12 +132,12 @@ public class SchemaEmitterTests
                 Kind = "class",
                 Docs = new CanonicalDocumentation
                 {
-                    Summary = "A documented class.",
-                    Remarks = "Some remarks.",
-                    Returns = "The result.",
-                    Parameters = new Dictionary<string, string>
+                    Summary = new List<DocNode> { DocNode.TextNode("A documented class.") },
+                    Remarks = new List<DocNode> { DocNode.TextNode("Some remarks.") },
+                    Returns = new List<DocNode> { DocNode.TextNode("The result.") },
+                    Parameters = new Dictionary<string, List<DocNode>>
                     {
-                        ["id"] = "The identifier."
+                        ["id"] = new List<DocNode> { DocNode.TextNode("The identifier.") }
                     }
                 }
             }
@@ -147,10 +147,10 @@ public class SchemaEmitterTests
         var json = SchemaEmitter.EmitAssemblySchema(
             "TestAssembly", "1.0.0", "net10.0", types, "sha256:abc", config);
 
-        Assert.Contains("\"summary\": \"A documented class.\"", json);
-        Assert.Contains("\"remarks\": \"Some remarks.\"", json);
-        Assert.Contains("\"returns\": \"The result.\"", json);
-        Assert.Contains("\"id\": \"The identifier.\"", json);
+        Assert.Contains("\"A documented class.\"", json);
+        Assert.Contains("\"Some remarks.\"", json);
+        Assert.Contains("\"The result.\"", json);
+        Assert.Contains("\"The identifier.\"", json);
     }
 
     [Fact]
@@ -484,7 +484,7 @@ public class SchemaEmitterTests
                 Kind = "class",
                 Docs = new CanonicalDocumentation
                 {
-                    Summary = "A reference type.",
+                    Summary = new List<DocNode> { DocNode.TextNode("A reference type.") },
                     SeeAlso = ["TestNs.OtherType", "System.String"]
                 }
             }

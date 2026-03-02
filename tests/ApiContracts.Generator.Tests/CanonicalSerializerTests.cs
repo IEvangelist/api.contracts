@@ -106,7 +106,7 @@ public class CanonicalSerializerTests
                 Kind = "class",
                 Docs = new CanonicalDocumentation
                 {
-                    Summary = "A summary",
+                    Summary = new List<DocNode> { DocNode.TextNode("A summary") },
                     Examples =
                     [
                         new CanonicalCodeExample

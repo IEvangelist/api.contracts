@@ -295,23 +295,58 @@
     },
     "docs": {
       "type": "object",
-      "description": "Normalized XML documentation.",
+      "description": "Rich structured XML documentation preserving inline references, code, lists, and exceptions.",
       "additionalProperties": false,
       "properties": {
         "summary": {
-          "type": "string"
+          "$ref": "#/$defs/docContent",
+          "description": "Summary documentation content."
         },
         "remarks": {
-          "type": "string"
+          "$ref": "#/$defs/docContent",
+          "description": "Detailed remarks documentation content."
         },
         "returns": {
-          "type": "string"
+          "$ref": "#/$defs/docContent",
+          "description": "Return value documentation content."
+        },
+        "value": {
+          "$ref": "#/$defs/docContent",
+          "description": "Property value documentation content."
         },
         "parameters": {
           "type": "object",
-          "description": "Parameter name to description mapping.",
+          "description": "Parameter name to rich description mapping.",
           "additionalProperties": {
-            "type": "string"
+            "$ref": "#/$defs/docContent"
+          }
+        },
+        "typeParameters": {
+          "type": "object",
+          "description": "Type parameter name to rich description mapping.",
+          "additionalProperties": {
+            "$ref": "#/$defs/docContent"
+          }
+        },
+        "exceptions": {
+          "type": "array",
+          "description": "Exceptions that may be thrown.",
+          "items": {
+            "$ref": "#/$defs/docException"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "description": "Required permissions.",
+          "items": {
+            "$ref": "#/$defs/docPermission"
+          }
+        },
+        "examples": {
+          "type": "array",
+          "description": "Code examples.",
+          "items": {
+            "$ref": "#/$defs/docExample"
           }
         },
         "seeAlso": {
@@ -319,6 +354,129 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "docContent": {
+      "type": "array",
+      "description": "Rich documentation content as an array of inline nodes.",
+      "items": {
+        "$ref": "#/$defs/docNode"
+      }
+    },
+    "docNode": {
+      "type": "object",
+      "description": "A single node in a documentation content tree.",
+      "required": ["kind"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "Node kind.",
+          "enum": ["text", "code", "codeblock", "cref", "href", "langword", "paramref", "typeparamref", "para", "list", "note"]
+        },
+        "text": {
+          "type": "string",
+          "description": "Text content for text/code/codeblock kinds, or display text for href kind."
+        },
+        "value": {
+          "type": "string",
+          "description": "Reference value: cref doc-ID, href URL, langword keyword, parameter name, or note type."
+        },
+        "language": {
+          "type": "string",
+          "description": "Programming language for 'codeblock' kind."
+        },
+        "children": {
+          "$ref": "#/$defs/docContent",
+          "description": "Child nodes for para/note kinds."
+        },
+        "style": {
+          "type": "string",
+          "description": "List style for 'list' kind.",
+          "enum": ["bullet", "number", "table"]
+        },
+        "header": {
+          "$ref": "#/$defs/docListItem",
+          "description": "Optional header row for 'list' kind with table style."
+        },
+        "items": {
+          "type": "array",
+          "description": "List items for 'list' kind.",
+          "items": {
+            "$ref": "#/$defs/docListItem"
+          }
+        }
+      }
+    },
+    "docListItem": {
+      "type": "object",
+      "description": "An item in a documentation list.",
+      "additionalProperties": false,
+      "properties": {
+        "term": {
+          "$ref": "#/$defs/docContent",
+          "description": "Optional term for definition lists."
+        },
+        "description": {
+          "$ref": "#/$defs/docContent",
+          "description": "Item description."
+        }
+      }
+    },
+    "docException": {
+      "type": "object",
+      "description": "A documented exception.",
+      "required": ["type", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Exception type doc-ID reference."
+        },
+        "description": {
+          "$ref": "#/$defs/docContent",
+          "description": "When the exception is thrown."
+        }
+      }
+    },
+    "docPermission": {
+      "type": "object",
+      "description": "A documented permission requirement.",
+      "required": ["type", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Permission type doc-ID reference."
+        },
+        "description": {
+          "$ref": "#/$defs/docContent",
+          "description": "Description of the permission requirement."
+        }
+      }
+    },
+    "docExample": {
+      "type": "object",
+      "description": "A code example.",
+      "required": ["language", "code"],
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Programming language."
+        },
+        "region": {
+          "type": "string",
+          "description": "Optional named region."
+        },
+        "code": {
+          "type": "string",
+          "description": "The code content."
+        },
+        "description": {
+          "$ref": "#/$defs/docContent",
+          "description": "Optional description of the example."
         }
       }
     },

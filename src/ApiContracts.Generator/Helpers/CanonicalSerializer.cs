@@ -224,7 +224,8 @@ internal static class CanonicalSerializer
 
     private static void SerializeDocsForHash(Utf8JsonWriter writer, CanonicalDocumentation docs)
     {
-        // Docs contribute to hash excluding code sample content
+        // Docs contribute to hash excluding code sample content.
+        // Flatten rich doc nodes to plain text for hash stability.
         writer.WriteStartObject();
 
         if (docs.Parameters is { Count: > 0 })
@@ -232,21 +233,27 @@ internal static class CanonicalSerializer
             writer.WriteStartObject("parameters");
             foreach (var kvp in docs.Parameters.OrderBy(k => k.Key))
             {
-                writer.WriteString(kvp.Key, kvp.Value);
+                writer.WriteString(kvp.Key, CanonicalModelBuilder.FlattenDocNodesToText(kvp.Value));
             }
             writer.WriteEndObject();
         }
-        if (docs.Remarks is not null)
+
+        var remarks = CanonicalModelBuilder.FlattenDocNodesToText(docs.Remarks);
+        if (remarks.Length > 0)
         {
-            writer.WriteString("remarks", docs.Remarks);
+            writer.WriteString("remarks", remarks);
         }
-        if (docs.Returns is not null)
+
+        var returns = CanonicalModelBuilder.FlattenDocNodesToText(docs.Returns);
+        if (returns.Length > 0)
         {
-            writer.WriteString("returns", docs.Returns);
+            writer.WriteString("returns", returns);
         }
-        if (docs.Summary is not null)
+
+        var summary = CanonicalModelBuilder.FlattenDocNodesToText(docs.Summary);
+        if (summary.Length > 0)
         {
-            writer.WriteString("summary", docs.Summary);
+            writer.WriteString("summary", summary);
         }
         // Note: Examples content excluded from hash per spec
         // Note: SeeAlso excluded from hash per spec

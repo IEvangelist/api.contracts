@@ -276,22 +276,76 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
 
             var docs = new CanonicalDocumentation
             {
-                Summary = NormalizeXmlText(root.Element("summary")),
-                Remarks = NormalizeXmlText(root.Element("remarks")),
-                Returns = NormalizeXmlText(root.Element("returns")),
+                Summary = ParseDocContent(root.Element("summary")),
+                Remarks = ParseDocContent(root.Element("remarks")),
+                Returns = ParseDocContent(root.Element("returns")),
+                Value = ParseDocContent(root.Element("value")),
             };
 
             // Parameters
             var paramElements = root.Elements("param").ToList();
             if (paramElements.Count > 0)
             {
-                docs.Parameters = new Dictionary<string, string>();
+                docs.Parameters = new Dictionary<string, List<DocNode>>();
                 foreach (var param in paramElements)
                 {
                     var name = param.Attribute("name")?.Value;
                     if (name is not null)
                     {
-                        docs.Parameters[name] = NormalizeXmlText(param) ?? "";
+                        docs.Parameters[name] = ParseDocContent(param) ?? [DocNode.TextNode("")];
+                    }
+                }
+            }
+
+            // Type parameters
+            var typeParamElements = root.Elements("typeparam").ToList();
+            if (typeParamElements.Count > 0)
+            {
+                docs.TypeParameters = new Dictionary<string, List<DocNode>>();
+                foreach (var tp in typeParamElements)
+                {
+                    var name = tp.Attribute("name")?.Value;
+                    if (name is not null)
+                    {
+                        docs.TypeParameters[name] = ParseDocContent(tp) ?? [DocNode.TextNode("")];
+                    }
+                }
+            }
+
+            // Exceptions
+            var exceptionElements = root.Elements("exception").ToList();
+            if (exceptionElements.Count > 0)
+            {
+                docs.Exceptions = [];
+                foreach (var exc in exceptionElements)
+                {
+                    var cref = exc.Attribute("cref")?.Value;
+                    if (cref is not null)
+                    {
+                        docs.Exceptions.Add(new DocException
+                        {
+                            Type = cref,
+                            Description = ParseDocContent(exc) ?? [DocNode.TextNode("")],
+                        });
+                    }
+                }
+            }
+
+            // Permissions
+            var permissionElements = root.Elements("permission").ToList();
+            if (permissionElements.Count > 0)
+            {
+                docs.Permissions = [];
+                foreach (var perm in permissionElements)
+                {
+                    var cref = perm.Attribute("cref")?.Value;
+                    if (cref is not null)
+                    {
+                        docs.Permissions.Add(new DocPermission
+                        {
+                            Type = cref,
+                            Description = ParseDocContent(perm) ?? [DocNode.TextNode("")],
+                        });
                     }
                 }
             }
@@ -306,25 +360,34 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
                     var codeElement = example.Element("code");
                     if (codeElement is not null)
                     {
+                        // Parse description from non-code child nodes
+                        var descNodes = new List<DocNode>();
+                        foreach (var node in example.Nodes())
+                        {
+                            if (node is XElement el && el.Name == "code") continue;
+                            ParseXmlNode(node, descNodes);
+                        }
+                        NormalizeDocNodes(descNodes);
+
                         docs.Examples.Add(new CanonicalCodeExample
                         {
                             Language = codeElement.Attribute("language")?.Value ?? "csharp",
                             Region = codeElement.Attribute("region")?.Value,
                             Code = codeElement.Value.Trim(),
-                            Description = NormalizeXmlText(example.Elements()
-                                .Where(e => e.Name != "code")
-                                .FirstOrDefault()),
+                            Description = descNodes.Count > 0 ? descNodes : null,
                         });
                     }
                 }
             }
 
-            // See also
+            // See also — supports both cref and href
             var seeAlsoElements = root.Elements("seealso").ToList();
             if (seeAlsoElements.Count > 0)
             {
                 docs.SeeAlso = [.. seeAlsoElements
-                    .Select(s => s.Attribute("cref")?.Value ?? s.Value)
+                    .Select(s => s.Attribute("cref")?.Value
+                              ?? s.Attribute("href")?.Value
+                              ?? s.Value)
                     .Where(s => !string.IsNullOrEmpty(s))];
             }
 
@@ -336,6 +399,255 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         }
     }
 
+    /// <summary>
+    /// Parses an XML element's content into a list of rich documentation nodes,
+    /// preserving see-cref, langword, code, paramref, typeparamref, para, and list elements.
+    /// </summary>
+    private static List<DocNode>? ParseDocContent(XElement? element)
+    {
+        if (element is null) return null;
+
+        var nodes = new List<DocNode>();
+
+        foreach (var child in element.Nodes())
+        {
+            ParseXmlNode(child, nodes);
+        }
+
+        NormalizeDocNodes(nodes);
+
+        return nodes.Count > 0 ? nodes : null;
+    }
+
+    /// <summary>Recursively parses an XML node into DocNode list.</summary>
+    private static void ParseXmlNode(XNode node, List<DocNode> result)
+    {
+        switch (node)
+        {
+            case XText textNode:
+                var text = textNode.Value
+                    .Replace("\r\n", "\n")
+                    .Replace("\r", "\n");
+
+                // Normalize internal whitespace: collapse runs of spaces/newlines
+                var lines = text.Split('\n');
+                var normalized = string.Join(" ",
+                    lines.Select(l => l.Trim()).Where(l => l.Length > 0));
+
+                if (normalized.Length > 0)
+                {
+                    result.Add(DocNode.TextNode(normalized));
+                }
+                break;
+
+            case XElement el:
+                switch (el.Name.LocalName)
+                {
+                    case "see":
+                        var cref = el.Attribute("cref")?.Value;
+                        var langword = el.Attribute("langword")?.Value;
+                        var href = el.Attribute("href")?.Value;
+
+                        if (cref is not null)
+                        {
+                            result.Add(DocNode.CrefNode(cref));
+                        }
+                        else if (langword is not null)
+                        {
+                            result.Add(DocNode.LangwordNode(langword));
+                        }
+                        else if (href is not null)
+                        {
+                            var linkText = el.Value.Trim();
+                            result.Add(DocNode.HrefNode(href,
+                                string.IsNullOrEmpty(linkText) ? null : linkText));
+                        }
+                        break;
+
+                    case "c":
+                        result.Add(DocNode.CodeNode(el.Value));
+                        break;
+
+                    case "code":
+                        // Standalone <code> block (not inside <example>)
+                        result.Add(DocNode.CodeblockNode(
+                            el.Value.Trim(),
+                            el.Attribute("language")?.Value));
+                        break;
+
+                    case "paramref":
+                        var paramName = el.Attribute("name")?.Value;
+                        if (paramName is not null)
+                        {
+                            result.Add(DocNode.ParamrefNode(paramName));
+                        }
+                        break;
+
+                    case "typeparamref":
+                        var typeParamName = el.Attribute("name")?.Value;
+                        if (typeParamName is not null)
+                        {
+                            result.Add(DocNode.TypeparamrefNode(typeParamName));
+                        }
+                        break;
+
+                    case "para":
+                        var paraChildren = ParseDocContent(el);
+                        if (paraChildren is { Count: > 0 })
+                        {
+                            result.Add(DocNode.ParaNode(paraChildren));
+                        }
+                        break;
+
+                    case "list":
+                        var listStyle = el.Attribute("type")?.Value ?? "bullet";
+                        var items = new List<DocListItem>();
+
+                        // Parse optional listheader
+                        DocListItem? listHeader = null;
+                        var listheaderEl = el.Element("listheader");
+                        if (listheaderEl is not null)
+                        {
+                            var headerTermEl = listheaderEl.Element("term");
+                            var headerDescEl = listheaderEl.Element("description");
+                            listHeader = new DocListItem
+                            {
+                                Term = ParseDocContent(headerTermEl),
+                                Description = ParseDocContent(headerDescEl) ?? [DocNode.TextNode(listheaderEl.Value.Trim())],
+                            };
+                        }
+
+                        foreach (var item in el.Elements("item"))
+                        {
+                            var termEl = item.Element("term");
+                            var descEl = item.Element("description");
+                            items.Add(new DocListItem
+                            {
+                                Term = ParseDocContent(termEl),
+                                Description = ParseDocContent(descEl) ?? [DocNode.TextNode(item.Value.Trim())],
+                            });
+                        }
+                        if (items.Count > 0)
+                        {
+                            result.Add(DocNode.ListNode(listStyle, items, listHeader));
+                        }
+                        break;
+
+                    case "note":
+                        var noteType = el.Attribute("type")?.Value ?? "note";
+                        var noteChildren = ParseDocContent(el);
+                        if (noteChildren is { Count: > 0 })
+                        {
+                            result.Add(DocNode.NoteNode(noteType, noteChildren));
+                        }
+                        break;
+
+                    default:
+                        // Unknown element — recurse into its children to preserve nested content
+                        foreach (var child in el.Nodes())
+                        {
+                            ParseXmlNode(child, result);
+                        }
+                        break;
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Removes leading/trailing whitespace text nodes and collapses adjacent text nodes.
+    /// </summary>
+    private static void NormalizeDocNodes(List<DocNode> nodes)
+    {
+        // Remove leading empty text
+        while (nodes.Count > 0 &&
+               nodes[0].Kind == "text" &&
+               string.IsNullOrWhiteSpace(nodes[0].Text))
+        {
+            nodes.RemoveAt(0);
+        }
+
+        // Remove trailing empty text
+        while (nodes.Count > 0 &&
+               nodes[nodes.Count - 1].Kind == "text" &&
+               string.IsNullOrWhiteSpace(nodes[nodes.Count - 1].Text))
+        {
+            nodes.RemoveAt(nodes.Count - 1);
+        }
+
+        // Merge adjacent text nodes
+        for (int i = nodes.Count - 1; i > 0; i--)
+        {
+            if (nodes[i].Kind == "text" && nodes[i - 1].Kind == "text")
+            {
+                nodes[i - 1] = DocNode.TextNode(nodes[i - 1].Text + " " + nodes[i].Text);
+                nodes.RemoveAt(i);
+            }
+        }
+    }
+
+    /// <summary>Flattens doc nodes to plain text for contexts that need a string.</summary>
+    internal static string FlattenDocNodesToText(List<DocNode>? nodes)
+    {
+        if (nodes is null || nodes.Count == 0) return "";
+
+        var sb = new System.Text.StringBuilder();
+        FlattenNodes(nodes, sb);
+        return sb.ToString().Trim();
+    }
+
+    private static void FlattenNodes(List<DocNode> nodes, System.Text.StringBuilder sb)
+    {
+        foreach (var node in nodes)
+        {
+            switch (node.Kind)
+            {
+                case "text":
+                    sb.Append(node.Text);
+                    break;
+                case "code":
+                    sb.Append(node.Text);
+                    break;
+                case "codeblock":
+                    sb.Append(node.Text);
+                    break;
+                case "cref":
+                    // Extract short name from cref like "T:SampleApi.Customer" -> "Customer"
+                    var crefVal = node.Value ?? "";
+                    var lastDot = crefVal.LastIndexOf('.');
+                    sb.Append(lastDot >= 0 ? crefVal.Substring(lastDot + 1) : crefVal);
+                    break;
+                case "href":
+                    sb.Append(node.Text ?? node.Value);
+                    break;
+                case "langword":
+                    sb.Append(node.Value);
+                    break;
+                case "paramref":
+                case "typeparamref":
+                    sb.Append(node.Value);
+                    break;
+                case "para":
+                case "note":
+                    sb.Append(" ");
+                    if (node.Children is not null)
+                        FlattenNodes(node.Children, sb);
+                    sb.Append(" ");
+                    break;
+                case "list":
+                    if (node.Items is not null)
+                    {
+                        foreach (var item in node.Items)
+                        {
+                            sb.Append(" ");
+                            FlattenNodes(item.Description, sb);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
     private static string? ExtractSummary(ISymbol symbol)
     {
         var xmlComment = symbol.GetDocumentationCommentXml();
@@ -344,29 +656,13 @@ internal sealed class CanonicalModelBuilder(Compilation compilation)
         try
         {
             var doc = XDocument.Parse(xmlComment);
-            return NormalizeXmlText(doc.Root?.Element("summary"));
+            var nodes = ParseDocContent(doc.Root?.Element("summary"));
+            return FlattenDocNodesToText(nodes);
         }
         catch
         {
             return null;
         }
-    }
-
-    private static string? NormalizeXmlText(XElement? element)
-    {
-        if (element is null) return null;
-
-        var text = element.Value
-            .Replace("\r\n", "\n")
-            .Replace("\r", "\n");
-
-        // Normalize whitespace
-        var lines = text.Split('\n')
-            .Select(l => l.Trim())
-            .Where(l => l.Length > 0);
-
-        var result = string.Join(" ", lines);
-        return string.IsNullOrWhiteSpace(result) ? null : result;
     }
 
     private static List<CanonicalAttribute>? ExtractShapeAttributes(ISymbol symbol)

@@ -222,7 +222,11 @@ public class PackageEmissionTests : IDisposable
             .First(t => t.GetProperty("name").GetString() == "Customer");
 
         Assert.True(customer.TryGetProperty("docs", out var docs));
-        Assert.Equal("A customer entity for testing schema generation.", docs.GetProperty("summary").GetString());
+        // summary is now an array of doc nodes
+        var summaryArr = docs.GetProperty("summary");
+        Assert.Equal(JsonValueKind.Array, summaryArr.ValueKind);
+        var firstNode = summaryArr.EnumerateArray().First();
+        Assert.Equal("A customer entity for testing schema generation.", firstNode.GetProperty("text").GetString());
     }
 
     [Fact]
