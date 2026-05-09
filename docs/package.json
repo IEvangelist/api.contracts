@@ -12,7 +12,7 @@
   "dependencies": {
     "@astrojs/starlight": "^0.37.6",
     "@catppuccin/starlight": "^1.1.1",
-    "@expressive-code/plugin-collapsible-sections": "^0.41.7",
+    "@expressive-code/plugin-collapsible-sections": "^0.42.0",
     "@expressive-code/plugin-line-numbers": "^0.41.7",
     "astro": "^5.18.0"
   }
